@@ -22,11 +22,6 @@ export default {
         { title: '优雅的使用 icon', href: 'https://segmentfault.com/a/1190000012213278' }
       ]
     }
-  },
-  watch: {
-    articleList() {
-      console.log($t)
-    }
   }
 }
 </script>
