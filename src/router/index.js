@@ -7,7 +7,6 @@ Vue.use(Router)
 import Layout from '@/views/layout/Layout'
 
 /** note: submenu only apppear when children.length>=1
-*   detail see  https://panjiachen.github.io/vue-element-admin-site/#/router-and-nav?id=sidebar
 **/
 
 /**
@@ -264,6 +263,12 @@ export const asyncRouterMap = [
     path: '/i18n',
     component: Layout,
     children: [{ path: 'index', component: () => import('@/views/i18n-demo/index'), name: 'i18n', meta: { title: 'i18n', icon: 'international' }}]
+  },
+
+  {
+    path: '/adome',
+    component: Layout,
+    children: [{ path: 'index', component: () => import('@/views/adome/index'), name: 'adome', meta: { title: 'adome', icon: 'international' }}]
   },
 
   { path: '*', redirect: '/404', hidden: true }

@@ -176,9 +176,16 @@
      <div class="goods-edit__region-content">
       <div class="goods-edit__region-content--inner">
        <div class="zent-form__control-group sku-field">
-        <label class="zent-form__control-label">
-         <!-- react-text: 205 -->商品规格：
-         <!-- /react-text --></label>
+        <label class="zent-form__control-label">商品规格：</label>
+        <el-select v-model="value" placeholder="请选择">
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+        <!-- <div class="zent-select-popup" tabindex="0"><span value="1" class="zent-select-option  ">颜色</span><span value="2" class="zent-select-option  ">尺寸</span><span value="542" class="zent-select-option  ">房型</span><span value="12" class="zent-select-option  ">尺码</span><span value="14" class="zent-select-option  ">规格</span><span value="33" class="zent-select-option  ">款式</span><span value="497" class="zent-select-option  current">净含量</span><span value="499" class="zent-select-option  ">种类</span><span value="502" class="zent-select-option  ">内存</span><span value="503" class="zent-select-option  ">版本</span><span value="505" class="zent-select-option  ">金重</span><span value="506" class="zent-select-option  ">套餐</span><span value="531" class="zent-select-option  ">容量</span><span value="532" class="zent-select-option  ">上市时间</span><span value="533" class="zent-select-option  ">系列</span><span value="534" class="zent-select-option  ">机芯</span><span value="535" class="zent-select-option  ">适用</span><span value="536" class="zent-select-option  ">包装</span><span value="537" class="zent-select-option  ">口味</span><span value="538" class="zent-select-option  ">产地</span><span value="539" class="zent-select-option  ">出行日期</span><span value="540" class="zent-select-option  ">出行人群</span><span value="541" class="zent-select-option  ">入住时段</span><span value="543" class="zent-select-option  ">介质</span><span value="544" class="zent-select-option  ">开本</span><span value="545" class="zent-select-option  ">类型（例如实体票,电子票）</span><span value="546" class="zent-select-option  ">有效期</span></div> -->
         <div class="zent-form__controls">
          <div>
           <div class="rc-sku">
@@ -258,10 +265,8 @@
          <p class="zent-form__error-desc">请输入库存</p>
         </div>
        </div>
-       <div class="zent-form__control-group member-discount-field">
-        <label class="zent-form__control-label">
-         <!-- react-text: 273 -->会员折扣：
-         <!-- /react-text --></label>
+       <!-- <div class="zent-form__control-group member-discount-field">
+        <label class="zent-form__control-label">会员折扣：</label>
         <div class="zent-form__controls">
          <div>
           <label class="zent-form__checkbox zent-checkbox-wrap zent-checkbox-checked"><span class="zent-checkbox"><span class="zent-checkbox-inner"></span><input type="checkbox" value="on" /></span><span>参加会员折扣</span></label>
@@ -269,7 +274,7 @@
           <p class="help-block"><span class="c-gray">是否勾选不影响自定义会员价生效。</span><a target="_blank" rel="noopener noreferrer" href="https://help.youzan.com/qa#/menu/2111/detail/1092">什么是自定义会员价？</a></p>
          </div>
         </div>
-       </div>
+       </div> -->
        <div class="zent-form__control-group no-control-label">
         <label class="zent-form__control-label"></label>
         <div class="zent-form__controls">
@@ -571,10 +576,29 @@ export default {
   name: 'guide',
   data() {
     return {
+      options: [{
+        value: '选项1',
+        label: '黄金糕'
+      }, {
+        value: '选项2',
+        label: '双皮奶'
+      }, {
+        value: '选项3',
+        label: '蚵仔煎'
+      }, {
+        value: '选项4',
+        label: '龙须面'
+      }, {
+        value: '选项5',
+        label: '北京烤鸭'
+      }],
+      value: '',
       driver: null
     }
   },
   mounted() {
+    this.axios.get('api/ting?method=baidu.ting.billboard.billList&type=1&size=10&offset=0').then(res => console.log(res))
+    // csFetchList(this.list).then(res => console.log(res))
     // this.driver = new Driver()
   },
   methods: {

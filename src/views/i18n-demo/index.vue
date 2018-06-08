@@ -77,6 +77,7 @@ export default {
     }
   },
   created() {
+    console.log(this.$i18n.getLocaleMessage('en')[viewName])
     if (!this.$i18n.getLocaleMessage('en')[viewName]) {
       this.$i18n.mergeLocaleMessage('en', local.en)
       this.$i18n.mergeLocaleMessage('zh', local.zh)

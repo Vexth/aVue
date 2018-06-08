@@ -10,12 +10,27 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    proxyTable: {},
+    proxyTable: {
+      '/api': {  
+        target: 'http://tingapi.ting.baidu.com/v1/restserver/',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/api': '/'
+        }
+      },
+      '/dome': {  
+        target: 'http://tingapi.ting.baidu.com/v1/restserver/',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/dome': '/'
+        }
+      }
+    },
 
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST
     port: 9527, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
-    autoOpenBrowser: true,
+    // autoOpenBrowser: true,
     errorOverlay: true,
     notifyOnErrors: false,
     poll: false, // https://webpack.js.org/configuration/dev-server/#devserver-watchoptions-
