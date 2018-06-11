@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { Message } from 'element-ui'
-// import store from '@/store'
+import store from '@/store'
 // import { getToken } from '@/utils/auth'
 
 // create an axios instance
@@ -14,9 +14,10 @@ const service = axios.create({
 // request interceptor
 service.interceptors.request.use(config => {
   // Do something before request is sent
-  // if (store.getters.token) {
-  //   config.headers['Authorization'] = getToken() // 让每个请求携带token-- ['Authorization']为自定义key 请根据实际情况自行修改
-  // }
+  if (store.getters.token) {
+    // config.headers['Authorization'] = getToken() // 让每个请求携带token-- ['Authorization']为自定义key 请根据实际情况自行修改
+    config.headers['Authorization'] = `Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE1Mjg3NzU1NjAsInVzZXJuYW1lIjoidGVzdCJ9.1K6HLDxUctchwrX_2N0Zm7uQgRQ_fJm8bhDm7v9UK_uXBYq7dLBfqnUhgoIjzPdLhp-yGiTt0IBY7lkitpyqLg`
+  }
   return config
 }, error => {
   // Do something with request error

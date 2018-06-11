@@ -1,15 +1,14 @@
 <template>
   <div class="app-container">
-    <!-- <p class="warn-content">
+    <p class="warn-content">
       {{$t('guide.description')}}
       <a href="https://github.com/kamranahmedse/driver.js" target="_blank">driver.js.
       </a>
     </p>
     <el-button icon='el-icon-question' type="primary" @click.prevent.stop="guide">{{$t('guide.button')}}</el-button>
-    <br /> -->
 
-  <form class="zent-form zent-form--horizontal">
-   <!-- <div class="goods-edit__region">
+  <!-- <form class="zent-form zent-form--horizontal">
+   <div class="goods-edit__region">
     <div class="goods-edit__region--inner">
      <div class="goods-edit__region-title">
       <div class="goods-edit__region-title--inner">商品类型</div>
@@ -59,7 +58,7 @@
       </div>
      </div>
     </div>
-   </div> -->
+   </div>
    <div class="goods-edit__region">
     <div class="goods-edit__region--inner">
      <div class="goods-edit__region-title">
@@ -126,7 +125,7 @@
          </div>
         </div>
        </div>
-       <!-- <div class="zent-form__control-group ">
+       <div class="zent-form__control-group ">
         <label class="zent-form__control-label">商品分组：</label>
         <div class="zent-form__controls">
          <div>
@@ -139,11 +138,9 @@
           <p class="help-block hide">使用“列表中隐藏”分组，商品将不出现在商品列表中</p>
          </div>
         </div>
-       </div> -->
+       </div>
        <div class="zent-form__control-group ">
-        <label class="zent-form__control-label">
-         <!-- react-text: 177 -->商品卖点：
-         <!-- /react-text --></label>
+        <label class="zent-form__control-label">商品卖点：</label>
         <div class="zent-form__controls">
          <span>
           <div class="zent-input-wrapper input-xxlarge">
@@ -151,7 +148,7 @@
           </div><p class="help-block">在商品详情页标题下面展示卖点信息，建议60字以内<a href="javascript:;" rel="noopener noreferrer" style="margin-left: 5px;">查看示例</a></p></span>
         </div>
        </div>
-       <!-- <div class="zent-form__control-group upload-field">
+       <div class="zent-form__control-group upload-field">
         <label class="zent-form__control-label">主图视频：</label>
         <div class="zent-form__controls">
          <div class="video-edit-wrap">
@@ -161,7 +158,7 @@
           </div>
          </div>
         </div>
-       </div> -->
+       </div>
       </div>
      </div>
     </div>
@@ -185,7 +182,7 @@
             :value="item.value">
           </el-option>
         </el-select>
-        <!-- <div class="zent-select-popup" tabindex="0"><span value="1" class="zent-select-option  ">颜色</span><span value="2" class="zent-select-option  ">尺寸</span><span value="542" class="zent-select-option  ">房型</span><span value="12" class="zent-select-option  ">尺码</span><span value="14" class="zent-select-option  ">规格</span><span value="33" class="zent-select-option  ">款式</span><span value="497" class="zent-select-option  current">净含量</span><span value="499" class="zent-select-option  ">种类</span><span value="502" class="zent-select-option  ">内存</span><span value="503" class="zent-select-option  ">版本</span><span value="505" class="zent-select-option  ">金重</span><span value="506" class="zent-select-option  ">套餐</span><span value="531" class="zent-select-option  ">容量</span><span value="532" class="zent-select-option  ">上市时间</span><span value="533" class="zent-select-option  ">系列</span><span value="534" class="zent-select-option  ">机芯</span><span value="535" class="zent-select-option  ">适用</span><span value="536" class="zent-select-option  ">包装</span><span value="537" class="zent-select-option  ">口味</span><span value="538" class="zent-select-option  ">产地</span><span value="539" class="zent-select-option  ">出行日期</span><span value="540" class="zent-select-option  ">出行人群</span><span value="541" class="zent-select-option  ">入住时段</span><span value="543" class="zent-select-option  ">介质</span><span value="544" class="zent-select-option  ">开本</span><span value="545" class="zent-select-option  ">类型（例如实体票,电子票）</span><span value="546" class="zent-select-option  ">有效期</span></div> -->
+        <div class="zent-select-popup" tabindex="0"><span value="1" class="zent-select-option  ">颜色</span><span value="2" class="zent-select-option  ">尺寸</span><span value="542" class="zent-select-option  ">房型</span><span value="12" class="zent-select-option  ">尺码</span><span value="14" class="zent-select-option  ">规格</span><span value="33" class="zent-select-option  ">款式</span><span value="497" class="zent-select-option  current">净含量</span><span value="499" class="zent-select-option  ">种类</span><span value="502" class="zent-select-option  ">内存</span><span value="503" class="zent-select-option  ">版本</span><span value="505" class="zent-select-option  ">金重</span><span value="506" class="zent-select-option  ">套餐</span><span value="531" class="zent-select-option  ">容量</span><span value="532" class="zent-select-option  ">上市时间</span><span value="533" class="zent-select-option  ">系列</span><span value="534" class="zent-select-option  ">机芯</span><span value="535" class="zent-select-option  ">适用</span><span value="536" class="zent-select-option  ">包装</span><span value="537" class="zent-select-option  ">口味</span><span value="538" class="zent-select-option  ">产地</span><span value="539" class="zent-select-option  ">出行日期</span><span value="540" class="zent-select-option  ">出行人群</span><span value="541" class="zent-select-option  ">入住时段</span><span value="543" class="zent-select-option  ">介质</span><span value="544" class="zent-select-option  ">开本</span><span value="545" class="zent-select-option  ">类型（例如实体票,电子票）</span><span value="546" class="zent-select-option  ">有效期</span></div>
         <div class="zent-form__controls">
          <div>
           <div class="rc-sku">
@@ -200,17 +197,13 @@
         </div>
        </div>
        <div class="zent-form__control-group stock-field hide">
-        <label class="zent-form__control-label">
-         <!-- react-text: 219 -->规格明细：
-         <!-- /react-text --></label>
+        <label class="zent-form__control-label">规格明细：</label>
         <div class="zent-form__controls">
          <div class="table-sku-wrap"></div>
         </div>
        </div>
        <div class="zent-form__control-group has-error ">
-        <label class="zent-form__control-label"><em class="zent-form__required">*</em>
-         <!-- react-text: 227 -->价格：
-         <!-- /react-text --></label>
+        <label class="zent-form__control-label"><em class="zent-form__required">*</em>价格：</label>
         <div class="zent-form__controls">
          <div>
           <span class="input-small">
@@ -225,30 +218,23 @@
         </div>
        </div>
        <div class="zent-form__control-group ">
-        <label class="zent-form__control-label">
-         <!-- react-text: 239 -->划线价：
-         <!-- /react-text --></label>
+        <label class="zent-form__control-label">划线价：</label>
         <div class="zent-form__controls">
          <div>
           <span class="input-small" style="margin-left: 0px;">
            <div class="zent-input-wrapper">
             <input type="text" class="zent-input" value="" />
            </div></span>
-          <div class="help-block">
-           <!-- react-text: 246 -->商品没有优惠的情况下，划线价在商品详情会以划线形式显示。
-           <!-- /react-text -->
+          <div class="help-block">商品没有优惠的情况下，划线价在商品详情会以划线形式显示。
            <div class="zent-popover-wrapper zent-pop-wrapper" style="display: inline-block;">
             <a href="javascript:;">示例</a>
-            <!-- react-empty: 249 -->
            </div>
           </div>
          </div>
         </div>
        </div>
        <div class="zent-form__control-group has-error total-stock-field">
-        <label class="zent-form__control-label"><em class="zent-form__required">*</em>
-         <!-- react-text: 255 -->库存：
-         <!-- /react-text --></label>
+        <label class="zent-form__control-label"><em class="zent-form__required">*</em>库存：</label>
         <div class="zent-form__controls">
          <div>
           <span class="input-small">
@@ -265,7 +251,7 @@
          <p class="zent-form__error-desc">请输入库存</p>
         </div>
        </div>
-       <!-- <div class="zent-form__control-group member-discount-field">
+       <div class="zent-form__control-group member-discount-field">
         <label class="zent-form__control-label">会员折扣：</label>
         <div class="zent-form__controls">
          <div>
@@ -274,7 +260,7 @@
           <p class="help-block"><span class="c-gray">是否勾选不影响自定义会员价生效。</span><a target="_blank" rel="noopener noreferrer" href="https://help.youzan.com/qa#/menu/2111/detail/1092">什么是自定义会员价？</a></p>
          </div>
         </div>
-       </div> -->
+       </div>
        <div class="zent-form__control-group no-control-label">
         <label class="zent-form__control-label"></label>
         <div class="zent-form__controls">
@@ -319,7 +305,7 @@
      </div>
     </div>
    </div>
-   <!-- <div class="goods-edit__region">
+   <div class="goods-edit__region">
     <div class="goods-edit__region--inner">
      <div class="goods-edit__region-title">
       <div class="goods-edit__region-title--inner">
@@ -553,64 +539,40 @@
       </div>
      </div>
     </div>
-   </div> -->
-   <!-- <div class="app-design">
+   </div>
+   <div class="app-design">
     <div class="app-actions">
      <div class="form-actions text-center">
       <button type="button" class="zent-btn"><span>保存并查看</span></button>
       <button type="button" class="zent-btn-primary zent-btn"><span>下一步</span></button>
      </div>
     </div>
-   </div> -->
-  </form>
+   </div>
+  </form> -->
 
   </div>
 </template>
 
 <script>
-// import * as Driver from 'driver.js' // import driver.js
-// import 'driver.js/dist/driver.min.css' // import driver.js css
-// import steps from './defineSteps'
+import * as Driver from 'driver.js' // import driver.js
+import 'driver.js/dist/driver.min.css' // import driver.js css
+import steps from './defineSteps'
 
 export default {
   name: 'guide',
   data() {
     return {
-      options: [{
-        value: '选项1',
-        label: '黄金糕'
-      }, {
-        value: '选项2',
-        label: '双皮奶'
-      }, {
-        value: '选项3',
-        label: '蚵仔煎'
-      }, {
-        value: '选项4',
-        label: '龙须面'
-      }, {
-        value: '选项5',
-        label: '北京烤鸭'
-      }],
-      value: '',
       driver: null
     }
   },
   mounted() {
-    this.axios.get('api/ting?method=baidu.ting.billboard.billList&type=1&size=10&offset=0').then(res => console.log(res))
-    // csFetchList(this.list).then(res => console.log(res))
-    // this.driver = new Driver()
+    this.driver = new Driver()
   },
   methods: {
-    // guide() {
-    //   this.driver.defineSteps(steps)
-    //   this.driver.start()
-    // }
+    guide() {
+      this.driver.defineSteps(steps)
+      this.driver.start()
+    }
   }
 }
 </script>
-
-<style scoped>
-@import url('./base.css');
-@import url('./good.css');
-</style>

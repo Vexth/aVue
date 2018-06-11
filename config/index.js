@@ -18,11 +18,11 @@ module.exports = {
           '^/api': '/'
         }
       },
-      '/dome': {  
-        target: 'http://tingapi.ting.baidu.com/v1/restserver/',
+      '/shop': {  
+        target: 'https://shop.jxxykj.cn/api/v1/shop/',
         changeOrigin: true,
         pathRewrite: {
-          '^/dome': '/'
+          '^/shop': '/'
         }
       }
     },
