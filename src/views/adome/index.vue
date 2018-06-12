@@ -3,10 +3,10 @@
 		<el-form ref="form" :model="form" label-width="150px">
 			<div class="title">基本信息</div>
 			<el-form-item label="商品名称：">
-				<el-input v-model="form.name"></el-input>
+				<el-input v-model="form.title"></el-input>
 			</el-form-item>
 			<el-form-item label="分享描述：">
-				<el-input v-model="form.name"></el-input>
+				<el-input v-model="form.brief"></el-input>
 			</el-form-item>
       <el-form-item label="商品类目：">
         <el-select v-model="value" placeholder="请选择" @change="optionChange(value)">
@@ -34,7 +34,7 @@
                     :value="item" :disabled="item.disabled">
                   </el-option>
                 </el-select>
-                <el-button type="danger" icon="el-icon-delete" @click="del(i)"></el-button>
+                <!-- <el-button type="danger" icon="el-icon-delete" @click="del(i)"></el-button> -->
               </div>
               
               <div class="title mb0 bgf">
@@ -52,7 +52,10 @@
                 </el-select>
               </div>
             </div>
-            <div class="title mb0"><el-button :disabled="isdisabled" @click="addItem">添加规格项目</el-button></div>
+            <div class="title mb0">
+              <el-button :disabled="isdisabled" @click="addItem">添加规格项目</el-button>
+              <el-button type="primary" @click="addTale">生成规格明细</el-button>
+            </div>
           </div>
         </template>
 			</el-form-item>
@@ -60,19 +63,51 @@
         <template>
           <div class="guigeul">
             <ul>
-              <li style="display: flex;">
+              <li style="display: flex; border-bottom: 1px solid #dcdfe6;">
                 <div v-for="(row, i) in rows" :key="i">{{row.label}}</div>
               <li>
-              <li v-for="(items, index) in dataList" :key="index" style="display: table;">
-                <div v-if="items.title === '' ? false : true" :style="{float: 'left', height: items.list.length * 56 + 'px', lineHeight: items.list.length * 56 + 'px', padding: 0}">{{items.title}}</div>
+              <li v-for="(items, index) in dataList" :key="index" style="display: table; border-bottom: 1px solid #dcdfe6; width: 100%;">
+                <div style="border-right: 1px solid #dcdfe6;" v-if="items.attrContent === '' ? false : true" :style="{float: 'left', height: items.list.length * 56 + 'px', lineHeight: items.list.length * 56 + 'px', padding: 0}">{{items.attrContent}}</div>
                 <ul style="float: left;">
                   <li v-for="(item, i) in items.list" :key="i" style="display: flex;">
-                    <div v-if="item.mane === '' ? false : true">{{item.mane}}</div>
-                    <div>{{item.price}}</div>
-                    <div>{{item.stock}}</div>
-                    <div>{{item.coding}}</div>
-                    <div>{{item.costprice}}</div>
-                    <div>{{item.volume}}</div>
+                    <div v-if="item.attrContent === '' ? false : true">{{item.attrContent}}</div>
+                    <div>
+                      <!-- <el-input
+                        placeholder="请输入价格"
+                        v-model="items.list[i].unitPrice"
+                        clearable>
+                      </el-input> -->
+                      <input type="text" v-model="dataList[index]['list'][i].unitPrice" @blur="OnInput({unitPrice:`${items.list[i].unitPrice}`, attrOption: `${dataList[index].id}|${items.list[i].id}`})" />
+                      <span>{{dataList[index]['list'][i].unitPrice}}</span>
+                    </div>
+                    <div>
+                      <!-- <el-input
+                        placeholder="请输入库存"
+                        v-model="items.list[i].stockAmount"
+                        clearable>
+                      </el-input> -->
+                      <input type="text" v-model="dataList[index]['list'][i].stockAmount" @blur="OnInput({stockAmount:`${items.list[i].stockAmount}`, attrOption: `${dataList[index].id}|${items.list[i].id}`})" />
+                      <span>{{dataList[index]['list'][i].stockAmount}}</span>
+                    </div>
+                    <div>
+                      <!-- <el-input
+                        placeholder="请输入规格编码"
+                        v-model="items.list[i].input3"
+                        clearable>
+                      </el-input> -->
+                      <input type="text" v-model="dataList[index]['list'][i].input3" @blur="OnInput({input3:`${items.list[i].input3}`, attrOption: `${dataList[index].id}|${items.list[i].id}`})" />
+                      <span>{{dataList[index]['list'][i].input3}}</span>
+                    </div>
+                    <div>
+                      <!-- <el-input
+                        placeholder="请输入成本价"
+                        v-model="items.list[i].costPrice"
+                        clearable>
+                      </el-input> -->
+                      <input type="text" v-model="dataList[index]['list'][i].costPrice" @blur="OnInput({costPrice:`${items.list[i].costPrice}`, attrOption: `${dataList[index].id}|${items.list[i].id}`})" />
+                      <span>{{dataList[index]['list'][i].costPrice}}</span>
+                    </div>
+                    <div>{{item.saleAmount ? item.saleAmount : 0}}</div>
                   </li>
                 </ul>
               </li>
@@ -80,7 +115,7 @@
           </div>
         </template>
 			</el-form-item>
-      <el-form-item label="价格：">
+      <!-- <el-form-item label="价格：">
 				<el-input v-model="form.name"></el-input>
 			</el-form-item>
       <el-form-item label="划线价：">
@@ -94,7 +129,7 @@
 			</el-form-item>
       <el-form-item label="成本价：">
 				<el-input v-model="form.name"></el-input>
-			</el-form-item>
+			</el-form-item> -->
 			<el-form-item>
 				<el-button type="primary" @click="onSubmit">立即创建</el-button>
 				<el-button>取消</el-button>
@@ -110,35 +145,11 @@ export default {
       isXS: false,
       isdisabled: false,
       options1: [],
-      rows: [
-        {
-          prop: 'date',
-          label: '价格（元）',
-          width: 180
-        },
-        {
-          prop: 'name',
-          label: '库存',
-          width: 180
-        },
-        {
-          prop: 'address',
-          label: '规格编码',
-          width: 180
-        },
-        {
-          prop: 'address1',
-          label: '成本价',
-          width: 180
-        },
-        {
-          prop: 'address2',
-          label: '销量',
-          width: 180
-        }
-      ],
+      rows: [],
       form: {
+        title: '',
         name: '',
+        brief: '',
         region: '',
         date1: '',
         date2: '',
@@ -146,7 +157,6 @@ export default {
         type: [],
         resource: '',
         desc: '',
-        restaurants: [],
         items: []
       },
       isSp: false,
@@ -154,7 +164,10 @@ export default {
       value: '',
       driver: null,
       itemsList: {},
-      productCategoryId: null
+      productCategoryId: null,
+      iscfxz: '',
+      formList: {},
+      skuList: []
     }
   },
   watch: {
@@ -163,7 +176,6 @@ export default {
     }
   },
   mounted() {
-    this.restaurants = this.loadAll()
     this.axios.get('shop/ProductCategoryOption?vendorId=1').then(res => {
       if (res.status === 200) {
         this.options = res.data.data
@@ -174,6 +186,72 @@ export default {
     // this.axios.get('api/ting?method=baidu.ting.billboard.billList&type=1&size=10&offset=0').then(res => console.log(res))
   },
   methods: {
+    dataToFunc(data1, data2) {
+      const data = []
+      for (let i = 0; i < data1.length; i++) {
+        for (let j = 0; j < data2.length; j++) {
+          if (data1[i].id === data2[j]) {
+            data1[i].unitPrice = ''
+            data1[i].stockAmount = ''
+            data1[i].input3 = ''
+            data1[i].costPrice = ''
+            data.push(data1[i])
+          }
+        }
+      }
+      return data
+    },
+    addTale() {
+      let key1 = []
+      let key2 = []
+      const rows = [
+        {
+          prop: 'date',
+          label: '价格（元）'
+        },
+        {
+          prop: 'name',
+          label: '库存'
+        },
+        {
+          prop: 'address',
+          label: '规格编码'
+        },
+        {
+          prop: 'address1',
+          label: '成本价'
+        },
+        {
+          prop: 'address2',
+          label: '销量'
+        }
+      ]
+      for (const key in this.formList) {
+        if (key === 'COLOR') {
+          rows.splice(0, 0, {
+            prop: 'COLOR',
+            label: '颜色'
+          })
+          key1 = this.dataToFunc(this.itemsList[key], this.formList[key].list)
+        } else if (key === 'SIZE') {
+          rows.splice(1, 0, {
+            prop: 'SIZE',
+            label: '尺码'
+          })
+          key2 = this.dataToFunc(this.itemsList[key], this.formList[key].list)
+        }
+      }
+      key1.map(res => {
+        if (key2.length === 0) {
+          key2 = [{ attrContent: '', id: '' }]
+        }
+        res['list'] = key2
+      })
+      this.isXS = true
+      this.rows = rows
+      this.dataList = key1
+      console.log(this.dataList)
+    },
     optionChange(e) {
       this.productCategoryId = e.id
       this.axios.get(`shop/getProductAttrOption?productCategoryId=${e.id}`).then(res => {
@@ -193,7 +271,20 @@ export default {
       }).catch(err => console.log(err))
     },
     itemsListFn(e, i) {
-      console.log(e)
+      if (this.iscfxz === e.value) {
+        this.$alert('规格名不能选择相同的', '提示', {
+          confirmButtonText: '确定',
+          callback: action => {
+            this.$message({
+              type: 'error',
+              message: '规格名选择相同了，请重新选择'
+            })
+          }
+        })
+        return
+      }
+      this.formList[e.value] = e
+      this.iscfxz = e.value
       this.form.items[i].options5 = this.itemsList[e.value]
     },
     del(e) {
@@ -206,6 +297,7 @@ export default {
         e.splice(5, 1)
         return
       }
+      this.formList[v.value].list = e
       let attrType = ''
       const arr = e.filter(res => Object.prototype.toString.call(res) === '[object String]')
       if (arr.length < 1) {
@@ -259,10 +351,53 @@ export default {
           { mane: '', price: '价格2', stock: '库存2', coding: '编码2', costprice: '成本价2', volume: '销量2', title: 1 }
         ]
       })
+      {"product":
+        {"isOnSale":0,"priceUnderline":1.0,"productCategoryId":1,"sortOrder":0,"title":"标题","vendorUserId":1},
+        "skuList":[
+          {"attrOption":"1|3","costPrice":1.23,"saleAmount":0,"stockAmount":0,"unitPrice":1.23},
+          {"attrOption":"2|3","costPrice":1.23,"saleAmount":0,"stockAmount":0,"unitPrice":1.23}]
+      }
       */
     },
+    dataToList(data) {
+      const skuList = []
+      data.map(res => res['list'].map(v => {
+        const obj = {}
+        obj['attrOption'] = `${res.id}|${v.id}`
+        obj['costPrice'] = v.costPrice
+        obj['saleAmount'] = 0
+        obj['stockAmount'] = v.stockAmount
+        obj['unitPrice'] = v.unitPrice
+        skuList.push(obj)
+      }))
+      console.log(skuList)
+    },
+    OnInput(e) {
+      this.skuList.push(e)
+    },
     onSubmit() {
-      console.log(this.form)
+      let skuList = this.skuList
+      skuList = skuList.map((item, index, arr) => {
+        const i = arr.find(_item => item['attrOption'] === _item['attrOption'])
+        if (i !== item) {
+          i.a = { ...i.a, ...item }
+          return undefined
+        } else {
+          console.log(i.a)
+          i.a = i.a
+          return i
+        }
+      }).filter(item => item !== undefined).map(res => {
+        res = { ...res, ...res.a }
+        delete res.a
+        return res
+      })
+      const list = {
+        product: { productCategoryId: this.productCategoryId, title: this.form.title, brief: this.form.brief, vendorUserId: 1 },
+        skuList: skuList
+      }
+      this.axios.post('shop/createProduct', list).catch(err => console.log(err)).then(res => console.log(res))
+      console.log(list)
     },
     addItem() {
       this.isSp = true
@@ -270,36 +405,6 @@ export default {
       if (this.form.items.length >= 2) {
         this.isdisabled = true
       }
-    },
-    querySearch(queryString, cb) {
-      var restaurants = this.restaurants
-      var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants
-      // 调用 callback 返回建议列表的数据
-      cb(results)
-    },
-    createFilter(queryString) {
-      return (restaurant) => {
-        return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
-      }
-    },
-    loadAll() {
-      return [
-        {
-          'value': '(小杨生煎)西郊百联餐厅',
-          'address': '长宁区仙霞西路88号百联2楼'
-        },
-        {
-          'value': '阳阳麻辣烫',
-          'address': '天山西路389号'
-        },
-        {
-          'value': '南拳妈妈龙虾盖浇饭',
-          'address': '普陀区金沙江路1699号鑫乐惠美食广场A13'
-        }
-      ]
-    },
-    handleSelect(item) {
-      console.log(item)
     }
   }
 }
@@ -348,8 +453,13 @@ export default {
   width: 100%;
 }
 .guigeul div {
-  padding: 10px;
-  width: 100px;
+  /* padding: 10px; */
+  width: 200px;
   text-align: center;
+  line-height: 56px;
+}
+
+.guigeul div.el-input--medium {
+  width: 180px;
 }
 </style>
