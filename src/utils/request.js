@@ -15,8 +15,9 @@ const service = axios.create({
 service.interceptors.request.use(config => {
   // Do something before request is sent
   if (store.getters.token) {
+    config.headers['Accept'] = `application/json`
     // config.headers['Authorization'] = getToken() // 让每个请求携带token-- ['Authorization']为自定义key 请根据实际情况自行修改
-    config.headers['Authorization'] = `Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE1Mjg4NjQ4ODUsInVzZXJuYW1lIjoidGVzdCJ9.QJd4y1GwHG0q7Ld_3PaMjYBKIQI76x0aJc8ieFEfZ73Oz0m9OzBAHIRsBoPVrF1znIXlxT5FXdowz1vDJ6IAUg`
+    config.headers['Authorization'] = `Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE1MjkwMzcyODMsInVzZXJuYW1lIjoib1VlSlk1UDBTZkNOckpubEx0WVRKaUttNTd5TSJ9.Yl-6sOI2ABKWPWeLk20mgF0qAl453qHyI55fuA_H7yXBRWrEEhWkHuA5R32GBziUO8RZFpy8LOLyrRcTxuG90Q`
   }
   return config
 }, error => {

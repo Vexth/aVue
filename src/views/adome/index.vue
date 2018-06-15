@@ -18,6 +18,19 @@
           </el-option>
         </el-select>
       </el-form-item>
+      <el-form-item label="上传图片：">
+				<el-upload
+          :before-upload="beforeUpload"
+          :action="action"
+          list-type="picture-card"
+          :on-preview="handlePictureCardPreview"
+          :on-remove="handleRemove">
+          <i class="el-icon-plus"></i>
+        </el-upload>
+        <el-dialog :visible.sync="dialogVisible">
+          <img width="100%" :src="dialogImageUrl" alt="">
+        </el-dialog>
+			</el-form-item>
 
 			<div class="title">价格库存</div>
 			<el-form-item label="商品规格：">
@@ -138,9 +151,13 @@
   </div>
 </template>
 <script>
+import Dropzone from '@/components/Dropzone/index.vue'
 export default {
   data() {
     return {
+      action: '123',
+      dialogImageUrl: '',
+      dialogVisible: false,
       dataList: [],
       isXS: false,
       isdisabled: false,
@@ -170,10 +187,8 @@ export default {
       skuList: []
     }
   },
-  watch: {
-    form(val) {
-      console.log(val)
-    }
+  components: {
+    Dropzone
   },
   mounted() {
     this.axios.get('shop/ProductCategoryOption?vendorId=1').then(res => {
@@ -186,6 +201,19 @@ export default {
     // this.axios.get('api/ting?method=baidu.ting.billboard.billList&type=1&size=10&offset=0').then(res => console.log(res))
   },
   methods: {
+    handleRemove(file, fileList) {
+      console.log(file, fileList);
+    },
+    handlePictureCardPreview(file) {
+      this.dialogImageUrl = file.url;
+      this.dialogVisible = true;
+    },
+    beforeUpload(file) {
+      let fd = new FormData()
+      fd.append('multipartFile', file)
+      this.axios.post('shop/qiniu/uploadfile', fd).then(res => this.dialogImageUrl = res.data)
+      return false // false就是不自动上传，我后来试了发现都一样，都不会自动上传
+    },
     dataToFunc(data1, data2) {
       const data = []
       for (let i = 0; i < data1.length; i++) {
@@ -396,7 +424,9 @@ export default {
         product: { productCategoryId: this.productCategoryId, title: this.form.title, brief: this.form.brief, vendorUserId: 1 },
         skuList: skuList
       }
-      this.axios.post('shop/createProduct', list).catch(err => console.log(err)).then(res => console.log(res))
+      this.axios.post('shop/createProduct', list).catch(err => console.log(err)).then(res => {
+        this.$router.push('/bdeno/index')
+      })
       console.log(list)
     },
     addItem() {

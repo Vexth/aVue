@@ -271,5 +271,17 @@ export const asyncRouterMap = [
     children: [{ path: 'index', component: () => import('@/views/adome/index'), name: 'adome', meta: { title: 'adome', icon: 'international' }}]
   },
 
+  {
+    path: '/bdeno',
+    component: Layout,
+    children: [{ path: 'index', component: () => import('@/views/bdeno/index'), name: 'bdeno', meta: { title: 'bdeno', icon: 'international' }}]
+  },
+
+  {
+    path: '/cdone',
+    component: Layout,
+    children: [{ path: 'index', component: () => import('@/views/cdone/index'), name: 'cdone', meta: { title: 'cdone', icon: 'international' }}]
+  },
+
   { path: '*', redirect: '/404', hidden: true }
 ]

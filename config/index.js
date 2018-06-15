@@ -11,6 +11,13 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
+      '/shop1': {  
+        target: 'http://192.168.10.100:8080/api/v1/',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/shop1': '/'
+        }
+      },
       '/api': {  
         target: 'http://tingapi.ting.baidu.com/v1/restserver/',
         changeOrigin: true,
@@ -38,7 +45,7 @@ module.exports = {
     // Use Eslint Loader?
     // If true, your code will be linted during bundling and
     // linting errors and warnings will be shown in the console.
-    useEslint: true,
+    useEslint: false,
     // If true, eslint errors and warnings will also be shown in the error overlay
     // in the browser.
     showEslintErrorsInOverlay: false,
