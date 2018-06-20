@@ -17,7 +17,7 @@ service.interceptors.request.use(config => {
   if (store.getters.token) {
     config.headers['Accept'] = `application/json`
     // config.headers['Authorization'] = getToken() // 让每个请求携带token-- ['Authorization']为自定义key 请根据实际情况自行修改
-    config.headers['Authorization'] = `Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE1MjkwMzcyODMsInVzZXJuYW1lIjoib1VlSlk1UDBTZkNOckpubEx0WVRKaUttNTd5TSJ9.Yl-6sOI2ABKWPWeLk20mgF0qAl453qHyI55fuA_H7yXBRWrEEhWkHuA5R32GBziUO8RZFpy8LOLyrRcTxuG90Q`
+    config.headers['Authorization'] = `Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE1Mjk0NzY1ODksInVzZXJuYW1lIjoidGVzdCJ9.HRv69T-Zp47-Izai2t9X1UI9Rwgh66Imv2LoBrCPcLLRkJKddVmlqWrF0wOaPjGH826jQ8Kvbe5a7K43IsA8QA`
   }
   return config
 }, error => {

@@ -52,7 +52,15 @@ export default {
     exportZip: 'Export Zip',
     theme: '换肤',
     clipboardDemo: 'Clipboard',
-    i18n: '国际化'
+    i18n: '国际化',
+
+    showcase: '商品',
+    addgoods: '新增商品',
+    goodslist: '商品列表',
+    trade: '订单',
+    orderlist: '所有订单',
+    customer: '客户',
+    customerlist: '客户管理'
   },
   navbar: {
     logOut: '退出登录',

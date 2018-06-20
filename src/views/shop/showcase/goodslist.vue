@@ -62,21 +62,21 @@ export default {
     }
   },
   created() {
-		this.getList()
+    this.getList()
   },
   methods: {
     getList() {
       this.listLoading = true
       this.axios.get('shop1/wechat/productList?appId=wxdda83d03c2d1521c').then(response => {
-				const items = response.data.data
-				this.list = items
+        const items = response.data.data
+        this.list = items
         this.listLoading = false
       })
     },
     confirmEdit(row) {
-      //GET /api/v1/wechat/productDetail
+      // GET /api/v1/wechat/productDetail
       // console.log(row.id)
-      this.$router.push({ path: '/cdone/index', query:{ id: row.id } })
+      this.$router.push({ path: '/showcase/modifygoods', query: { id: row.id }})
       // row.edit = false
       // row.originalTitle = row.title
       // this.$message({

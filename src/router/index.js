@@ -266,21 +266,51 @@ export const asyncRouterMap = [
   },
 
   {
-    path: '/adome',
+    path: '/showcase',
     component: Layout,
-    children: [{ path: 'index', component: () => import('@/views/adome/index'), name: 'adome', meta: { title: 'adome', icon: 'international' }}]
+    redirect: 'noredirect',
+    name: 'showcase',
+    meta: {
+      title: 'showcase',
+      icon: 'chart'
+    },
+    children: [
+      { path: 'addgoods', component: () => import('@/views/shop/showcase/addgoods'), name: 'addgoods', meta: { title: 'addgoods', noCache: true }},
+      { path: 'goodslist', component: () => import('@/views/shop/showcase/goodslist'), name: 'goodslist', meta: { title: 'goodslist', noCache: true }},
+      { path: 'modifygoods', component: () => import('@/views/shop/showcase/modifygoods'), name: 'modifygoods', meta: { title: 'modifygoods', noCache: true }, hidden: true }
+    ]
   },
 
   {
-    path: '/bdeno',
+    path: '/trade',
     component: Layout,
-    children: [{ path: 'index', component: () => import('@/views/bdeno/index'), name: 'bdeno', meta: { title: 'bdeno', icon: 'international' }}]
+    redirect: 'noredirect',
+    name: 'trade',
+    meta: {
+      title: 'trade',
+      icon: 'list'
+    },
+    children: [
+      { path: 'orderlist', component: () => import('@/views/shop/trade/orderlist'), name: 'orderlist', meta: { icon: 'list', title: 'orderlist', noCache: true }}
+      // { path: 'goodslist', component: () => import('@/views/trade/goodslist'), name: '商品列表', meta: { title: '商品列表', noCache: true }},
+      // { path: 'modifygoods', component: () => import('@/views/trade/modifygoods'), name: 'mixChart', meta: { title: 'mixChart', noCache: true }, hidden: true}
+    ]
   },
 
   {
-    path: '/cdone',
+    path: '/customer',
     component: Layout,
-    children: [{ path: 'index', component: () => import('@/views/cdone/index'), name: 'cdone', meta: { title: 'cdone', icon: 'international' }}]
+    redirect: 'noredirect',
+    name: 'customer',
+    meta: {
+      title: 'customer',
+      icon: 'user'
+    },
+    children: [
+      { path: 'customerlist', component: () => import('@/views/shop/customer/customerlist'), name: 'customerlist', meta: { icon: 'user', title: 'customerlist', noCache: true }}
+      // { path: 'goodslist', component: () => import('@/views/trade/goodslist'), name: '商品列表', meta: { title: '商品列表', noCache: true }},
+      // { path: 'modifygoods', component: () => import('@/views/trade/modifygoods'), name: 'mixChart', meta: { title: 'mixChart', noCache: true }, hidden: true}
+    ]
   },
 
   { path: '*', redirect: '/404', hidden: true }

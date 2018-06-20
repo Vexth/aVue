@@ -77,7 +77,7 @@
   </div>
 </template>
 <script>
-import Dropzone from '@/components/Dropzone/index.vue'
+// import Dropzone from '@/components/Dropzone/index.vue'
 export default {
   data() {
     return {
@@ -92,7 +92,7 @@ export default {
     }
   },
   created() {
-    //GET /api/v1/wechat/productDetail
+    // GET /api/v1/wechat/productDetail
     this.axios.get(`shop1/wechat/productDetail?productId=${this.$route.query.id}`).then(res => {
       console.log(res.data.data)
       const data = res.data.data
@@ -108,14 +108,6 @@ export default {
       this.axios.post(`shop1/modifyProduct`, row).then(res => {
         console.log(res)
       })
-      //GET /api/v1/wechat/productDetail
-      // console.log(row.id)
-      // row.edit = false
-      // row.originalTitle = row.title
-      // this.$message({
-      //   message: 'The title has been edited',
-      //   type: 'success'
-      // })
     },
     cancelEdit(row) {
       console.log(row)

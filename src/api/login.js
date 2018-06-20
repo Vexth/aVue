@@ -5,6 +5,11 @@ export function loginByUsername(username, password) {
     username,
     password
   }
+  // return request({
+  //   url: 'https://shop.jxxykj.cn/auth/login?username=test&password=123456',
+  //   method: 'post',
+  //   data
+  // })
   return request({
     url: '/login/login',
     method: 'post',

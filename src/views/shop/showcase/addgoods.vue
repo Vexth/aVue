@@ -202,16 +202,19 @@ export default {
   },
   methods: {
     handleRemove(file, fileList) {
-      console.log(file, fileList);
+      console.log(file, fileList)
     },
     handlePictureCardPreview(file) {
-      this.dialogImageUrl = file.url;
-      this.dialogVisible = true;
+      this.dialogImageUrl = file.url
+      this.dialogVisible = true
     },
     beforeUpload(file) {
-      let fd = new FormData()
+      const fd = new FormData()
       fd.append('multipartFile', file)
-      this.axios.post('shop/qiniu/uploadfile', fd).then(res => this.dialogImageUrl = res.data)
+      this.axios.post('shop/qiniu/uploadfile', fd).then(res => {
+        console.log(res)
+        this.dialogImageUrl = res.data
+      })
       return false // false就是不自动上传，我后来试了发现都一样，都不会自动上传
     },
     dataToFunc(data1, data2) {
