@@ -57,10 +57,15 @@ export default {
     showcase: '商品',
     addgoods: '新增商品',
     goodslist: '商品列表',
+    modifygoods: '修改商品',
     trade: '订单',
-    orderlist: '所有订单',
+    orderlist: '订单',
     customer: '客户',
-    customerlist: '客户管理'
+    customerlist: '管理',
+    ump: '营销',
+    activity: '活动',
+    system: '系统管理',
+    navsys: '菜单配置'
   },
   navbar: {
     logOut: '退出登录',

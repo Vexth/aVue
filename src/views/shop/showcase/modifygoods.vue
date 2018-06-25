@@ -54,6 +54,10 @@
 
             <el-table-column min-width="200px" label="成本价">
               <template slot-scope="scope">
+                <template v-if="isBool">
+                  <el-input class="edit-input" size="small" v-model="scope.row.costPrice"></el-input>
+                  <!-- <el-button class='cancel-btn' size="small" icon="el-icon-refresh" type="warning" @click="cancelEdit(scope.row)">cancel</el-button> -->
+                </template>
                 <span>{{ scope.row.costPrice }}</span>
               </template>
             </el-table-column>

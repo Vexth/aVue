@@ -38,7 +38,7 @@ export const constantRouterMap = [
       name: 'dashboard',
       meta: { title: 'dashboard', icon: 'dashboard', noCache: true }
     }]
-  },
+  }/*,
   {
     path: '/documentation',
     component: Layout,
@@ -61,6 +61,7 @@ export const constantRouterMap = [
       meta: { title: 'guide', icon: 'guide', noCache: true }
     }]
   }
+  */
 ]
 
 export default new Router({
@@ -70,6 +71,7 @@ export default new Router({
 })
 
 export const asyncRouterMap = [
+  /*
   {
     path: '/permission',
     component: Layout,
@@ -264,7 +266,7 @@ export const asyncRouterMap = [
     component: Layout,
     children: [{ path: 'index', component: () => import('@/views/i18n-demo/index'), name: 'i18n', meta: { title: 'i18n', icon: 'international' }}]
   },
-
+*/
   {
     path: '/showcase',
     component: Layout,
@@ -310,6 +312,36 @@ export const asyncRouterMap = [
       { path: 'customerlist', component: () => import('@/views/shop/customer/customerlist'), name: 'customerlist', meta: { icon: 'user', title: 'customerlist', noCache: true }}
       // { path: 'goodslist', component: () => import('@/views/trade/goodslist'), name: '商品列表', meta: { title: '商品列表', noCache: true }},
       // { path: 'modifygoods', component: () => import('@/views/trade/modifygoods'), name: 'mixChart', meta: { title: 'mixChart', noCache: true }, hidden: true}
+    ]
+  },
+
+  {
+    path: '/ump',
+    component: Layout,
+    redirect: 'noredirect',
+    name: 'ump',
+    meta: {
+      title: 'ump',
+      icon: 'international'
+    },
+    children: [
+      { path: 'ump', component: () => import('@/views/shop/ump/ump'), name: 'ump', meta: { icon: 'international', title: 'ump', noCache: true }},
+      { path: 'activity', component: () => import('@/views/shop/ump/activity'), name: 'activity', meta: { title: 'activity', noCache: true }, hidden: true }
+    ]
+  },
+
+  {
+    path: '/system',
+    component: Layout,
+    redirect: 'noredirect',
+    name: 'system',
+    meta: {
+      title: 'system',
+      icon: 'component'
+    },
+    children: [
+      { path: 'navsys', component: () => import('@/views/shop/system/navsys'), name: 'navsys', meta: { icon: 'component', title: 'navsys', noCache: true }}
+      // { path: 'activity', component: () => import('@/views/shop/ump/activity'), name: 'activity', meta: { title: 'activity', noCache: true }, hidden: true }
     ]
   },
 

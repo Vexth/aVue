@@ -9,6 +9,7 @@
       text-color="#bfcbd9"
       active-text-color="#409EFF"
     >
+    <!-- <div style="text-align: center;padding-top: 10px;padding-bottom: 10px;"><img src="https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif?imageView2/1/w/80/h/80" alt="" srcset=""></div> -->
       <sidebar-item :routes="permission_routers"></sidebar-item>
     </el-menu>
   </el-scrollbar>

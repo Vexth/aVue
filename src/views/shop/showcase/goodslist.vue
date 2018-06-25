@@ -27,7 +27,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="Actions" width="120">
+      <el-table-column align="center" label="操作" width="120">
         <template slot-scope="scope">
           <el-button type="primary" @click='confirmEdit(scope.row)' size="small" icon="el-icon-edit">Edit</el-button>
         </template>

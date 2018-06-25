@@ -1,5 +1,5 @@
 import { loginByUsername, logout, getUserInfo } from '@/api/login'
-import { getToken, setToken, removeToken } from '@/utils/auth'
+import { getToken, setToken, removeToken, GetUserInfo, setUserInfo } from '@/utils/auth'
 
 const user = {
   state: {
@@ -13,7 +13,8 @@ const user = {
     roles: [],
     setting: {
       articlePlatform: []
-    }
+    },
+    userinfo: GetUserInfo()
   },
 
   mutations: {
@@ -40,6 +41,9 @@ const user = {
     },
     SET_ROLES: (state, roles) => {
       state.roles = roles
+    },
+    SET_USERINFO: (state, userinfo) => {
+      state.userinfo = userinfo
     }
   },
 
@@ -51,7 +55,9 @@ const user = {
         loginByUsername(username, userInfo.password).then(response => {
           const data = response.data
           commit('SET_TOKEN', data.token)
+          commit('SET_USERINFO', response.data.userInfo)
           setToken(response.data.token)
+          setUserInfo(response.data.userInfo)
           resolve()
         }).catch(error => {
           reject(error)
@@ -62,7 +68,7 @@ const user = {
     // 获取用户信息
     GetUserInfo({ commit, state }) {
       return new Promise((resolve, reject) => {
-        getUserInfo(state.token).then(response => {
+        getUserInfo(state.userinfo).then(response => {
           if (!response.data) { // 由于mockjs 不支持自定义状态码只能这样hack
             reject('error')
           }
