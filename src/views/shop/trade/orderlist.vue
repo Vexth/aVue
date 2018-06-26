@@ -104,7 +104,7 @@ export default {
     this.getList()
   },
   mounted() {
-    this.axios.get('api/ting?method=baidu.ting.billboard.billList&type=1&size=10&offset=0').then(res => console.log(res))
+    this.axios.get('api/ting?method=baidu.ting.billboard.billList&type=1&size=10&offset=0').then(res => console.log(res)).catch(err => console.log(err))
   },
   methods: {
     handleClick(tab, event) {

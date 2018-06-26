@@ -59,7 +59,7 @@ export default {
     this.axios.get('/shop/getRoleMenu').then(res => {
       const data = res.data.data
       this.treeList(data)
-    })
+    }).catch(err => console.log(err))
   },
 
   methods: {
@@ -114,7 +114,7 @@ export default {
         this.treeList(data)
         this.dialogFormVisible = false
         this.success('新增成功')
-      })
+      }).catch(err => console.log(err))
     },
 
     // 删除
@@ -123,7 +123,7 @@ export default {
         const data = res.data.data
         this.treeList(data)
         this.success('删除成功')
-      })
+      }).catch(err => console.log(err))
     },
 
     // 修改 POST /roleMenuModify
@@ -133,7 +133,7 @@ export default {
         this.treeList(data)
         this.dialogFormVisible = false
         this.success('修改成功')
-      })
+      }).catch(err => console.log(err))
     },
 
     renderContent(h, { node, data, store }) {

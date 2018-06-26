@@ -1,6 +1,12 @@
 <template>
   <div class="app-container">
 		<el-form ref="form" :model="form" label-width="150px">
+      <div class="title">商品类型</div>
+			<el-form-item label="" style="margin-left: -150px;">
+				<el-radio v-model="radio7" label="1" border>物流发货</el-radio>
+        <el-radio v-model="radio7" label="2" border>无需物流</el-radio>
+        <el-radio v-model="radio7" label="3" border>同城送或自提</el-radio>
+			</el-form-item>
 			<div class="title">基本信息</div>
 			<el-form-item label="商品名称：">
 				<el-input v-model="form.title"></el-input>
@@ -155,6 +161,7 @@ import Dropzone from '@/components/Dropzone/index.vue'
 export default {
   data() {
     return {
+      radio7: '1',
       action: '123',
       dialogImageUrl: '',
       dialogVisible: false,
@@ -191,7 +198,8 @@ export default {
     Dropzone
   },
   mounted() {
-    this.axios.get('shop/ProductCategoryOption?vendorId=1').then(res => {
+    // GET /api/v1/shop/getProductCategoryOptionByVendorId
+    this.axios.get('shop/getProductCategoryOptionByVendorId?vendorId=1').then(res => {
       if (res.status === 200) {
         this.options = res.data.data
       } else {
@@ -214,7 +222,7 @@ export default {
       this.axios.post('shop/qiniu/uploadfile', fd).then(res => {
         console.log(res)
         this.dialogImageUrl = res.data
-      })
+      }).catch(err => console.log(err))
       return false // false就是不自动上传，我后来试了发现都一样，都不会自动上传
     },
     dataToFunc(data1, data2) {
@@ -285,7 +293,8 @@ export default {
     },
     optionChange(e) {
       this.productCategoryId = e.id
-      this.axios.get(`shop/getProductAttrOption?productCategoryId=${e.id}`).then(res => {
+      // GET /api/v1/shop/getProductAttrOptionByUserId
+      this.axios.get(`shop/getProductAttrOptionByUserId?userAccountId=${e.id}`).then(res => {
         if (res.status === 200) {
           const obj = res.data.data
           for (const ite in obj) {

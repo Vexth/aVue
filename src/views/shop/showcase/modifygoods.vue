@@ -103,7 +103,7 @@ export default {
       this.form.title = data[0]['product']['title']
       this.form.brief = data[0]['product']['brief']
       this.list = data
-    })
+    }).catch(err => console.log(err))
   },
   methods: {
     confirmEdit(row, bool) {
@@ -111,7 +111,7 @@ export default {
       this.isBool = !bool
       this.axios.post(`shop1/modifyProduct`, row).then(res => {
         console.log(res)
-      })
+      }).catch(err => console.log(err))
     },
     cancelEdit(row) {
       console.log(row)
