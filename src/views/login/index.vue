@@ -93,9 +93,6 @@ export default {
       }
     },
     handleLogin() {
-      // this.axios.post(`https://shop.jxxykj.cn/auth/login`, this.loginForm).then(res => {
-
-      // })
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true

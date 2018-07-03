@@ -53,11 +53,11 @@ const user = {
       const username = userInfo.username.trim()
       return new Promise((resolve, reject) => {
         loginByUsername(username, userInfo.password).then(response => {
-          const data = response.data
+          const data = response.data.data
           commit('SET_TOKEN', data.token)
-          commit('SET_USERINFO', response.data.userInfo)
-          setToken(response.data.token)
-          setUserInfo(response.data.userInfo)
+          commit('SET_USERINFO', data)
+          setToken(data.token)
+          setUserInfo(data)
           resolve()
         }).catch(error => {
           reject(error)
@@ -68,6 +68,15 @@ const user = {
     // 获取用户信息
     GetUserInfo({ commit, state }) {
       return new Promise((resolve, reject) => {
+        // try {
+
+        //   commit('SET_NAME', state.userinfo.username)
+        //   // commit('SET_AVATAR', data.avatar)
+        //   // commit('SET_INTRODUCTION', data.introduction)
+        //   resolve(state.userinfo)
+        // } catch (error) {
+        //   reject(error)
+        // }
         getUserInfo(state.userinfo).then(response => {
           if (!response.data) { // 由于mockjs 不支持自定义状态码只能这样hack
             reject('error')
@@ -80,7 +89,7 @@ const user = {
             reject('getInfo: roles must be a non-null array !')
           }
 
-          commit('SET_NAME', data.name)
+          commit('SET_NAME', state.userinfo.username)
           commit('SET_AVATAR', data.avatar)
           commit('SET_INTRODUCTION', data.introduction)
           resolve(response)

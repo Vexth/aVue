@@ -29,7 +29,7 @@ service.interceptors.request.use(config => {
 service.interceptors.response.use(
   response => {
     const res = response.data
-    if (res.code !== 0 && res.code !== undefined) {
+    if (res.code !== 200 && res.code !== undefined) {
       Message({
         message: res.msg,
         type: 'error',

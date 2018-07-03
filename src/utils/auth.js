@@ -16,7 +16,10 @@ export function removeToken() {
 }
 
 export function GetUserInfo() {
-  const user = Cookies.get(UserInfo)
+  let user = Cookies.get(UserInfo)
+  if (user === 'undefined') {
+    user = undefined
+  }
   return user === undefined ? user : JSON.parse(user)
 }
 export function setUserInfo(token) {

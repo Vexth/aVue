@@ -34,13 +34,6 @@ Object.keys(filters).forEach(key => {
 
 Vue.config.productionTip = false
 
-router.beforeEach((to, from, next) => {
-  // 权限校验
-  // console.log(to)
-  // console.log(from)
-  next()
-})
-
 new Vue({
   el: '#app',
   router,
