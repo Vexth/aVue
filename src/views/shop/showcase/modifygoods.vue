@@ -192,6 +192,7 @@ export default {
       this.axios.post('api/v1/shop/uploadfile', fd).then(res => {
         this.imgPrimaryListUrl.push({ url: res.data.data })
       }).catch(err => console.log(err))
+      return false
     },
     beforeUploadFT(file) {
       const fd = new FormData()
@@ -200,6 +201,7 @@ export default {
       this.axios.post('api/v1/shop/uploadfile', fd).then(res => {
         this.imgDescListUrl.push({ url: res.data.data })
       }).catch(err => console.log(err))
+      return false
     },
     handleRemoveZT(file, fileList) {
       this.imgPrimaryListUrl = fileList
