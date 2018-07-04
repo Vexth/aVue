@@ -468,8 +468,8 @@ export default {
         return
       }
       const product = {}
-      product['imgPrimaryListUrl'] = this.imgPrimaryListUrl
-      product['imgDescListUrl'] = this.imgDescListUrl
+      product['imgPrimaryListUrl'] = this.imgPrimaryListUrl.map(res => res.url)
+      product['imgDescListUrl'] = this.imgDescListUrl.map(res => res.url)
       product['saleStatus'] = this.saleStatus ? 0 : 1
       product['categoryId'] = this.categoryId
       product['groupId'] = this.groupId
