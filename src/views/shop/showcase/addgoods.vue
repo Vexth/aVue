@@ -329,7 +329,7 @@ export default {
       return false
     },
     addTale() {
-      const list = []
+      var list = []
       const rows = [
         {
           prop: 'unitPrice',
@@ -478,7 +478,16 @@ export default {
       product['priceUnderline'] = this.form.priceUnderline
 
       let skuList = this.skuList
-      skuList = this.ArrayCon(skuList, 'attrOption')
+      skuList = this.ArrayCon(skuList, 'attrOption').map(res => {
+        const attrOption = res.attrOption
+        let a = attrOption.split('|')
+        const i = a.indexOf('undefined')
+        if (i > -1) {
+          a = a.splice(1, 1)
+          res.attrOption = a[0]
+        }
+        return res
+      })
 
       for (let i = 0; i < skuList.length; i++) {
         const element = skuList[i]
@@ -491,20 +500,6 @@ export default {
           return
         }
       }
-      // skuList = skuList.map((item, index, arr) => {
-      //   const i = arr.find(_item => item['attrOption'] === _item['attrOption'])
-      //   if (i !== item) {
-      //     i.a = { ...i.a, ...item }
-      //     return undefined
-      //   } else {
-      //     i.a = i.a
-      //     return i
-      //   }
-      // }).filter(item => item !== undefined).map(res => {
-      //   res = { ...res, ...res.a }
-      //   delete res.a
-      //   return res
-      // })
       // /api/v1/shop/product/productCreate
       this.axios.post('api/v1/shop/product/productCreate', { product, skuList }).catch(err => console.log(err)).then(res => {
         if (res.data.code === 200) {
@@ -513,7 +508,6 @@ export default {
           this.$message.error(res.data.msg)
         }
       })
-      // console.log(list)
     },
     addGuige(val, i) {
       if (val.optionsList === undefined) {
