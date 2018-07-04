@@ -278,7 +278,7 @@ export default {
   },
   mounted() {
     // GET /api/v1/shop/product/getCategoryOption
-    this.axios.get('shop/product/getCategoryOption').then(res => {
+    this.axios.get('api/v1/shop/product/getCategoryOption').then(res => {
       if (res.status === 200) {
         this.options = res.data.data
       } else {
@@ -286,7 +286,7 @@ export default {
       }
     }).catch(err => console.log(err))
     // // GET /api/v1/shop/product/getGroupOption
-    this.axios.get('shop/product/getGroupOption').then(res => {
+    this.axios.get('api/v1/shop/product/getGroupOption').then(res => {
       if (res.status === 200) {
         this.optionsFZ = res.data.data
       } else {
@@ -307,7 +307,7 @@ export default {
       const fd = new FormData()
       fd.append('multipartFile', file)
       // /api/v1/shop/uploadfile
-      this.axios.post('shop/uploadfile', fd).then(res => {
+      this.axios.post('api/v1/shop/uploadfile', fd).then(res => {
         this.imgPrimaryListUrl.push(res.data.data)
       }).catch(err => console.log(err))
     },
@@ -315,7 +315,7 @@ export default {
       const fd = new FormData()
       fd.append('multipartFile', file)
       // /api/v1/shop/uploadfile
-      this.axios.post('shop/uploadfile', fd).then(res => {
+      this.axios.post('api/v1/shop/uploadfile', fd).then(res => {
         this.imgDescListUrl.push(res.data.data)
       }).catch(err => console.log(err))
     },
@@ -371,7 +371,7 @@ export default {
     },
     optionChange() {
       // GET /api/v1/shop/product/getSkuAttrOption
-      this.axios.get(`shop/product/getSkuAttrOption`).then(res => {
+      this.axios.get(`api/v1/shop/product/getSkuAttrOption`).then(res => {
         if (res.status === 200) {
           this.options1 = res.data.data
         } else {
@@ -499,7 +499,7 @@ export default {
       //   return res
       // })
       // /api/v1/shop/product/productCreate
-      this.axios.post('shop/product/productCreate', { product, skuList }).catch(err => console.log(err)).then(res => {
+      this.axios.post('api/v1/shop/product/productCreate', { product, skuList }).catch(err => console.log(err)).then(res => {
         if (res.data.code === 200) {
           this.$router.push('/showcase/goodslist')
         } else {
@@ -524,10 +524,10 @@ export default {
         sortOrder: 0
       }
       // /api/v1/shop/product/productSkuAttrCreate
-      this.axios.post('shop/product/productSkuAttrCreate', data).then(res => {
+      this.axios.post('api/v1/shop/product/productSkuAttrCreate', data).then(res => {
         if (res.data.code === 200) {
           this.centerDialogVisible = false
-          this.axios.get(`shop/product/getSkuAttrOption`).then(res => {
+          this.axios.get(`api/v1/shop/product/getSkuAttrOption`).then(res => {
             if (res.status === 200) {
               this.formGuige = ''
               const a = res.data.data.filter(res => res.attrName === this.form.items[this.formI].optionsList.attrName)[0]

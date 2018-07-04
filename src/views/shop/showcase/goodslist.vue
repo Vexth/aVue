@@ -195,7 +195,7 @@ export default {
   methods: {
     getCategoryOption() {
       // GET /api/v1/shop/product/getCategoryOption
-      this.axios.get('shop/product/getCategoryOption').then(res => {
+      this.axios.get('api/v1/shop/product/getCategoryOption').then(res => {
         if (res.status === 200) {
           this.optionsLX = res.data.data
         } else {
@@ -205,7 +205,7 @@ export default {
     },
     getGroupOption() {
       // // GET /api/v1/shop/product/getGroupOption
-      this.axios.get('shop/product/getGroupOption').then(res => {
+      this.axios.get('api/v1/shop/product/getGroupOption').then(res => {
         if (res.status === 200) {
           this.optionsFZ = res.data.data
         } else {
@@ -216,7 +216,7 @@ export default {
     getList() {
       this.listLoading = false
       const params = this.formInline
-      this.axios.get('shop/product/productList', { params }).then(res => {
+      this.axios.get('api/v1/shop/product/productList', { params }).then(res => {
         const items = res.data.data
         this.list = items
         this.listLoading = false

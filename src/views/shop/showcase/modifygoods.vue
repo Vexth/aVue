@@ -147,7 +147,7 @@ export default {
   methods: {
     getCategoryOption() {
       // GET /api/v1/shop/product/getCategoryOption
-      this.axios.get('shop/product/getCategoryOption').then(res => {
+      this.axios.get('api/v1/shop/product/getCategoryOption').then(res => {
         if (res.status === 200) {
           this.optionsLX = res.data.data
         } else {
@@ -157,7 +157,7 @@ export default {
     },
     getGroupOption() {
       // // GET /api/v1/shop/product/getGroupOption
-      this.axios.get('shop/product/getGroupOption').then(res => {
+      this.axios.get('api/v1/shop/product/getGroupOption').then(res => {
         if (res.status === 200) {
           this.optionsFZ = res.data.data
         } else {
@@ -167,7 +167,7 @@ export default {
     },
     productLoad() {
       // GET /api/v1/shop/product/productLoad
-      this.axios.get(`shop/product/productLoad?productId=${this.$route.query.id}`).then(res => {
+      this.axios.get(`api/v1/shop/product/productLoad?productId=${this.$route.query.id}`).then(res => {
         const data = res.data.data
         const product = data['product']
         this.product = product
@@ -187,7 +187,7 @@ export default {
       const fd = new FormData()
       fd.append('multipartFile', file)
       // /api/v1/shop/uploadfile
-      this.axios.post('shop/uploadfile', fd).then(res => {
+      this.axios.post('api/v1/shop/uploadfile', fd).then(res => {
         this.imgPrimaryListUrl.push({ url: res.data.data })
       }).catch(err => console.log(err))
     },
@@ -195,7 +195,7 @@ export default {
       const fd = new FormData()
       fd.append('multipartFile', file)
       // /api/v1/shop/uploadfile
-      this.axios.post('shop/uploadfile', fd).then(res => {
+      this.axios.post('api/v1/shop/uploadfile', fd).then(res => {
         this.imgDescListUrl.push({ url: res.data.data })
       }).catch(err => console.log(err))
     },
@@ -234,7 +234,7 @@ export default {
       this.modifyData.costPrice = this.costPrice
       this.modifyData.stockBarcode = this.stockBarcode
       // /api/v1/shop/product/productModifySku
-      this.axios.post('shop/product/productModifySku', this.modifyData).then(res => {
+      this.axios.post('api/v1/shop/product/productModifySku', this.modifyData).then(res => {
         if (res.data.code === 200) {
           this.centerDialogVisible = false
           this.$message({
@@ -273,7 +273,7 @@ export default {
         type: 'warning'
       }).then(() => {
         // /api/v1/shop/product/productModifyBasic
-        this.axios.post(`shop/product/productModifyBasic`, data).then(res => {
+        this.axios.post(`api/v1/shop/product/productModifyBasic`, data).then(res => {
           if (res.data.code === 200) {
             this.productLoad()
             this.$message({
