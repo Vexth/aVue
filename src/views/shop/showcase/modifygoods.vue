@@ -266,7 +266,7 @@ export default {
       let data = {}
       data = { ...data, ...this.form }
       data['id'] = this.$route.query.id
-      data['saleStatus'] = this.saleStatus ? 1 : 0
+      data['saleStatus'] = this.saleStatus ? 0 : 1
       data['categoryId'] = this.categoryId
       data['groupId'] = this.groupId
       data['imgPrimaryListUrl'] = this.imgPrimaryListUrl.map(res => res.url)
