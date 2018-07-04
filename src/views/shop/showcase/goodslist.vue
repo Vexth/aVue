@@ -12,7 +12,7 @@
       <el-col :span="4">
         <div class="grid-content">
           <span>商品分组：</span>
-          <el-select v-model="formInline.groupId" placeholder="商品分组">
+          <el-select v-model="formInline.groupId" placeholder="商品分组" clearable>
             <el-option
               v-for="item in optionsFZ"
               :key="item.value"
@@ -25,7 +25,7 @@
       <el-col :span="4">
         <div class="grid-content">
           <span>商品类型：</span>
-          <el-select v-model="formInline.categoryId" placeholder="商品类型">
+          <el-select v-model="formInline.categoryId" placeholder="商品类型" clearable>
             <el-option
               v-for="item in optionsLX"
               :key="item.value"
@@ -38,7 +38,7 @@
       <el-col :span="4">
         <div class="grid-content">
           <span>指定车型：</span>
-          <el-select v-model="formInline.carInfoId" placeholder="指定车型">
+          <el-select v-model="formInline.carInfoId" placeholder="指定车型" clearable>
             <el-option label="区域一" value="0"></el-option>
             <el-option label="区域二" value="1"></el-option>
           </el-select>
@@ -52,8 +52,8 @@
           <span>销售情况：</span>
           <el-select v-model="formInline.saleStatus" placeholder="销售情况">
             <el-option label="出售中" value="0"></el-option>
-            <el-option label="售完" value="1"></el-option>
-            <el-option label="仓库中" value="2"></el-option>
+            <el-option label="售完" value="2"></el-option>
+            <el-option label="仓库中" value="1"></el-option>
           </el-select>
         </div>
       </el-col>

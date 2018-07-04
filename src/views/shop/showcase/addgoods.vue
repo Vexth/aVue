@@ -8,13 +8,13 @@
         <el-radio v-model="radio7" label="3" border>同城送或自提</el-radio>
 			</el-form-item>
 			<div class="title">基本信息</div>
-			<el-form-item label="商品名称：">
+			<el-form-item label="商品名称：" required>
 				<el-input v-model="form.title"></el-input>
 			</el-form-item>
 			<el-form-item label="分享描述：">
 				<el-input v-model="form.sharetitle"></el-input>
 			</el-form-item>
-      <el-form-item label="分享图片上传：">
+      <el-form-item label="分享图片上传：" required>
 				<el-upload
           :before-upload="beforeUploadFT"
           :action="action"
@@ -27,7 +27,7 @@
           <img width="100%" :src="dialogImageUrl" alt="">
         </el-dialog>
 			</el-form-item>
-      <el-form-item label="商品类目：">
+      <el-form-item label="商品类目：" required>
         <el-select v-model="categoryId" placeholder="请选择" @change="optionChange">
           <el-option
             v-for="item in options"
@@ -47,7 +47,7 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="主图上传：">
+      <el-form-item label="主图上传：" required>
 				<el-upload
           :before-upload="beforeUploadZT"
           :action="action"
@@ -105,7 +105,7 @@
           </div>
         </template>
 			</el-form-item>
-      <el-form-item v-if="isXS" label="规格明细：">
+      <el-form-item v-if="isXS" label="规格明细：" required>
         <template>
           <div class="guigeul">
             <ul>
@@ -118,11 +118,11 @@
                   <li v-for="(item, i) in items.list" :key="i" style="display: flex;">
                     <div v-if="item.attrName === '' ? false : true">{{item.attrName}}</div>
                     <div>
-                      <input type="text" v-model="dataList[index]['list'][i].unitPrice" @blur="OnInput({unitPrice:`${items.list[i].unitPrice}`, attrOption: `${dataList[index].id}|${items.list[i].id}`})" />
+                      <input type="text" v-model="dataList[index]['list'][i].unitPrice" onKeyPress="if((event.keyCode<48 || event.keyCode>57) && event.keyCode!=46 || /\.\d\d$/.test(value))event.returnValue=false" @blur="OnInput({unitPrice:`${items.list[i].unitPrice}`, attrOption: `${dataList[index].id}|${items.list[i].id}`})" />
                       <!-- <span>{{dataList[index]['list'][i].unitPrice}}</span> -->
                     </div>
                     <div>
-                      <input type="text" v-model="dataList[index]['list'][i].stockAmount" @blur="OnInput({stockAmount:`${items.list[i].stockAmount}`, attrOption: `${dataList[index].id}|${items.list[i].id}`})" />
+                      <input v-model="dataList[index]['list'][i].stockAmount" type="text" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" @blur="OnInput({stockAmount:`${items.list[i].stockAmount}`, attrOption: `${dataList[index].id}|${items.list[i].id}`})" />
                       <!-- <span>{{dataList[index]['list'][i].stockAmount}}</span> -->
                     </div>
                     <div>
@@ -157,8 +157,8 @@
 				<el-input v-model="form['成本价']" :disabled="true"></el-input>
 			</el-form-item> -->
       <div class="title">其他信息</div>
-      <el-form-item label="是否上架：">
-				<el-checkbox v-model="isOnSale">是否立即上架</el-checkbox>
+      <el-form-item label="是否上架：" required>
+				<el-checkbox v-model="saleStatus">是否立即上架</el-checkbox>
 			</el-form-item>
       <!-- <el-form-item label="留言：">
 				<el-input v-model="form['留言']"></el-input>
@@ -256,7 +256,7 @@ export default {
       },
       imgPrimaryListUrl: [],
       imgDescListUrl: [],
-      isOnSale: false,
+      saleStatus: false,
       isSp: false,
       options: [],
       value: '',
@@ -419,7 +419,9 @@ export default {
       this.form.items[i]['guige'].children = b
     },
     OnInput(e) {
+      console.log(e)
       this.skuList.push(e)
+      console.log(this.skuList)
     },
     ArrayCon(arr, fn) {
       return arr.map((item, index, arr) => {
@@ -442,6 +444,10 @@ export default {
         this.$message.error('请填写商品名称！')
         return
       }
+      if (this.categoryId === null) {
+        this.$message.error('请选择商品类目！')
+        return
+      }
       if (this.imgPrimaryListUrl.length === 0) {
         this.$message.error('请上传主图！')
         return
@@ -450,10 +456,14 @@ export default {
         this.$message.error('请上传分享图片！')
         return
       }
+      if (this.skuList.length === 0) {
+        this.$message.error('请填写规格明细！')
+        return
+      }
       const product = {}
       product['imgPrimaryListUrl'] = this.imgPrimaryListUrl
       product['imgDescListUrl'] = this.imgDescListUrl
-      product['isOnSale'] = this.isOnSale
+      product['saleStatus'] = this.saleStatus
       product['categoryId'] = this.categoryId
       product['groupId'] = this.groupId
       product['title'] = this.form.title
@@ -462,6 +472,18 @@ export default {
 
       let skuList = this.skuList
       skuList = this.ArrayCon(skuList, 'attrOption')
+
+      for (let i = 0; i < skuList.length; i++) {
+        const element = skuList[i]
+        if (element['unitPrice'] === undefined || element['unitPrice'] === '') {
+          this.$message.error('请填写价格！')
+          return
+        }
+        if (element['stockAmount'] === undefined || element['stockAmount'] === '') {
+          this.$message.error('请填写库存！')
+          return
+        }
+      }
       // skuList = skuList.map((item, index, arr) => {
       //   const i = arr.find(_item => item['attrOption'] === _item['attrOption'])
       //   if (i !== item) {

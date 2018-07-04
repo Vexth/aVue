@@ -2,13 +2,13 @@
   <div class="app-container">
     <el-form ref="form" :model="form" label-width="150px">
       <div class="title">基本信息</div>
-			<el-form-item label="商品名称：">
+			<el-form-item label="商品名称：" required>
 				<el-input class="name" v-model="form.title"></el-input>
 			</el-form-item>
 			<el-form-item label="分享描述：">
 				<el-input class="name" v-model="form.sharetitle"></el-input>
 			</el-form-item>
-      <el-form-item label="分享图片上传：">
+      <el-form-item label="分享图片上传：" required>
 				<el-upload
           :before-upload="beforeUploadFT"
           :action="action"
@@ -42,7 +42,7 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="主图上传：">
+      <el-form-item label="主图上传：" required>
 				<el-upload
           :before-upload="beforeUploadZT"
           :action="action"
@@ -93,13 +93,13 @@
       width="30%"
       center>
       <div style="text-align: center;">
-        <div class="mb10"><span>价格：</span><el-input placeholder="请输入内容" v-model="modifyData['unitPrice']" clearable></el-input></div>
-        <div class="mb10"><span>库存：</span><el-input placeholder="请输入内容" v-model="modifyData['stockAmount']" clearable></el-input></div>
-        <div class="mb10"><span>成本价：</span><el-input placeholder="请输入内容" v-model="modifyData['costPrice']" clearable></el-input></div>
-        <div class="mb10"><span>规格编码：</span><el-input placeholder="请输入内容" v-model="modifyData['stockBarcode']" clearable></el-input></div>
+        <div class="mb10"><span>价格：</span><el-input placeholder="请输入内容" v-model="unitPrice" clearable onKeyPress="if((event.keyCode<48 || event.keyCode>57) && event.keyCode!=46 || /\.\d\d$/.test(value))event.returnValue=false"></el-input></div>
+        <div class="mb10"><span>库存：</span><el-input placeholder="请输入内容" v-model="stockAmount" clearable onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"></el-input></div>
+        <div class="mb10"><span>成本价：</span><el-input placeholder="请输入内容" v-model="costPrice" clearable onKeyPress="if((event.keyCode<48 || event.keyCode>57) && event.keyCode!=46 || /\.\d\d$/.test(value))event.returnValue=false"></el-input></div>
+        <div class="mb10"><span>规格编码：</span><el-input placeholder="请输入内容" v-model="stockBarcode" clearable></el-input></div>
       </div>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="centerDialogVisible = false, modifyData = {}">取 消</el-button>
+        <el-button @click="centerDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="subModify">确 定</el-button>
       </span>
     </el-dialog>
@@ -130,8 +130,13 @@ export default {
       groupId: null,
       centerDialogVisible: false,
       modifyData: {},
+      modifyStr: '',
       rows: [],
-      product: []
+      product: [],
+      unitPrice: null,
+      stockAmount: null,
+      costPrice: null,
+      stockBarcode: ''
     }
   },
   created() {
@@ -208,15 +213,30 @@ export default {
     },
     modify(value) {
       this.modifyData = value
+      this.unitPrice = value.unitPrice
+      this.stockAmount = value.stockAmount
+      this.costPrice = value.costPrice
+      this.stockBarcode = value.stockBarcode
       this.centerDialogVisible = true
     },
     // 修改单品信息
     subModify() {
+      if (this.unitPrice === '' || this.unitPrice === null) {
+        this.$message.error('请填写价格！')
+        return
+      }
+      if (this.stockAmount === '' || this.stockAmount === null) {
+        this.$message.error('请填写库存！')
+        return
+      }
+      this.modifyData.unitPrice = this.unitPrice
+      this.modifyData.stockAmount = this.stockAmount
+      this.modifyData.costPrice = this.costPrice
+      this.modifyData.stockBarcode = this.stockBarcode
       // /api/v1/shop/product/productModifySku
       this.axios.post('shop/product/productModifySku', this.modifyData).then(res => {
         if (res.data.code === 200) {
           this.centerDialogVisible = false
-          this.productLoad()
           this.$message({
             message: '修改成功',
             type: 'success'
@@ -229,6 +249,14 @@ export default {
     confirmEdit() {
       if (this.form.title === '') {
         this.$message.error('请填写商品名称！')
+        return
+      }
+      if (this.imgPrimaryListUrl.length === 0) {
+        this.$message.error('请上传主图！')
+        return
+      }
+      if (this.imgDescListUrl.length === 0) {
+        this.$message.error('请上传分享图片！')
         return
       }
       let data = {}
