@@ -216,7 +216,7 @@ export default {
     getList() {
       this.listLoading = false
       const params = this.formInline
-      this.axios.get('api/v1/shop/product/productList', { params }).then(res => {
+      this.axios.post('api/v1/shop/product/productList', params).then(res => {
         const items = res.data.data
         this.list = items
         this.listLoading = false
