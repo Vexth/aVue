@@ -60,7 +60,7 @@
 				<el-input v-model="form.priceUnderline"></el-input>
 			</el-form-item>
       <el-form-item label="是否上架：">
-				<el-checkbox v-model="isOnSale">是否立即上架</el-checkbox>
+				<el-checkbox v-model="saleStatus">是否立即上架</el-checkbox>
 			</el-form-item>
       <el-form-item>
 				<el-button @click="confirmEdit" type="primary">修改基本信息</el-button>
@@ -114,7 +114,7 @@ export default {
       listLoading: false,
       dataList: [],
       list: null,
-      isOnSale: false,
+      saleStatus: false,
       dialogVisible: false,
       dialogImageUrl: '',
       form: {
@@ -173,7 +173,9 @@ export default {
         this.product = product
         this.form.title = product['title']
         this.form.sharetitle = product['sharetitle']
-        this.isOnSale = product['isOnSale']
+        if (product['saleStatus'] !== 1) {
+          this.saleStatus = true
+        }
         this.form.priceUnderline = product['priceUnderline']
         this.categoryId = product['categoryId']
         this.groupId = product['groupId']
@@ -262,7 +264,7 @@ export default {
       let data = {}
       data = { ...data, ...this.form }
       data['id'] = this.$route.query.id
-      data['isOnSale'] = this.isOnSale
+      data['saleStatus'] = this.saleStatus ? 1 : 0
       data['categoryId'] = this.categoryId
       data['groupId'] = this.groupId
       data['imgPrimaryListUrl'] = this.imgPrimaryListUrl.map(res => res.url)

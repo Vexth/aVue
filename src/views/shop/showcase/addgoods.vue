@@ -18,9 +18,10 @@
 				<el-upload
           :before-upload="beforeUploadFT"
           :action="action"
+          :file-list="imgDescListUrl"
           list-type="picture-card"
           :on-preview="handlePictureCardPreview"
-          :on-remove="handleRemove">
+          :on-remove="handleRemoveFT">
           <i class="el-icon-plus"></i>
         </el-upload>
         <el-dialog :visible.sync="dialogVisible">
@@ -52,8 +53,9 @@
           :before-upload="beforeUploadZT"
           :action="action"
           list-type="picture-card"
+          :file-list="imgPrimaryListUrl"
           :on-preview="handlePictureCardPreview"
-          :on-remove="handleRemove">
+          :on-remove="handleRemoveZT">
           <i class="el-icon-plus"></i>
         </el-upload>
         <el-dialog :visible.sync="dialogVisible">
@@ -219,7 +221,7 @@ export default {
       formGuigeId: null,
       formI: null,
       radio7: '1',
-      action: 'https://jsonplaceholder.typicode.com/posts/',
+      action: 'api/v1/shop/uploadfile',
       dialogImageUrl: '',
       dialogVisible: false,
       dataList: [],
@@ -296,8 +298,13 @@ export default {
     // this.axios.get('api/ting?method=baidu.ting.billboard.billList&type=1&size=10&offset=0').then(res => console.log(res))
   },
   methods: {
-    handleRemove(file, fileList) {
+    handleRemoveZT(file, fileList) {
       console.log(file, fileList)
+      this.imgPrimaryListUrl = fileList
+    },
+    handleRemoveFT(file, fileList) {
+      console.log(file, fileList)
+      this.imgDescListUrl = fileList
     },
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file.url
@@ -308,16 +315,18 @@ export default {
       fd.append('multipartFile', file)
       // /api/v1/shop/uploadfile
       this.axios.post('api/v1/shop/uploadfile', fd).then(res => {
-        this.imgPrimaryListUrl.push(res.data.data)
+        this.imgPrimaryListUrl.push({ url: res.data.data })
       }).catch(err => console.log(err))
+      return false
     },
     beforeUploadFT(file) {
       const fd = new FormData()
       fd.append('multipartFile', file)
       // /api/v1/shop/uploadfile
       this.axios.post('api/v1/shop/uploadfile', fd).then(res => {
-        this.imgDescListUrl.push(res.data.data)
+        this.imgDescListUrl.push({ url: res.data.data })
       }).catch(err => console.log(err))
+      return false
     },
     addTale() {
       const list = []
@@ -419,9 +428,7 @@ export default {
       this.form.items[i]['guige'].children = b
     },
     OnInput(e) {
-      console.log(e)
       this.skuList.push(e)
-      console.log(this.skuList)
     },
     ArrayCon(arr, fn) {
       return arr.map((item, index, arr) => {
@@ -463,7 +470,7 @@ export default {
       const product = {}
       product['imgPrimaryListUrl'] = this.imgPrimaryListUrl
       product['imgDescListUrl'] = this.imgDescListUrl
-      product['saleStatus'] = this.saleStatus
+      product['saleStatus'] = this.saleStatus ? 0 : 1
       product['categoryId'] = this.categoryId
       product['groupId'] = this.groupId
       product['title'] = this.form.title
@@ -565,8 +572,6 @@ export default {
   padding: 0;
   list-style-type: none;
 }
-/* @import url('./base.css');
-@import url('./good.css'); */
 .title {
   background-color: #f8f8f8;
   font-size: 14px;
