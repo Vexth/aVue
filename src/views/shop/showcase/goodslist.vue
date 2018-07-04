@@ -2,7 +2,7 @@
   <div class="app-container">
     
     <el-button style="margin-bottom: 20px;" type="primary" @click="add">新增商品</el-button>
-    <el-row style="">
+    <el-row>
       <el-col :span="4">
         <div class="grid-content">
           <span>商品名称：</span>
@@ -264,15 +264,20 @@ export default {
   top: 10px;
 }
 
-.el-row{
-  margin-bottom: 20px;
+.el-col-4 {
+  width: 281px;
 }
+.el-col-7{
+  width: 491px;
+}
+
 .el-input{
   width: 200px;
 }
 
 .grid-content {
   min-height: 36px;
+  margin-bottom: 20px;
 }
 .grid-content span {
   width: 70px;
