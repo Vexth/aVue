@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
-      <el-tab-pane v-for="item in navlist" :key="item.name" :label="item.label" :name="item.name">{{item.name}}</el-tab-pane>
+      <el-tab-pane v-for="item in navlist" :key="item.name" :label="item.label" :name="item.name"></el-tab-pane>
     </el-tabs>
     <el-table :data="list" v-loading.body="listLoading" border fit highlight-current-row style="width: 100%" @selection-change="handleSelectionChange" ref="multipleTable">
 
@@ -9,45 +9,49 @@
 
       <el-table-column align="center" label="姓名" width="80">
         <template slot-scope="scope">
-          <span>{{scope.row.id}}</span>
+          <span>{{ scope.row.author }}</span>
+          <!-- <span>{{scope.row.id}}</span> -->
         </template>
       </el-table-column>
 
-      <el-table-column width="180" align="center" label="手机号码">
+      <el-table-column align="center" label="手机号码">
         <template slot-scope="scope">
-          <span>{{scope.row.timestamp | parseTime('{y}-{m}-{d} {h}:{i}')}}</span>
+          <span>{{ scope.row.title }}</span>
+          <!-- <span>{{scope.row.timestamp | parseTime('{y}-{m}-{d} {h}:{i}')}}</span> -->
         </template>
       </el-table-column>
 
-      <el-table-column width="140" align="center" label="微信号/微信昵称">
+      <el-table-column align="center" label="微信号/微信昵称">
         <template slot-scope="scope">
           <span>{{scope.row.author}}</span>
         </template>
       </el-table-column>
 
-      <el-table-column width="100" label="购次">
+      <el-table-column label="购次">
         <template slot-scope="scope">
-          <svg-icon v-for="n in +scope.row.importance" icon-class="star" class="meta-item__icon" :key="n"></svg-icon>
+          <span>{{ scope.row.artist_id }}</span>
+          <!-- <svg-icon v-for="n in +scope.row.importance" icon-class="star" class="meta-item__icon" :key="n"></svg-icon> -->
         </template>
       </el-table-column>
 
-      <el-table-column class-name="status-col" label="积分" width="110">
+      <el-table-column class-name="status-col" label="积分">
         <template slot-scope="scope">
-          <el-tag :type="scope.row.status | statusFilter">{{scope.row.status}}</el-tag>
+          <span>{{ scope.row.artist_id }}</span>
+          <!-- <el-tag :type="scope.row.status | statusFilter">{{scope.row.status}}</el-tag> -->
         </template>
       </el-table-column>
 
-      <el-table-column min-width="300px" label="来源方式">
+      <el-table-column label="来源方式">
         <template slot-scope="scope">
           <template v-if="scope.row.edit">
-            <el-input class="edit-input" size="small" v-model="scope.row.title"></el-input>
+            <el-input class="edit-input" size="small" v-model="scope.row.country"></el-input>
             <el-button class='cancel-btn' size="small" icon="el-icon-refresh" type="warning" @click="cancelEdit(scope.row)">cancel</el-button>
           </template>
-          <span v-else>{{ scope.row.title }}</span>
+          <span v-else>{{ scope.row.country }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column min-width="300px" label="客户身份">
+      <el-table-column label="客户身份">
         <template slot-scope="scope">
           <template v-if="scope.row.edit">
             <el-input class="edit-input" size="small" v-model="scope.row.title"></el-input>
@@ -68,7 +72,6 @@
   </div>
 </template>
 <script>
-import { fetchList } from '@/api/article'
 export default {
   data() {
     return {
@@ -82,7 +85,7 @@ export default {
         { name: '4', label: '已关闭' },
         { name: '5', label: '退款中' }
       ],
-      list: null,
+      list: [],
       listLoading: true,
       listQuery: {
         page: 1,
@@ -101,29 +104,21 @@ export default {
     }
   },
   created() {
-    this.getList()
-  },
-  mounted() {
-    this.axios.get('api/ting?method=baidu.ting.billboard.billList&type=1&size=10&offset=0').then(res => console.log(res)).catch(err => console.log(err))
+    this.getList(1)
   },
   methods: {
     handleClick(tab, event) {
-      this.getList()
+      this.getList(tab.name)
       console.log(tab.name, event)
     },
-    getList() {
+    getList(id) {
       this.listLoading = true
-      fetchList(this.listQuery).then(response => {
-        const items = response.data.items
-        this.list = items.map(v => {
-          this.$set(v, 'edit', false) // https://vuejs.org/v2/guide/reactivity.html
-
-          v.originalTitle = v.title //  will be used when user click the cancel botton
-
-          return v
-        })
+      this.axios.get(`restserver/ting?method=baidu.ting.billboard.billList&type=${id}&size=10&offset=0`).then(res => {
+        if (res.status === 200) {
+          this.list = res.data.song_list
+        }
         this.listLoading = false
-      })
+      }).catch(err => console.log(err))
     },
     cancelEdit(row) {
       row.title = row.originalTitle

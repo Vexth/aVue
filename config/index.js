@@ -18,13 +18,13 @@ module.exports = {
           '^/shop1': '/'
         }
       },
-      // '/api': {  
-      //   target: 'http://tingapi.ting.baidu.com/v1/restserver/',
-      //   changeOrigin: true,
-      //   pathRewrite: {
-      //     '^/api': '/'
-      //   }
-      // },
+      '/restserver': {  
+        target: 'http://tingapi.ting.baidu.com/v1/restserver/',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/restserver': '/'
+        }
+      },
       '/api': {  
         target: 'https://shop.jxxykj.cn/api/',
         changeOrigin: true,

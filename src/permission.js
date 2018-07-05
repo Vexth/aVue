@@ -16,7 +16,14 @@ function hasPermission(roles, permissionRoles) {
 
 const whiteList = ['/login', '/authredirect']// no redirect whitelist
 
+const modifygoods = 'modifygoods'
+
 router.beforeEach((to, from, next) => {
+  if (to.name === modifygoods && to.query['id'] === '') {
+    next('/login') // 否则全部重定向到登录页
+    NProgress.done() // if current page is login will not trigger afterEach hook, so manually handle it
+    return
+  }
   NProgress.start() // start progress bar
   if (getToken()) { // determine if there has token
     /* has token*/
