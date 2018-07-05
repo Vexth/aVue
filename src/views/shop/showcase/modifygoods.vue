@@ -126,6 +126,7 @@ export default {
       optionsFZ: [],
       imgPrimaryListUrl: [],
       imgDescListUrl: [],
+      imgSpecListUrl: [],
       categoryId: null,
       groupId: null,
       centerDialogVisible: false,
@@ -203,6 +204,15 @@ export default {
       }).catch(err => console.log(err))
       return false
     },
+    beforeUploadGG(file) {
+      const fd = new FormData()
+      fd.append('multipartFile', file)
+      // /api/v1/shop/uploadfile
+      this.axios.post('api/v1/shop/uploadfile', fd).then(res => {
+        this.imgSpecListUrl.push({ url: res.data.data })
+      }).catch(err => console.log(err))
+      return false
+    },
     handleRemoveZT(file, fileList) {
       this.imgPrimaryListUrl = fileList
       console.log(file, fileList)
@@ -210,6 +220,10 @@ export default {
     handleRemoveFT(file, fileList) {
       this.imgDescListUrl = fileList
       console.log(file, fileList)
+    },
+    handleRemoveGG(file, fileList) {
+      console.log(file, fileList)
+      this.imgSpecListUrl = fileList
     },
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file.url
@@ -263,6 +277,10 @@ export default {
         this.$message.error('请上传分享图片！')
         return
       }
+      if (this.imgSpecListUrl.length === 0) {
+        this.$message.error('请上传规格参数图片！')
+        return
+      }
       let data = {}
       data = { ...data, ...this.form }
       data['id'] = this.$route.query.id
@@ -271,6 +289,7 @@ export default {
       data['groupId'] = this.groupId
       data['imgPrimaryListUrl'] = this.imgPrimaryListUrl.map(res => res.url)
       data['imgDescListUrl'] = this.imgDescListUrl.map(res => res.url)
+      data['imgSpecListUrl'] = this.imgSpecListUrl.map(res => res.url)
       this.$confirm('修改基本信息, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',

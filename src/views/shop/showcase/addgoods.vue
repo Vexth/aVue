@@ -14,7 +14,7 @@
 			<el-form-item label="分享描述：">
 				<el-input v-model="form.sharetitle"></el-input>
 			</el-form-item>
-      <el-form-item label="分享图片上传：" required>
+      <el-form-item label="描述图片上传：" required>
 				<el-upload
           :before-upload="beforeUploadFT"
           :action="action"
@@ -56,6 +56,20 @@
           :file-list="imgPrimaryListUrl"
           :on-preview="handlePictureCardPreview"
           :on-remove="handleRemoveZT">
+          <i class="el-icon-plus"></i>
+        </el-upload>
+        <el-dialog :visible.sync="dialogVisible">
+          <img width="100%" :src="dialogImageUrl" alt="">
+        </el-dialog>
+			</el-form-item>
+      <el-form-item label="规格参数图片上传：" required>
+				<el-upload
+          :before-upload="beforeUploadGG"
+          :action="action"
+          list-type="picture-card"
+          :file-list="imgSpecListUrl"
+          :on-preview="handlePictureCardPreview"
+          :on-remove="handleRemoveGG">
           <i class="el-icon-plus"></i>
         </el-upload>
         <el-dialog :visible.sync="dialogVisible">
@@ -258,6 +272,7 @@ export default {
       },
       imgPrimaryListUrl: [],
       imgDescListUrl: [],
+      imgSpecListUrl: [],
       saleStatus: false,
       isSp: false,
       options: [],
@@ -306,6 +321,10 @@ export default {
       console.log(file, fileList)
       this.imgDescListUrl = fileList
     },
+    handleRemoveGG(file, fileList) {
+      console.log(file, fileList)
+      this.imgSpecListUrl = fileList
+    },
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file.url
       this.dialogVisible = true
@@ -325,6 +344,15 @@ export default {
       // /api/v1/shop/uploadfile
       this.axios.post('api/v1/shop/uploadfile', fd).then(res => {
         this.imgDescListUrl.push({ url: res.data.data })
+      }).catch(err => console.log(err))
+      return false
+    },
+    beforeUploadGG(file) {
+      const fd = new FormData()
+      fd.append('multipartFile', file)
+      // /api/v1/shop/uploadfile
+      this.axios.post('api/v1/shop/uploadfile', fd).then(res => {
+        this.imgSpecListUrl.push({ url: res.data.data })
       }).catch(err => console.log(err))
       return false
     },
@@ -460,7 +488,11 @@ export default {
         return
       }
       if (this.imgDescListUrl.length === 0) {
-        this.$message.error('请上传分享图片！')
+        this.$message.error('请上传描述图片！')
+        return
+      }
+      if (this.imgSpecListUrl.length === 0) {
+        this.$message.error('请上传规格参数图片！')
         return
       }
       if (this.skuList.length === 0) {
@@ -470,6 +502,7 @@ export default {
       const product = {}
       product['imgPrimaryListUrl'] = this.imgPrimaryListUrl.map(res => res.url)
       product['imgDescListUrl'] = this.imgDescListUrl.map(res => res.url)
+      product['imgSpecListUrl'] = this.imgSpecListUrl.map(res => res.url)
       product['saleStatus'] = this.saleStatus ? 0 : 1
       product['categoryId'] = this.categoryId
       product['groupId'] = this.groupId
