@@ -56,6 +56,20 @@
           <img width="100%" :src="dialogImageUrl" alt="">
         </el-dialog>
 			</el-form-item>
+      <el-form-item label="规格参数图片上传：" required>
+				<el-upload
+          :before-upload="beforeUploadGG"
+          :action="action"
+          list-type="picture-card"
+          :file-list="imgSpecListUrl"
+          :on-preview="handlePictureCardPreview"
+          :on-remove="handleRemoveGG">
+          <i class="el-icon-plus"></i>
+        </el-upload>
+        <el-dialog :visible.sync="dialogVisible">
+          <img width="100%" :src="dialogImageUrl" alt="">
+        </el-dialog>
+			</el-form-item>
       <el-form-item label="划线价：">
 				<el-input v-model="form.priceUnderline"></el-input>
 			</el-form-item>
