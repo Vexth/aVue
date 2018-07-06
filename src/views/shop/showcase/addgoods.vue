@@ -263,7 +263,7 @@ export default {
       formGuige: '',
       formGuigeId: null,
       formI: null,
-      radio7: '1',
+      radio7: '2',
       action: 'api/v1/shop/uploadfile',
       dialogImageUrl: '',
       dialogVisible: false,
