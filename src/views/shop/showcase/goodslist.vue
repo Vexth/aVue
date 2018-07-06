@@ -93,7 +93,7 @@
 
       <el-table-column align="center" label="商品">
         <template slot-scope="scope">
-          <span style="text-align: left;display: inline-block;">{{scope.row.product.title}}</span>
+          <span :title="scope.row.product.title" style="text-align: left;display: inline-block;text-overflow: ellipsis;white-space: nowrap;">{{scope.row.product.title}}</span>
         </template>
       </el-table-column>
 

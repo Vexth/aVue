@@ -8,19 +8,16 @@
 			<el-form-item label="分享描述：">
 				<el-input class="name" v-model="form.sharetitle"></el-input>
 			</el-form-item>
-      <el-form-item label="分享图片上传：" required>
-				<el-upload
-          :before-upload="beforeUploadFT"
-          :action="action"
-          list-type="picture-card"
-          :file-list="imgDescListUrl"
-          :on-preview="handlePictureCardPreview"
-          :on-remove="handleRemoveFT">
+      <el-form-item label="描述图片上传：" required>
+				<ul>
+          <li v-for="(img, i) in imgDescList" :key="i" class="uploadList">
+            <img style="width: 100%;" :src="img.url">
+            <div class="cha" @click="cha('imgDescList', imgDescList, i)">×</div>
+          </li>
+        </ul>
+        <div class="uploadList" @click="uploadList('imgDescList')">
           <i class="el-icon-plus"></i>
-        </el-upload>
-        <el-dialog :visible.sync="dialogVisible">
-          <img width="100%" :src="dialogImageUrl" alt="">
-        </el-dialog>
+        </div>
 			</el-form-item>
       <el-form-item label="商品类目：">
         <el-select v-model="categoryId" disabled placeholder="请选择">
@@ -43,32 +40,26 @@
         </el-select>
       </el-form-item>
       <el-form-item label="主图上传：" required>
-				<el-upload
-          :before-upload="beforeUploadZT"
-          :action="action"
-          list-type="picture-card"
-          :file-list="imgPrimaryListUrl"
-          :on-preview="handlePictureCardPreview"
-          :on-remove="handleRemoveZT">
+				<ul>
+          <li v-for="(img, i) in imgPrimaryList" :key="i" class="uploadList">
+            <img style="width: 100%;" :src="img.url">
+            <div class="cha" @click="cha('imgPrimaryList', imgPrimaryList, i)">×</div>
+          </li>
+        </ul>
+        <div class="uploadList" @click="uploadList('imgPrimaryList')">
           <i class="el-icon-plus"></i>
-        </el-upload>
-        <el-dialog :visible.sync="dialogVisible">
-          <img width="100%" :src="dialogImageUrl" alt="">
-        </el-dialog>
+        </div>
 			</el-form-item>
       <el-form-item label="规格参数图片上传：" required>
-				<el-upload
-          :before-upload="beforeUploadGG"
-          :action="action"
-          list-type="picture-card"
-          :file-list="imgSpecListUrl"
-          :on-preview="handlePictureCardPreview"
-          :on-remove="handleRemoveGG">
+				<ul>
+          <li v-for="(img, i) in imgSpecList" :key="i" class="uploadList">
+            <img style="width: 100%;" :src="img.url">
+            <div class="cha" @click="cha('imgSpecList', imgSpecList, i)">×</div>
+          </li>
+        </ul>
+        <div class="uploadList" @click="uploadList('imgSpecList')">
           <i class="el-icon-plus"></i>
-        </el-upload>
-        <el-dialog :visible.sync="dialogVisible">
-          <img width="100%" :src="dialogImageUrl" alt="">
-        </el-dialog>
+        </div>
 			</el-form-item>
       <el-form-item label="划线价：">
 				<el-input v-model="form.priceUnderline"></el-input>
@@ -117,6 +108,37 @@
         <el-button type="primary" @click="subModify">确 定</el-button>
       </span>
     </el-dialog>
+
+    <el-dialog
+      title="我的图片"
+      :visible.sync="tpDialogVisible"
+      width="50%"
+      center>
+      <div class="left">
+        <el-upload
+          :before-upload="beforeUpload"
+          :on-preview="handlePictureCardPreview"
+          :on-remove="handleRemove"
+          class="upload-demo"
+          :action="action"
+          :on-change="handleChange">
+          <el-button size="small" type="primary">点击上传</el-button>
+          <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过2M</div>
+        </el-upload>
+      </div>
+      <div class="rigth">
+        <ul>
+          <li v-for="(img, i) in imgList" :key="i" class="uploadList" @click="liClick(img)">
+            <img style="width: 100%;" :src="img.url">
+            <div :style="{ display: selected.indexOf(img.id) > -1 ? 'inline-block' : 'none' }" class="selected"><i class="index">{{i+1}}</i></div>
+          </li>
+        </ul>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="tpDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="tpSub">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -130,6 +152,7 @@ export default {
       list: null,
       saleStatus: false,
       dialogVisible: false,
+      tpDialogVisible: false,
       dialogImageUrl: '',
       form: {
         title: '',
@@ -138,9 +161,15 @@ export default {
       },
       optionsLX: [],
       optionsFZ: [],
-      imgPrimaryListUrl: [],
-      imgDescListUrl: [],
-      imgSpecListUrl: [],
+      imgPrimaryList: [],
+      imgDescList: [],
+      imgSpecList: [],
+      imgList: [],
+      imageId: {},
+      imageIdstr: '',
+      selected: [],
+      selectedImg: '',
+      selectedImgList: [],
       categoryId: null,
       groupId: null,
       centerDialogVisible: false,
@@ -158,6 +187,7 @@ export default {
     this.productLoad()
     this.getCategoryOption()
     this.getGroupOption()
+    this.ImgList()
   },
   methods: {
     getCategoryOption() {
@@ -194,50 +224,83 @@ export default {
         this.form.priceUnderline = product['priceUnderline']
         this.categoryId = product['categoryId']
         this.groupId = product['groupId']
-        this.imgPrimaryListUrl = product['imgPrimaryListUrl'].map(res => ({ url: res }))
-        this.imgDescListUrl = product['imgDescListUrl'].map(res => ({ url: res }))
+        this.imgPrimaryList = product['imgPrimaryList']
+        this.imgDescList = product['imgDescList']
+        this.imgSpecList = product['imgSpecList']
         this.rows = data.thead
         this.list = data.tbody
       }).catch(err => console.log(err))
     },
-    beforeUploadZT(file) {
+    ImgList() {
+      // api/v1/shop/image/list
+      this.axios.get('api/v1/shop/image/list').then(res => {
+        if (res.data.code === 200) {
+          this.imgList = res.data.data
+        } else {
+          this.$message.error(res.data.msg)
+        }
+      }).catch(err => console.log(err))
+    },
+    liClick(img) {
+      if (this.selected.indexOf(img.id) > -1) {
+        this.selected = this.selected.filter(k => k !== img.id)
+        this.selectedImgList = this.selectedImgList.filter(k => k.id !== img.id)
+      } else {
+        this.selectedImgList.push(img)
+        this.selected.push(img.id)
+      }
+    },
+    tpSub() {
+      if (this.imageIdstr === 'imageId') {
+        if (this.selectedImgList.length > 1) {
+          this.$message.error('请选择一张图片！')
+          return
+        }
+        this.tpDialogVisible = false
+        this.imageId.imageId = this.selectedImgList[0]['id']
+        this.skuList.push(this.imageId)
+        return
+      }
+      this.tpDialogVisible = false
+      this[this.selectedImg] = [...this[this.selectedImg], ...this.selectedImgList]
+    },
+    cha(title, val, id) {
+      val.splice(id, 1)
+      this[title] = val
+    },
+    beforeUpload(file) {
       const fd = new FormData()
       fd.append('multipartFile', file)
       // /api/v1/shop/uploadfile
-      this.axios.post('api/v1/shop/uploadfile', fd).then(res => {
-        this.imgPrimaryListUrl.push({ url: res.data.data })
+      // /api/v1/shop/image/upload
+      this.axios.post('api/v1/shop/image/upload', fd).then(res => {
+        if (res.data.code === 200) {
+          this.ImgList()
+        } else {
+          this.$message.error(res.data.msg)
+        }
+        // this.imgPrimaryListUrl.push({ url: res.data.data })
       }).catch(err => console.log(err))
       return false
     },
-    beforeUploadFT(file) {
-      const fd = new FormData()
-      fd.append('multipartFile', file)
-      // /api/v1/shop/uploadfile
-      this.axios.post('api/v1/shop/uploadfile', fd).then(res => {
-        this.imgDescListUrl.push({ url: res.data.data })
-      }).catch(err => console.log(err))
-      return false
-    },
-    beforeUploadGG(file) {
-      const fd = new FormData()
-      fd.append('multipartFile', file)
-      // /api/v1/shop/uploadfile
-      this.axios.post('api/v1/shop/uploadfile', fd).then(res => {
-        this.imgSpecListUrl.push({ url: res.data.data })
-      }).catch(err => console.log(err))
-      return false
-    },
-    handleRemoveZT(file, fileList) {
-      this.imgPrimaryListUrl = fileList
+    handleChange(file, fileList) {
       console.log(file, fileList)
     },
-    handleRemoveFT(file, fileList) {
-      this.imgDescListUrl = fileList
+    uploadList(val) {
+      this.selected = []
+      this.selectedImgList = []
+      this.selectedImg = val
+      this.tpDialogVisible = true
+    },
+    handleRemove(file, fileList) {
       console.log(file, fileList)
     },
-    handleRemoveGG(file, fileList) {
-      console.log(file, fileList)
-      this.imgSpecListUrl = fileList
+    addTP(title, val) {
+      this.selected = []
+      this.selectedImgList = []
+      this.tpDialogVisible = true
+      this.imageId = val
+      this.imageIdstr = title
     },
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file.url
@@ -283,15 +346,15 @@ export default {
         this.$message.error('请填写商品名称！')
         return
       }
-      if (this.imgPrimaryListUrl.length === 0) {
+      if (this.imgPrimaryList.length === 0) {
         this.$message.error('请上传主图！')
         return
       }
-      if (this.imgDescListUrl.length === 0) {
+      if (this.imgDescList.length === 0) {
         this.$message.error('请上传分享图片！')
         return
       }
-      if (this.imgSpecListUrl.length === 0) {
+      if (this.imgSpecList.length === 0) {
         this.$message.error('请上传规格参数图片！')
         return
       }
@@ -301,9 +364,9 @@ export default {
       data['saleStatus'] = this.saleStatus ? 0 : 1
       data['categoryId'] = this.categoryId
       data['groupId'] = this.groupId
-      data['imgPrimaryListUrl'] = this.imgPrimaryListUrl.map(res => res.url)
-      data['imgDescListUrl'] = this.imgDescListUrl.map(res => res.url)
-      data['imgSpecListUrl'] = this.imgSpecListUrl.map(res => res.url)
+      data['imgPrimaryList'] = this.imgPrimaryList
+      data['imgDescList'] = this.imgDescList
+      data['imgSpecList'] = this.imgSpecList
       this.$confirm('修改基本信息, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -351,5 +414,96 @@ export default {
   width: 80px;
   display: inline-block;
   text-align: right;
+}
+
+.uploadList {
+  background-color: #fbfdff;
+  border: 1px dashed #c0ccda;
+  border-radius: 6px;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 120px;
+  height: 120px;
+  line-height: 120px;
+  vertical-align: top;
+  text-align: center;
+  cursor: pointer;
+  float: left;
+  margin: 4px;
+  position: relative;
+}
+.uploadList i{
+  font-size: 28px;
+  color: #8c939d;
+}
+.uploadList:hover {
+  border-color: #409EFF;
+  color: #409EFF;
+}
+.uploadList:hover .cha {
+  display: inline-block;
+}
+.left{
+  margin-bottom: 10px;
+  border-bottom: 1px solid #e4e7ed;
+  padding-bottom: 10px;
+}
+.rigth {
+  display: inline-block;
+}
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.selected {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 2px solid #07d;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  display: none;
+}
+.selected:after {
+  position: absolute;
+  display: block;
+  content: " ";
+  right: 0;
+  top: 0;
+  border: 14px solid #07d;
+  border-left-color: transparent;
+  border-bottom-color: transparent;
+  z-index: 1;
+}
+.selected .index{
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  z-index: 2;
+  font-size: 12px;
+  color: #fff;
+  font-style: normal;
+  font-family: arial;
+  width: 13px;
+  text-align: center;
+  height: 15px;
+  line-height: 20px;
+}
+.cha {
+  position: absolute;
+  top: 0;
+  right: 0;
+  line-height: 24px;
+  width: 24px;
+  color: #fff;
+  background: #999;
+  border-radius: 50%;
+  z-index: 2;
+  display: none;
 }
 </style>
