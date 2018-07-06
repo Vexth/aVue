@@ -155,7 +155,7 @@
       <!-- <el-form-item label="价格：">
 				<el-input v-model="form['价格']" :disabled="isXS"></el-input>
 			</el-form-item> -->
-      <el-form-item label="划线价：">
+      <el-form-item label="市场价：">
 				<el-input v-model="form.priceUnderline"></el-input>
 			</el-form-item>
       <!-- <el-form-item label="库存：">
@@ -219,7 +219,7 @@
       </span>
     </el-dialog>
 
-    <el-dialog
+    <!-- <el-dialog
       title="我的图片"
       :visible.sync="tpDialogVisible"
       width="50%"
@@ -240,10 +240,21 @@
         <ul>
           <li v-for="(img, i) in imgList" :key="i" class="uploadList" @click="liClick(img)">
             <img style="width: 100%;" :src="img.url">
-            <div :style="{ display: selected.indexOf(img.id) > -1 ? 'inline-block' : 'none' }" class="selected"><i class="index el-icon-check"></i></div>
+            <div :style="{ display: selected.indexOf(img.id) > -1 ? 'inline-block' : 'none' }" class="selected"><i class="index">{{i+1}}</i></div>
           </li>
         </ul>
       </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="tpDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="tpSub">确 定</el-button>
+      </span>
+    </el-dialog> -->
+    <el-dialog
+      title="我的图片"
+      :visible.sync="tpDialogVisible"
+      width="50%"
+      center>
+      <DialogImg ref="DialogImg" />
       <span slot="footer" class="dialog-footer">
         <el-button @click="tpDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="tpSub">确 定</el-button>
@@ -253,6 +264,7 @@
 </template>
 <script>
 import Dropzone from '@/components/Dropzone/index.vue'
+import DialogImg from './dialogImg.vue'
 export default {
   data() {
     return {
@@ -326,7 +338,7 @@ export default {
     }
   },
   components: {
-    Dropzone
+    Dropzone, DialogImg
   },
   mounted() {
     // GET /api/v1/shop/product/getCategoryOption
@@ -347,26 +359,26 @@ export default {
     }).catch(err => console.log(err))
     // this.axios.get('api/ting?method=baidu.ting.billboard.billList&type=1&size=10&offset=0').then(res => console.log(res))
     this.getSkuAttrOption()
-    this.ImgList()
+    // this.ImgList()
   },
   methods: {
-    handleRemove(file, fileList) {
-      console.log(file, fileList)
-    },
-    handlePictureCardPreview(file) {
-      this.dialogImageUrl = file.url
-      this.dialogVisible = true
-    },
-    ImgList() {
-      // api/v1/shop/image/list
-      this.axios.get('api/v1/shop/image/list').then(res => {
-        if (res.data.code === 200) {
-          this.imgList = res.data.data
-        } else {
-          this.$message.error(res.data.msg)
-        }
-      }).catch(err => console.log(err))
-    },
+    // handleRemove(file, fileList) {
+    //   console.log(file, fileList)
+    // },
+    // handlePictureCardPreview(file) {
+    //   this.dialogImageUrl = file.url
+    //   this.dialogVisible = true
+    // },
+    // ImgList() {
+    //   // api/v1/shop/image/list
+    //   this.axios.get('api/v1/shop/image/list').then(res => {
+    //     if (res.data.code === 200) {
+    //       this.imgList = res.data.data
+    //     } else {
+    //       this.$message.error(res.data.msg)
+    //     }
+    //   }).catch(err => console.log(err))
+    // },
     liClick(img) {
       if (this.selected.indexOf(img.id) > -1) {
         this.selected = this.selected.filter(k => k !== img.id)
@@ -377,6 +389,7 @@ export default {
       }
     },
     tpSub() {
+      this.selectedImgList = this.$refs.DialogImg.tpSub()
       if (this.imageIdstr === 'imageId') {
         if (this.selectedImgList.length > 1) {
           this.$message.error('请选择一张图片！')
@@ -389,29 +402,30 @@ export default {
       }
       this.tpDialogVisible = false
       this[this.selectedImg] = [...this[this.selectedImg], ...this.selectedImgList]
+      console.log(this[this.selectedImg])
     },
     cha(title, val, id) {
       val.splice(id, 1)
       this[title] = val
     },
-    beforeUpload(file) {
-      const fd = new FormData()
-      fd.append('multipartFile', file)
-      // /api/v1/shop/uploadfile
-      // /api/v1/shop/image/upload
-      this.axios.post('api/v1/shop/image/upload', fd).then(res => {
-        if (res.data.code === 200) {
-          this.ImgList()
-        } else {
-          this.$message.error(res.data.msg)
-        }
-        // this.imgPrimaryListUrl.push({ url: res.data.data })
-      }).catch(err => console.log(err))
-      return false
-    },
-    handleChange(file, fileList) {
-      console.log(file, fileList)
-    },
+    // beforeUpload(file) {
+    //   const fd = new FormData()
+    //   fd.append('multipartFile', file)
+    //   // /api/v1/shop/uploadfile
+    //   // /api/v1/shop/image/upload
+    //   this.axios.post('api/v1/shop/image/upload', fd).then(res => {
+    //     if (res.data.code === 200) {
+    //       this.ImgList()
+    //     } else {
+    //       this.$message.error(res.data.msg)
+    //     }
+    //     // this.imgPrimaryListUrl.push({ url: res.data.data })
+    //   }).catch(err => console.log(err))
+    //   return false
+    // },
+    // handleChange(file, fileList) {
+    //   console.log(file, fileList)
+    // },
     uploadList(val) {
       this.selected = []
       this.selectedImgList = []

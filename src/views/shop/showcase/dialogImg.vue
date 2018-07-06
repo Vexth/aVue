@@ -1,9 +1,5 @@
 <template>
-  <el-dialog
-    title="我的图片"
-    :visible.sync="tpDialogVisible"
-    width="50%"
-    center>
+  <div>
     <div class="left">
       <el-upload
         :before-upload="beforeUpload"
@@ -17,26 +13,23 @@
       <ul>
         <li v-for="(img, i) in imgList" :key="i" class="uploadList" @click="liClick(img)">
           <img style="width: 100%;" :src="img.url">
-          <div :style="{ display: selected.indexOf(img.id) > -1 ? 'inline-block' : 'none' }" class="selected"><i class="index">{{i+1}}</i></div>
+          <div :style="{ display: selected.indexOf(img.id) > -1 ? 'inline-block' : 'none' }" class="selected"><i class="index el-icon-check"></i></div>
         </li>
       </ul>
     </div>
-    <span slot="footer" class="dialog-footer">
-      <el-button @click="tpDialogVisible = false">取 消</el-button>
-      <el-button type="primary" @click="tpSub">确 定</el-button>
-    </span>
-  </el-dialog>
+  </div>
 </template>
 
 <script>
 export default {
   data() {
     return {
-      tpDialogVisible: false,
-      selected: []
+      action: '123',
+      selected: [],
+      imgList: [],
+      selectedImgList: []
     }
   },
-  props: [imgList],
   mounted() {
     this.ImgList()
   },
@@ -64,24 +57,98 @@ export default {
       }).catch(err => console.log(err))
       return false
     },
-    tpSub() {
-      if (this.imageIdstr === 'imageId') {
-        if (this.selectedImgList.length > 1) {
-          this.$message.error('请选择一张图片！')
-          return
-        }
-        this.tpDialogVisible = false
-        this.imageId.imageId = this.selectedImgList[0]['id']
-        this.skuList.push(this.imageId)
-        return
+    liClick(img) {
+      if (this.selected.indexOf(img.id) > -1) {
+        this.selected = this.selected.filter(k => k !== img.id)
+        this.selectedImgList = this.selectedImgList.filter(k => k.id !== img.id)
+      } else {
+        this.selectedImgList.push(img)
+        this.selected.push(img.id)
       }
-      this.tpDialogVisible = false
-      this[this.selectedImg] = [...this[this.selectedImg], ...this.selectedImgList]
+    },
+    tpSub() {
+      return this.selectedImgList
     }
   }
 }
 </script>
 
-<style>
-
+<style scoped>
+.uploadList {
+  background-color: #fbfdff;
+  border: 1px dashed #c0ccda;
+  border-radius: 6px;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 120px;
+  height: 120px;
+  line-height: 120px;
+  vertical-align: top;
+  text-align: center;
+  cursor: pointer;
+  float: left;
+  margin: 4px;
+  position: relative;
+}
+.uploadList i{
+  font-size: 28px;
+  color: #8c939d;
+}
+.uploadList:hover {
+  border-color: #409EFF;
+  color: #409EFF;
+}
+.uploadList:hover .cha {
+  display: inline-block;
+}
+.left{
+  margin-bottom: 10px;
+  border-bottom: 1px solid #e4e7ed;
+  padding-bottom: 10px;
+}
+.rigth {
+  display: inline-block;
+}
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+.selected {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 2px solid #07d;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  display: none;
+}
+.selected:after {
+  position: absolute;
+  display: block;
+  content: " ";
+  right: 0;
+  top: 0;
+  border: 14px solid #07d;
+  border-left-color: transparent;
+  border-bottom-color: transparent;
+  z-index: 1;
+}
+.selected .index{
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  z-index: 2;
+  font-size: 12px;
+  color: #fff;
+  font-style: normal;
+  font-family: arial;
+  width: 13px;
+  text-align: center;
+  height: 15px;
+  line-height: 20px;
+}
 </style>
