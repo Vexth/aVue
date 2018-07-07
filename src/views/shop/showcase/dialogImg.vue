@@ -25,10 +25,12 @@ export default {
   data() {
     return {
       action: '123',
-      selected: [],
-      imgList: [],
-      selectedImgList: []
+      imgList: []
     }
+  },
+  props: {
+    selected: Array,
+    selectedImgList: Array
   },
   mounted() {
     this.ImgList()
