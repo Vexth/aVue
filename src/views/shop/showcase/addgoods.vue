@@ -84,7 +84,7 @@
             </div>
             <div class="title mb0">
               <el-button :disabled="isdisabled" @click="addItem">添加规格项目</el-button>
-              <el-button type="primary" @click="addTale">生成规格明细</el-button>
+              <el-button type="primary" @click="addTale" :disabled="disabled">生成规格明细</el-button>
             </div>
           </div>
         </template>
@@ -215,6 +215,7 @@ import vImgList from './imgList.vue'
 export default {
   data() {
     return {
+      disabled: true,
       title: '',
       titleName: '',
       centerDialogVisible: false,
@@ -277,7 +278,7 @@ export default {
       itemsList: {},
       categoryId: null,
       groupId: null,
-      iscfxz: '',
+      iscfxz: [],
       formList: {},
       skuList: [],
       checked1: false,
@@ -357,13 +358,22 @@ export default {
           label: '操作'
         }
       ]
-      this.form.items.map((res, i) => {
+      for (let i = 0; i < this.form.items.length; i++) {
+        const element = this.form.items[i]
+        if (element.value1 === '') {
+          this.$message.error('请选择规格名！')
+          return
+        }
+        if (element.state1.length === 0) {
+          this.$message.error('请选择规格值！')
+          return
+        }
         rows.unshift({
           prop: 'attrName',
-          label: res['guige']['attrName']
+          label: element['guige']['attrName']
         })
-        list.push(res['guige'])
-      })
+        list.push(element['guige'])
+      }
       this.isXS = true
       this.rows = rows
       list[0]['children'].map(res => {
@@ -395,13 +405,15 @@ export default {
       this.axios.get(`api/v1/shop/product/getSkuAttrOption`).then(res => {
         if (res.status === 200) {
           this.options1 = res.data.data
+          localStorage.setItem('options1', JSON.stringify(this.options1))
         } else {
           console.error(res)
         }
       }).catch(err => console.log(err))
     },
     itemsListFn(e, i) {
-      if (this.iscfxz === e) {
+      this.form.items[i].state1 = []
+      if (this.iscfxz.indexOf(e) > -1) {
         this.$alert('规格名不能选择相同的', '提示', {
           confirmButtonText: '确定',
           callback: action => {
@@ -409,21 +421,25 @@ export default {
               type: 'error',
               message: '规格名选择相同了，请重新选择'
             })
-            this.form.items[i].options5 = []
+            this.form.items[i].value1 = ''
+            this.iscfxz[i] = ''
           }
         })
         return
       }
-      this.iscfxz = e
-      const a = this.options1.filter(res => res.id === e)[0]
+      this.iscfxz[i] = e
+      const op = JSON.parse(localStorage.getItem('options1'))
+      const a = op.filter(res => res.id === e)[0]
       this.form.items[i].optionsList = a
       this.form.items[i].options5 = a['children']
     },
     del(e) {
       this.isdisabled = false
       this.form.items.splice(e, 1)
-      this.iscfxz = e === 0 ? '' : e - 1
       this.isXS = false
+      if (this.form.items.length === 0) {
+        this.disabled = true
+      }
     },
     itemChange(e, v, i) {
       if (e.length > 5) {
@@ -579,6 +595,7 @@ export default {
       this.form.items[i].optionsList = this.form.items[this.formI].optionsList
     },
     addItem() {
+      this.disabled = false
       this.isSp = true
       this.form.items.push({ value1: '', state1: '' })
       if (this.form.items.length >= 2) {
@@ -631,7 +648,7 @@ export default {
 }
 .guigeul div {
   /* padding: 10px; */
-  width: 200px;
+  width: 180px;
   text-align: center;
   line-height: 56px;
 }

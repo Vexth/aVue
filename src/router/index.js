@@ -293,8 +293,8 @@ export const asyncRouterMap = [
       icon: 'list'
     },
     children: [
-      { path: 'orderlist', component: () => import('@/views/shop/trade/orderlist'), name: 'orderlist', meta: { icon: 'list', title: 'orderlist', noCache: true }}
-      // { path: 'goodslist', component: () => import('@/views/trade/goodslist'), name: '商品列表', meta: { title: '商品列表', noCache: true }},
+      { path: 'orderlist', component: () => import('@/views/shop/trade/orderlist'), name: 'orderlist', meta: { title: 'orderlist', noCache: true }},
+      { path: 'orderOverview', component: () => import('@/views/shop/trade/orderOverview'), name: 'orderOverview', meta: { title: 'orderOverview', noCache: true }}
       // { path: 'modifygoods', component: () => import('@/views/trade/modifygoods'), name: 'mixChart', meta: { title: 'mixChart', noCache: true }, hidden: true}
     ]
   },

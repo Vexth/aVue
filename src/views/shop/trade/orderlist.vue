@@ -1,80 +1,30 @@
 <template>
   <div class="app-container">
+    <el-tabs v-model="activeNameTitle" @tab-click="handleClickTitle">
+      <el-tab-pane v-for="item in navlistTitle" :key="item.name" :label="item.label" :name="item.name"></el-tab-pane>
+    </el-tabs>
+
+    <v-order-list-hander @query="query" @Export="Export" />
+
     <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
       <el-tab-pane v-for="item in navlist" :key="item.name" :label="item.label" :name="item.name"></el-tab-pane>
     </el-tabs>
-    <el-table :data="list" v-loading.body="listLoading" border fit highlight-current-row style="width: 100%" @selection-change="handleSelectionChange" ref="multipleTable">
 
-      <el-table-column type="selection" width="35"></el-table-column>
-
-      <el-table-column align="center" label="姓名" width="80">
-        <template slot-scope="scope">
-          <span>{{ scope.row.author }}</span>
-          <!-- <span>{{scope.row.id}}</span> -->
-        </template>
-      </el-table-column>
-
-      <el-table-column align="center" label="手机号码">
-        <template slot-scope="scope">
-          <span>{{ scope.row.title }}</span>
-          <!-- <span>{{scope.row.timestamp | parseTime('{y}-{m}-{d} {h}:{i}')}}</span> -->
-        </template>
-      </el-table-column>
-
-      <el-table-column align="center" label="微信号/微信昵称">
-        <template slot-scope="scope">
-          <span>{{scope.row.author}}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column label="购次">
-        <template slot-scope="scope">
-          <span>{{ scope.row.artist_id }}</span>
-          <!-- <svg-icon v-for="n in +scope.row.importance" icon-class="star" class="meta-item__icon" :key="n"></svg-icon> -->
-        </template>
-      </el-table-column>
-
-      <el-table-column class-name="status-col" label="积分">
-        <template slot-scope="scope">
-          <span>{{ scope.row.artist_id }}</span>
-          <!-- <el-tag :type="scope.row.status | statusFilter">{{scope.row.status}}</el-tag> -->
-        </template>
-      </el-table-column>
-
-      <el-table-column label="来源方式">
-        <template slot-scope="scope">
-          <template v-if="scope.row.edit">
-            <el-input class="edit-input" size="small" v-model="scope.row.country"></el-input>
-            <el-button class='cancel-btn' size="small" icon="el-icon-refresh" type="warning" @click="cancelEdit(scope.row)">cancel</el-button>
-          </template>
-          <span v-else>{{ scope.row.country }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column label="客户身份">
-        <template slot-scope="scope">
-          <template v-if="scope.row.edit">
-            <el-input class="edit-input" size="small" v-model="scope.row.title"></el-input>
-            <el-button class='cancel-btn' size="small" icon="el-icon-refresh" type="warning" @click="cancelEdit(scope.row)">cancel</el-button>
-          </template>
-          <span v-else>{{ scope.row.title }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column align="center" label="操作" width="120">
-        <template slot-scope="scope">
-          <el-button v-if="scope.row.edit" type="success" @click="confirmEdit(scope.row)" size="small" icon="el-icon-circle-check-outline">Ok</el-button>
-          <el-button v-else type="primary" @click='scope.row.edit=!scope.row.edit' size="small" icon="el-icon-edit">Edit</el-button>
-        </template>
-      </el-table-column>
-
-    </el-table>
+    <v-order-list-table :rows="rows" :list="list" @star="star" @cancel="cancel" @confirm="confirm" />
   </div>
 </template>
 <script>
+import vOrderListTable from './orderListTable.vue'
+import vOrderListHander from './orderListHander.vue'
 export default {
   data() {
     return {
+      activeNameTitle: '-1',
+      navlistTitle: [
+        { name: '-1', label: '全部订单' },
+        { name: '0', label: '同城订单' },
+        { name: '1', label: '自提订单' }
+      ],
       activeName: '-1',
       navlist: [
         { name: '-1', label: '全部' },
@@ -85,8 +35,45 @@ export default {
         { name: '4', label: '已关闭' },
         { name: '5', label: '退款中' }
       ],
+      rows: [
+        {
+          label: '商品',
+          width: '20'
+        },
+        {
+          label: '单价/数量',
+          width: '9'
+        },
+        {
+          label: '售后',
+          width: '9'
+        },
+        {
+          label: '买家/电话',
+          width: '9'
+        },
+        {
+          label: '下单时间',
+          width: '9'
+        },
+        {
+          label: '订单状态',
+          width: '9'
+        },
+        {
+          label: '需付金额',
+          width: '9'
+        },
+        {
+          label: '地址',
+          width: '17'
+        },
+        {
+          label: '备注',
+          width: '9'
+        }
+      ],
       list: [],
-      listLoading: true,
       listQuery: {
         page: 1,
         limit: 10
@@ -106,47 +93,43 @@ export default {
   created() {
     this.getList(1)
   },
+  components: {
+    vOrderListTable, vOrderListHander
+  },
   methods: {
+    handleClickTitle(tab, event) {
+      console.log(tab.name, event)
+    },
     handleClick(tab, event) {
       this.getList(tab.name)
       console.log(tab.name, event)
     },
     getList(id) {
-      this.listLoading = true
       this.axios.get(`restserver/ting?method=baidu.ting.billboard.billList&type=${id}&size=10&offset=0`).then(res => {
         if (res.status === 200) {
           this.list = res.data.song_list
         }
-        this.listLoading = false
       }).catch(err => console.log(err))
     },
-    cancelEdit(row) {
-      row.title = row.originalTitle
-      row.edit = false
-      this.$message({
-        message: 'The title has been restored to the original value',
-        type: 'warning'
-      })
+    // 查询
+    query(val) {
+      console.log(val)
     },
-    confirmEdit(row) {
-      row.edit = false
-      row.originalTitle = row.title
-      this.$message({
-        message: 'The title has been edited',
-        type: 'success'
-      })
+    // 导出
+    Export(val) {
+      console.log(val)
     },
-    toggleSelection(rows) {
-      if (rows) {
-        rows.forEach(row => {
-          this.$refs.multipleTable.toggleRowSelection(row)
-        })
-      } else {
-        this.$refs.multipleTable.clearSelection()
-      }
+    // 加星
+    star(val) {
+      console.log(val)
     },
-    handleSelectionChange(val) {
-      this.multipleSelection = val
+    // 确认已付款
+    confirm(val) {
+      console.log(val)
+    },
+    // 取消订单
+    cancel(val) {
+      console.log(val)
     }
   }
 }
