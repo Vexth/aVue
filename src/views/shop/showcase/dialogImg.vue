@@ -12,7 +12,7 @@
     <div class="rigth">
       <ul>
         <li v-for="(img, i) in imgList" :key="i" class="uploadList" @click="liClick(img)">
-          <img style="width: 100%;" :src="img.url">
+          <img style="width: 100%;height: 100%;" :src="img.url">
           <div :style="{ display: selected.indexOf(img.id) > -1 ? 'inline-block' : 'none' }" class="selected"><i class="index el-icon-check"></i></div>
         </li>
       </ul>
