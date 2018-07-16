@@ -66,7 +66,8 @@ export default {
     ump: '营销',
     activity: '活动',
     system: '系统管理',
-    navsys: '菜单配置'
+    navsys: '菜单配置',
+    grouping: '分组管理'
   },
   navbar: {
     logOut: '退出登录',
