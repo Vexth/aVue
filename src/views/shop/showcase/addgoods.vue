@@ -67,6 +67,10 @@
                 <span>规格值：</span>
                 <el-select
                   v-model="form.items[i].state1"
+                  multiple
+                  filterable
+                  allow-create
+                  default-first-option
                   placeholder="请选择" @change="itemChange(form.items[i].state1, form.items[i], i)" @focus="focus(i)">
                   <el-option
                     v-for="item in form.items[i].options5"
