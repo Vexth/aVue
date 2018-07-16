@@ -235,7 +235,7 @@ export default {
         list['appointmentServiceTimeEnd'] = formatDate(this.form.appointmentServiceTimeEnd)
       }
       // POST /api/v1/shop/order/remark/modify 更新商家备注信息
-      this.axios.post(`api/v1/shop/order/remark/modify`, list).then(res => {
+      this.axios.post(`api/v1/shop/order/modify/remark`, list).then(res => {
         if (res.status === 200) {
           if (res.data.code === 200) {
             this.$message({
