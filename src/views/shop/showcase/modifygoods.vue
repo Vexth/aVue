@@ -74,9 +74,9 @@
       width="30%"
       center>
       <div style="text-align: center;">
-        <div class="mb10"><span>价格：</span><el-input placeholder="请输入内容" v-model="unitPrice" clearable onKeyPress="if((event.keyCode<48 || event.keyCode>57) && event.keyCode!=46 || /\.\d\d$/.test(value))event.returnValue=false"></el-input></div>
+        <div class="mb10"><span>价格：</span><el-input placeholder="请输入内容" v-model="unitPrice" clearable autocomplete="off" autofocus="autofocus" onkeyup="value=value.replace(/[^\d^\.]+/g,'')"></el-input></div>
         <div class="mb10"><span>库存：</span><el-input placeholder="请输入内容" v-model="stockAmount" clearable onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"></el-input></div>
-        <div class="mb10"><span>成本价：</span><el-input placeholder="请输入内容" v-model="costPrice" clearable onKeyPress="if((event.keyCode<48 || event.keyCode>57) && event.keyCode!=46 || /\.\d\d$/.test(value))event.returnValue=false"></el-input></div>
+        <div class="mb10"><span>成本价：</span><el-input placeholder="请输入内容" v-model="costPrice" clearable autocomplete="off" autofocus="autofocus" onkeyup="value=value.replace(/[^\d^\.]+/g,'')"></el-input></div>
         <div class="mb10"><span>规格编码：</span><el-input placeholder="请输入内容" v-model="stockBarcode" clearable></el-input></div>
       </div>
       <span slot="footer" class="dialog-footer">

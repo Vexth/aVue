@@ -3,18 +3,20 @@
     <el-row>
       <el-col :span="7">
         <div class="grid-content">
-          <el-select style="width: 150px;" v-model="formInline.carInfoId" placeholder="订单号" clearable>
-            <el-option label="区域一" value="0"></el-option>
-            <el-option label="区域二" value="1"></el-option>
+          <el-select style="width: 150px;" v-model="formInline.orderId" placeholder="订单号" clearable>
+            <el-option label="订单号" value="0"></el-option>
+            <el-option label="收件人姓名" value="1"></el-option>
+            <el-option label="收件人手机号" value="2"></el-option>
           </el-select>
-          <el-input v-model="formInline.title" placeholder="订单号" clearable></el-input>
+          <el-input v-if="formInline.orderId !== '2'" v-model="formInline.username" placeholder="订单号/收件人姓名" clearable></el-input>
+          <el-input v-else v-model="formInline.mobilePhone" placeholder="收件人手机号" clearable></el-input>
         </div>
       </el-col>
       <el-col :span="7">
         <div class="grid-content">
           <span>下单时间：</span>
           <el-date-picker
-            v-model="value"
+            v-model="formInline.value"
             type="datetimerange"
             :picker-options="pickerOptions"
             range-separator="至"
@@ -36,27 +38,24 @@
       </el-col>
       <el-col :span="4">
         <div class="grid-content">
-          <span>物流方式：</span>
-          <el-select v-model="formInline.groupId" placeholder="物流方式" clearable>
-            <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.name"
-              :value="item.id">
-            </el-option>
+          <span>营销方式：</span>
+          <el-select v-model="formInline.markingType" placeholder="营销方式" clearable>
+            <el-option label="全部" value="-1"></el-option>
+            <el-option label="普通" value="0"></el-option>
+            <el-option label="其他" value="1"></el-option>
           </el-select>
         </div>
       </el-col>
       <el-col :span="4" style="margin-left: 80px;">
         <div class="grid-content">
-          <span>订单类型：</span>
-          <el-select v-model="formInline.categoryId" placeholder="订单类型" clearable>
-            <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.name"
-              :value="item.id">
-            </el-option>
+          <span>订单状态：</span>
+          <el-select v-model="formInline.orderStatus" placeholder="订单状态" clearable>
+            <el-option label="全部" value="-1"></el-option>
+            <el-option label="待付款" value="0"></el-option>
+            <el-option label="已付款/等待服务/待发货" value="1"></el-option>
+            <el-option label="服务完成/已发货" value="2"></el-option>
+            <el-option label="买家确认服务完成/买家确认收货/已完成" value="3"></el-option>
+            <el-option label="已关闭" value="4"></el-option>
           </el-select>
         </div>
       </el-col>
@@ -66,27 +65,38 @@
       <el-col :span="7">
         <div class="grid-content">
           <span style="width: 150px;">付款方式：</span>
-          <el-select v-model="formInline.carInfoId" placeholder="付款方式" clearable>
-            <el-option label="区域一" value="0"></el-option>
-            <el-option label="区域二" value="1"></el-option>
+          <el-select v-model="formInline.paymentType" placeholder="付款方式" clearable>
+            <el-option label="全部" value="-1"></el-option>
+            <el-option label="微信支付" value="0"></el-option>
+            <el-option label="套餐卡" value="1"></el-option>
+            <el-option label="刷卡" value="2"></el-option>
+            <el-option label="现金" value="3"></el-option>
           </el-select>
         </div>
       </el-col>
       <el-col :span="4">
         <div class="grid-content">
-          <span>维权转台：</span>
-          <el-select v-model="formInline.carInfoId" placeholder="维权转台" clearable>
-            <el-option label="区域一" value="0"></el-option>
-            <el-option label="区域二" value="1"></el-option>
+          <span>售后服务：</span>
+          <el-select v-model="formInline.refundType" placeholder="售后服务" clearable>
+            <el-option label="全部" value="-1"></el-option>
+            <el-option label="无" value="0"></el-option>
+            <el-option label="退货中" value="1"></el-option>
+            <el-option label="退货完成" value="2"></el-option>
+            <el-option label="协商中" value="3"></el-option>
+            <el-option label="协商完成" value="4"></el-option>
+            <el-option label="退款中" value="5"></el-option>
+            <el-option label="退款完成" value="6"></el-option>
           </el-select>
         </div>
       </el-col>
       <el-col :span="4" style="margin-left: 80px;">
+        <!-- 0全部 1小程序，2公众号 -->
         <div class="grid-content">
           <span>订单来源：</span>
-          <el-select v-model="formInline.carInfoId" placeholder="订单来源" clearable>
-            <el-option label="区域一" value="0"></el-option>
-            <el-option label="区域二" value="1"></el-option>
+          <el-select v-model="formInline.orderFromType" placeholder="订单来源" clearable>
+            <el-option label="全部" value="-1"></el-option>
+            <el-option label="小程序" value="1"></el-option>
+            <el-option label="公众号" value="1"></el-option>
           </el-select>
         </div>
       </el-col>
@@ -99,6 +109,7 @@
 </template>
 
 <script>
+import formatDate from '@/views/shop/timeToString'
 export default {
   data() {
     return {
@@ -133,9 +144,17 @@ export default {
           }
         ]
       },
-      value: '',
-      options: [],
-      formInline: {}
+      formInline: {
+        value: [],
+        orderId: '0',
+        orderStatus: '-1',
+        markingType: '-1',
+        refundType: '-1',
+        orderFromType: '-1',
+        username: '',
+        mobilePhone: '',
+        paymentType: '-1'
+      }
     }
   },
   methods: {
@@ -143,7 +162,7 @@ export default {
       const end = new Date()
       const start = new Date()
       start.setTime(start.getTime() - 3600 * 1000 * 24 * i)
-      this.value = [start, end]
+      this.formInline.value = [start, end]
     },
     // 近7天
     query7() {
@@ -155,6 +174,10 @@ export default {
     },
     // 查询
     query() {
+      if (this.formInline.value.length !== 0) {
+        this.formInline['appointmentServiceTimeBegin'] = formatDate(this.formInline.value[0])
+        this.formInline['appointmentServiceTimeEnd'] = formatDate(this.formInline.value[1])
+      }
       this.$emit('query', this.formInline)
     },
     // 导出
