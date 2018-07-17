@@ -29,8 +29,8 @@
           </li>
           <li :style="{'width': '9%', 'height': item.goodsList.length * 97 + 'px'}">
             <div class="imgName" style="display: block;" v-for="(v, i) in item.goodsList" :key="i">
-              <p>￥{{item.unitPrice}}</p>
-              <p>（{{item.count}}件）</p>
+              <p>￥{{v.unitPrice}}</p>
+              <p>（{{v.count}}件）</p>
             </div>
           </li>
           <li :style="{'width': '9%','height': item.goodsList.length * 97 + 'px'}">
@@ -44,7 +44,7 @@
                 </el-option>
               </el-select>
               <span v-else>
-                <span v-if="item.refundType === null || item.refundType === '-1'">无</span>
+                <span v-if="item.refundType === null || item.refundType === '-1' || item.refundType === 'null'">无</span>
                 <span v-if="item.refundType === '1' || item.refundType === 1">退货中</span>
                 <span v-if="item.refundType === '2' || item.refundType === 2">退货完成</span>
                 <span v-if="item.refundType === '3' || item.refundType === 3">退款中</span>
@@ -89,7 +89,7 @@
               <span style="line-height: 30px;" v-if="item.orderStatus === '2' || item.orderStatus === 2">待发货</span>
               <span style="line-height: 30px;" v-if="item.orderStatus === '4' || item.orderStatus === 4">已收货</span>
               <span style="line-height: 30px;" v-if="item.orderStatus === '5' || item.orderStatus === 5">已关闭</span>
-              <div v-if="item.orderStatus !== 3 && item.orderStatus !== 5">
+              <div :style="{display: xsdd ? 'block' : 'none'}" v-if="item.orderStatus !== 3 && item.orderStatus !== 5">
                 <div class="fk">
                   <el-button size="mini" @click="cancel(item)">取消订单</el-button>
                 </div>
@@ -121,6 +121,7 @@ export default {
   data() {
     return {
       xs: true,
+      xsdd: true,
       input: '',
       isFalse: [],
       sel: [],
@@ -247,6 +248,8 @@ export default {
     },
     // 取消订单
     cancel(val) {
+      val.orderStatus = '5'
+      // this.xsdd = false
       this.$emit('cancel', val)
     },
     editL(i, val) {
