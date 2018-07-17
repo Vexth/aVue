@@ -2,7 +2,7 @@
   <div>
     <ul>
       <li v-for="(img, i) in tpList" :key="i" class="uploadList">
-        <img style="width: 100%;" :src="img.url">
+        <img style="width: 100%;height: 118px;" :src="img.url">
         <div class="cha" @click="cha(list, tpList, i)">×</div>
       </li>
     </ul>

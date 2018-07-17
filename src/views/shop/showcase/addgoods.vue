@@ -10,12 +10,24 @@
 			<div class="title">基本信息</div>
 			<el-form-item label="商品名称：" required>
 				<el-input v-model="form.title" style="width: 300px;" placeholder="商品名称必须填，最多100个字"></el-input>
+        <el-tooltip placement="right">
+          <div slot="content">111111111111111111111</div>
+          <i class="el-icon-question"></i>
+        </el-tooltip>
 			</el-form-item>
 			<el-form-item label="分享描述：">
 				<el-input v-model="form.sharetitle"></el-input>
+        <el-tooltip placement="right">
+          <div slot="content">111111111111111111111</div>
+          <i class="el-icon-question"></i>
+        </el-tooltip>
 			</el-form-item>
       <el-form-item label="描述图片上传：" required>
         <v-img-list :list="'imgDescList'" :tpList="imgDescList" @uploadList="uploadList" />
+        <el-tooltip placement="right">
+          <div slot="content">111111111111111111111</div>
+          <i class="el-icon-question"></i>
+        </el-tooltip>
 			</el-form-item>
       <el-form-item label="商品类目：" required>
         <el-select v-model="categoryId" placeholder="请选择">
@@ -26,6 +38,10 @@
             :value="item.id">
           </el-option>
         </el-select>
+        <el-tooltip placement="right">
+          <div slot="content">111111111111111111111</div>
+          <i class="el-icon-question"></i>
+        </el-tooltip>
       </el-form-item>
       <el-form-item label="商品分组：">
         <el-select v-model="groupId" placeholder="请选择">
@@ -36,12 +52,24 @@
             :value="item.id">
           </el-option>
         </el-select>
+        <el-tooltip placement="right">
+          <div slot="content">111111111111111111111</div>
+          <i class="el-icon-question"></i>
+        </el-tooltip>
       </el-form-item>
       <el-form-item label="主图上传：" required>
         <v-img-list :list="'imgPrimaryList'" :tpList="imgPrimaryList" @uploadList="uploadList" />
+        <el-tooltip placement="right">
+          <div slot="content">111111111111111111111</div>
+          <i class="el-icon-question"></i>
+        </el-tooltip>
 			</el-form-item>
       <el-form-item label="规格参数图片上传：" required>
 				<v-img-list :list="'imgSpecList'" :tpList="imgSpecList" @uploadList="uploadList" />
+        <el-tooltip placement="right">
+          <div slot="content">111111111111111111111</div>
+          <i class="el-icon-question"></i>
+        </el-tooltip>
 			</el-form-item>
 
 			<div class="title">价格库存</div>
@@ -71,10 +99,10 @@
                   filterable
                   allow-create
                   default-first-option
-                  placeholder="请选择" @change="itemChange(form.items[i].state1, form.items[i], i)" @focus="focus(i)">
+                  placeholder="请选择" @change="itemChange(form.items[i].state1, form.items[i], i)">
                   <el-option
                     v-for="item in form.items[i].options5"
-                    v-bind:key="item.id"
+                    :key="item.id"
                     :label="item.attrName"
                     :value="item.id">
                   </el-option>
@@ -96,6 +124,32 @@
               <li style="display: flex; border-bottom: 1px solid #dcdfe6;">
                 <div v-for="(row, i) in rows" :key="i">{{row.label}}</div>
               <li>
+              <li v-for="(items, index) in dataList" :key="index" style="display: flex; border-bottom: 1px solid #dcdfe6; width: 100%;">
+                <div v-for="(item, i) in items" :key="i">{{item.attrName}}</div>
+                <div>
+                  <input type="text" v-model="items[0].unitPrice" @blur="OnInput(items)" onKeyPress="if((event.keyCode<48 || event.keyCode>57) && event.keyCode!=46 || /\.\d\d$/.test(value))event.returnValue=false" />
+                </div>
+                <div>
+                  <input v-model="items[0].stockAmount" type="text" @blur="OnInput(items)" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" />
+                </div>
+                <div>
+                  <input type="text" v-model="items[0].stockBarcode" @blur="OnInput(items)" />
+                </div>
+                <div>
+                  <input type="text" v-model="items[0].costPrice" @blur="OnInput(items)" />
+                </div>
+                <div>0</div>
+                <div>
+                  <el-button :type="primary" size="mini" @click="addTP('imageId', items)">{{scText}}<i class="el-icon--right" :class="iconCheck ? 'el-icon-circle-check-outline' : 'el-icon-upload'"></i></el-button>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <!-- <div class="guigeul">
+            <ul>
+              <li style="display: flex; border-bottom: 1px solid #dcdfe6;">
+                <div v-for="(row, i) in rows" :key="i">{{row.label}}</div>
+              <li>
               <li v-for="(items, index) in dataList" :key="index" style="display: table; border-bottom: 1px solid #dcdfe6; width: 100%;">
                 <div style="border-right: 1px solid #dcdfe6;" v-if="items.attrName === undefined ? false : true" :style="{float: 'left', height: items.list.length * 56 + 'px', lineHeight: items.list.length * 56 + 'px', padding: 0}">{{items.attrName}}</div>
                 <ul style="float: left;">
@@ -103,19 +157,15 @@
                     <div v-if="item.attrName === '' ? false : true">{{item.attrName}}</div>
                     <div>
                       <input type="text" v-model="dataList[index]['list'][i].unitPrice" onKeyPress="if((event.keyCode<48 || event.keyCode>57) && event.keyCode!=46 || /\.\d\d$/.test(value))event.returnValue=false" @blur="OnInput({unitPrice:`${items.list[i].unitPrice}`, attrOption: `${dataList[index].id}|${items.list[i].id}`})" />
-                      <!-- <span>{{dataList[index]['list'][i].unitPrice}}</span> -->
                     </div>
                     <div>
                       <input v-model="dataList[index]['list'][i].stockAmount" type="text" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" @blur="OnInput({stockAmount:`${items.list[i].stockAmount}`, attrOption: `${dataList[index].id}|${items.list[i].id}`})" />
-                      <!-- <span>{{dataList[index]['list'][i].stockAmount}}</span> -->
                     </div>
                     <div>
                       <input type="text" v-model="dataList[index]['list'][i].stockBarcode" @blur="OnInput({stockBarcode:`${items.list[i].stockBarcode}`, attrOption: `${dataList[index].id}|${items.list[i].id}`})" />
-                      <!-- <span>{{dataList[index]['list'][i].stockBarcode}}</span> -->
                     </div>
                     <div>
                       <input type="text" v-model="dataList[index]['list'][i].costPrice" @blur="OnInput({costPrice:`${items.list[i].costPrice}`, attrOption: `${dataList[index].id}|${items.list[i].id}`})" />
-                      <!-- <span>{{dataList[index]['list'][i].costPrice}}</span> -->
                     </div>
                     <div>{{item.saleAmount ? item.saleAmount : 0}}</div>
                     <div>
@@ -125,7 +175,7 @@
                 </ul>
               </li>
             </ul>
-          </div>
+          </div> -->
         </template>
 			</el-form-item>
       <!-- <el-form-item label="价格：">
@@ -133,6 +183,10 @@
 			</el-form-item> -->
       <el-form-item label="市场价：">
 				<el-input v-model="form.priceUnderline"></el-input>
+        <el-tooltip placement="right">
+          <div slot="content">111111111111111111111</div>
+          <i class="el-icon-question"></i>
+        </el-tooltip>
 			</el-form-item>
       <!-- <el-form-item label="库存：">
 				<el-input v-model="form['库存']" :disabled="isXS"></el-input>
@@ -146,6 +200,10 @@
       <div class="title">其他信息</div>
       <el-form-item label="是否上架：" required>
 				<el-checkbox v-model="saleStatus">是否立即上架</el-checkbox>
+        <el-tooltip placement="right">
+          <div slot="content">111111111111111111111</div>
+          <i class="el-icon-question"></i>
+        </el-tooltip>
 			</el-form-item>
       <!-- <el-form-item label="留言：">
 				<el-input v-model="form['留言']"></el-input>
@@ -215,6 +273,9 @@ import vImgList from './imgList.vue'
 export default {
   data() {
     return {
+      scText: '上传',
+      primary: 'primary',
+      iconCheck: false,
       disabled: true,
       title: '',
       titleName: '',
@@ -319,6 +380,9 @@ export default {
         this.tpDialogVisible = false
         this.imageId.imageId = this.selectedImgList[0]['id']
         this.skuList.push(this.imageId)
+        this.iconCheck = true
+        this.primary = 'success'
+        this.scText = '成功'
         return
       }
       this.tpDialogVisible = false
@@ -333,6 +397,11 @@ export default {
     addTale() {
       var list = []
       const rows = [
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
         {
           prop: 'unitPrice',
           label: '价格（元）'
@@ -368,44 +437,65 @@ export default {
           this.$message.error('请选择规格值！')
           return
         }
-        rows.unshift({
+        rows[i] = {
           prop: 'attrName',
           label: element['guige']['attrName']
-        })
-        list.push(element['guige'])
+        }
+        list[i] = element['guige']
       }
       this.isXS = true
-      this.rows = rows
-      list[0]['children'].map(res => {
-        res.list = []
-        res.unitPrice = ''
-        res.stockAmount = ''
-        res.stockBarcode = ''
-        res.costPrice = ''
-      })
-      const data = [{
-        list: list[0]['children']
-      }]
-      if (list.length > 1) {
-        list[1]['children'].map(res => {
-          res['list'] = list[0]['children']
-        })
+      this.rows = rows.filter(res => res !== undefined)
+      // console.log(list)
+      var results = []
+      var result = []
+      function doExchange(arr, depth) {
+        for (var i = 0; i < arr[depth].length; i++) {
+          result[depth] = { ...arr[depth][i], unitPrice: '', stockAmount: '', stockBarcode: '', costPrice: '', imageId: '' }
+          if (depth !== arr.length - 1) {
+            doExchange(arr, depth + 1)
+          } else {
+            results.push(JSON.stringify(result))
+          }
+        }
       }
-      this.dataList = list.length > 1 ? list[1]['children'] : data
+      function test(arr) {
+        doExchange(arr, 0)
+      }
+      var garr = list.map(res => res['children'])
+      test(garr)
+      // console.log(results.length, results)
+      this.skuList = []
+      this.dataList = results.map(res => JSON.parse(res))
+      // list[0]['children'].map(res => {
+      //   res.list = []
+      //   res.unitPrice = ''
+      //   res.stockAmount = ''
+      //   res.stockBarcode = ''
+      //   res.costPrice = ''
+      // })
+      // const data = [{
+      //   list: list[0]['children']
+      // }]
+      // if (list.length > 1) {
+      //   list[1]['children'].map(res => {
+      //     res['list'] = list[0]['children']
+      //   })
+      // }
+      // this.dataList = list.length > 1 ? list[1]['children'] : data
     },
     addTP(title, val) {
       this.selected = []
       this.selectedImgList = []
       this.tpDialogVisible = true
-      this.imageId = val
       this.imageIdstr = title
+      const list = this.OnInput(val)
+      this.imageId = list
     },
     getSkuAttrOption() {
       // GET /api/v1/shop/product/getSkuAttrOption
       this.axios.get(`api/v1/shop/product/getSkuAttrOption`).then(res => {
         if (res.status === 200) {
           this.options1 = res.data.data
-          localStorage.setItem('options1', JSON.stringify(this.options1))
         } else {
           console.error(res)
         }
@@ -428,10 +518,17 @@ export default {
         return
       }
       this.iscfxz[i] = e
-      const op = JSON.parse(localStorage.getItem('options1'))
-      const a = op.filter(res => res.id === e)[0]
-      this.form.items[i].optionsList = a
-      this.form.items[i].options5 = a['children']
+      this.axios.get(`api/v1/shop/product/getSkuAttrOption`).then(res => {
+        console.log(this.form.items[i])
+        if (res.status === 200) {
+          this.options1 = res.data.data
+          const a = this.options1.filter(res => res.id === e)[0]
+          this.form.items[i].optionsList = a
+          this.form.items[i].options5 = a['children']
+        } else {
+          console.error(res)
+        }
+      }).catch(err => console.log(err))
     },
     del(e) {
       this.isdisabled = false
@@ -456,7 +553,19 @@ export default {
       this.form.items[i]['guige'].children = b
     },
     OnInput(e) {
-      this.skuList.push(e)
+      const list = {}
+      const attrOption = []
+      e.map(res => {
+        attrOption.push(res.id)
+      })
+      list['attrOption'] = attrOption.join('|')
+      list['costPrice'] = e[0]['costPrice']
+      list['stockAmount'] = e[0]['stockAmount']
+      list['stockBarcode'] = e[0]['stockBarcode']
+      list['unitPrice'] = e[0]['unitPrice']
+      list['imageId'] = e[0]['imageId']
+      this.skuList.push(list)
+      return list
     },
     ArrayCon(arr, fn) {
       return arr.map((item, index, arr) => {
@@ -511,17 +620,18 @@ export default {
       product['priceUnderline'] = this.form.priceUnderline
 
       let skuList = this.skuList
-      skuList = this.ArrayCon(skuList, 'attrOption').map(res => {
-        const attrOption = res.attrOption
-        let a = attrOption.split('|')
-        const i = a.indexOf('undefined')
-        if (i > -1) {
-          a = a.splice(1, 1)
-          res.attrOption = a[0]
-        }
-        return res
-      })
-
+      skuList = this.ArrayCon(skuList, 'attrOption')
+      // .map(res => {
+      //   const attrOption = res.attrOption
+      //   let a = attrOption.split('|')
+      //   const i = a.indexOf('undefined')
+      //   if (i > -1) {
+      //     a = a.splice(1, 1)
+      //     res.attrOption = a[0]
+      //   }
+      //   return res
+      // })
+      // console.log(product, skuList)
       for (let i = 0; i < skuList.length; i++) {
         const element = skuList[i]
         if (element['unitPrice'] === undefined || element['unitPrice'] === '') {
@@ -598,7 +708,7 @@ export default {
       this.disabled = false
       this.isSp = true
       this.form.items.push({ value1: '', state1: '' })
-      if (this.form.items.length >= 2) {
+      if (this.form.items.length >= 5) {
         this.isdisabled = true
       }
     }
@@ -651,9 +761,18 @@ export default {
   width: 180px;
   text-align: center;
   line-height: 56px;
+  display: inline-block;
 }
 
 .guigeul div.el-input--medium {
   width: 180px;
+}
+.el-icon-question {
+  font-size: 14px;
+  color: #ccc;
+}
+
+.guigeul input {
+  width: 120px;
 }
 </style>
