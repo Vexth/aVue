@@ -147,7 +147,6 @@ export default {
       }
       if (val['title'] !== '') {
         list['title'] = val['title']
-
       }
       // if (val['username'] !== '') {
       //   list['orderId'] = val['orderId']
