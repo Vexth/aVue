@@ -3,13 +3,15 @@
     <el-row>
       <el-col :span="7">
         <div class="grid-content">
-          <el-select style="width: 150px;" v-model="formInline.orderId" placeholder="订单号" clearable>
-            <el-option label="订单号" value="0"></el-option>
-            <el-option label="收件人姓名" value="1"></el-option>
-            <el-option label="收件人手机号" value="2"></el-option>
+          <el-select style="width: 150px;" v-model="formInline.queryType" placeholder="订单号" clearable>
+            <el-option label="订单号" value="1"></el-option>
+            <el-option label="收件人姓名" value="2"></el-option>
+            <el-option label="收件人手机号" value="3"></el-option>
           </el-select>
-          <el-input v-if="formInline.orderId !== '2'" v-model="formInline.username" placeholder="订单号/收件人姓名" clearable></el-input>
-          <el-input v-else v-model="formInline.mobilePhone" placeholder="收件人手机号" clearable></el-input>
+          <el-input v-if="formInline.queryType === '1'" v-model="formInline.orderId" placeholder="订单号" clearable></el-input>
+          <el-input v-if="formInline.queryType === '2'" v-model="formInline.username" placeholder="收件人姓名" clearable></el-input>
+          <el-input v-if="formInline.queryType === '3'" v-model="formInline.mobilePhone" placeholder="收件人手机号" clearable></el-input>
+          <!-- <el-input v-else v-model="formInline.orderId" placeholder="收件人手机号z" clearable></el-input> -->
         </div>
       </el-col>
       <el-col :span="7">
@@ -51,15 +53,15 @@
           <span>订单状态：</span>
           <el-select v-model="formInline.orderStatus" placeholder="订单状态" clearable>
             <el-option label="全部" value="-1"></el-option>
-            <el-option label="待付款" value="0"></el-option>
-            <el-option label="已付款/等待服务/待发货" value="1"></el-option>
-            <el-option label="服务完成/已发货" value="2"></el-option>
-            <el-option label="买家确认服务完成/买家确认收货/已完成" value="3"></el-option>
-            <el-option label="已关闭" value="4"></el-option>
+            <el-option label="待付款" value="1"></el-option>
+            <el-option label="已付款/等待服务/待发货" value="2"></el-option>
+            <el-option label="服务完成/已发货" value="3"></el-option>
+            <el-option label="买家确认服务完成/买家确认收货/已完成" value="4"></el-option>
+            <el-option label="已关闭" value="5"></el-option>
           </el-select>
         </div>
       </el-col>
-      
+
     </el-row>
     <el-row>
       <el-col :span="7">
@@ -68,9 +70,9 @@
           <el-select v-model="formInline.paymentType" placeholder="付款方式" clearable>
             <el-option label="全部" value="-1"></el-option>
             <el-option label="微信支付" value="0"></el-option>
-            <el-option label="套餐卡" value="1"></el-option>
-            <el-option label="刷卡" value="2"></el-option>
-            <el-option label="现金" value="3"></el-option>
+            <!--<el-option label="套餐卡" value="1"></el-option>-->
+            <!--<el-option label="刷卡" value="2"></el-option>-->
+            <!--<el-option label="现金" value="3"></el-option>-->
           </el-select>
         </div>
       </el-col>
@@ -96,7 +98,7 @@
           <el-select v-model="formInline.orderFromType" placeholder="订单来源" clearable>
             <el-option label="全部" value="-1"></el-option>
             <el-option label="小程序" value="1"></el-option>
-            <el-option label="公众号" value="1"></el-option>
+            <el-option label="公众号" value="2"></el-option>
           </el-select>
         </div>
       </el-col>
@@ -146,7 +148,8 @@ export default {
       },
       formInline: {
         value: [],
-        orderId: '0',
+        queryType: '1',
+        orderId: '',
         orderStatus: '-1',
         markingType: '-1',
         refundType: '-1',
@@ -163,6 +166,9 @@ export default {
       const start = new Date()
       start.setTime(start.getTime() - 3600 * 1000 * 24 * i)
       this.formInline.value = [start, end]
+      // console.log(this.formInline.value)
+      // this.formInline['createTimeBegin'] = formatDate(this.formInline.value[0])
+      // this.formInline['createTimeBegin'] = formatDate(this.formInline.value[1])
     },
     // 近7天
     query7() {
@@ -175,8 +181,8 @@ export default {
     // 查询
     query() {
       if (this.formInline.value.length !== 0) {
-        this.formInline['appointmentServiceTimeBegin'] = formatDate(this.formInline.value[0])
-        this.formInline['appointmentServiceTimeEnd'] = formatDate(this.formInline.value[1])
+        this.formInline['createTimeBegin'] = formatDate(this.formInline.value[0])
+        this.formInline['createTimeEnd'] = formatDate(this.formInline.value[1])
       }
       this.$emit('query', this.formInline)
     },

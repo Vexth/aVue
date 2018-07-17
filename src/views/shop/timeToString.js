@@ -3,8 +3,11 @@ function tran(n) {
 }
 
 export default function formatDate(timestamp) {
+  // console.log(timestamp)
   const time = new Date(timestamp)
-  const year = time.getYear()
+  // console.log(time)
+  const year = time.getFullYear()
+  // console.log(year)
   const month = time.getMonth() + 1
   const date = time.getDate()
   const hour = time.getHours()
