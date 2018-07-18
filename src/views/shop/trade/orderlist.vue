@@ -133,14 +133,25 @@ export default {
     // 查询
     query(val) {
       const list = {}
-      if (val['mobilePhone'] !== '') {
+      // <el-input v-if="formInline.queryType == '1'" v-model="formInline.orderId" placeholder="订单号" clearable></el-input>
+      // <el-input v-if="formInline.queryType == '2'" v-model="formInline.username" placeholder="收件人姓名" clearable></el-input>
+      // <el-input v-if="formInline.queryType == '3'" v-model="formInline.mobilePhone" placeholder="收件人手机号" clearable></el-input>
+      if (val['queryType'] === '1' && val['orderId'] !== '') {
         list['orderId'] = val['orderId']
-        list['mobilePhone'] = val['mobilePhone']
       }
-      if (val['username'] !== '') {
-        list['orderId'] = val['orderId']
+      if (val['queryType'] === '2' && val['username'] !== '') {
         list['username'] = val['username']
       }
+      if (val['queryType'] === '3' && val['mobilePhone'] !== '') {
+        list['mobilePhone'] = val['mobilePhone']
+      }
+      if (val['title'] !== '') {
+        list['title'] = val['title']
+      }
+      // if (val['username'] !== '') {
+      //   list['orderId'] = val['orderId']
+      //   list['username'] = val['username']
+      // }
       if (val['markingType'] !== '-1') {
         list['markingType'] = val['markingType']
       }
@@ -155,6 +166,12 @@ export default {
       }
       if (val['refundType'] !== '-1') {
         list['refundType'] = val['refundType']
+      }
+      if (val['createTimeBegin'] !== '') {
+        list['createTimeBegin'] = val['createTimeBegin']
+      }
+      if (val['createTimeEnd'] !== '') {
+        list['createTimeEnd'] = val['createTimeEnd']
       }
       this.queryList(list)
     },
