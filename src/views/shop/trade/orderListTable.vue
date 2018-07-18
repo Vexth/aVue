@@ -27,13 +27,13 @@
               </div>
             </div>
           </li>
-          <li :style="{'width': '9%', 'border-left': '1px solid rgb(216, 219, 227)', 'height': item.goodsList.length * 97 + 'px'}">
+          <li :style="{'width': '9%', 'border-left': '1px solid rgb(216, 219, 227)', 'height': item.goodsList.length * 87 + 10 + 'px'}">
             <div class="imgName" style="display: block;" v-for="(v, i) in item.goodsList" :key="i">
               <p>￥{{v.unitPrice}}</p>
               <p>（{{v.count}}件）</p>
             </div>
           </li>
-          <li :style="{'width': '9%','height': item.goodsList.length * 97 + 'px'}">
+          <li :style="{'width': '9%','height': item.goodsList.length * 87 + 10 + 'px'}">
             <div class="abs">
               <el-select v-if="refund.indexOf(i) > -1" v-model="item.refundType" placeholder="请选择">
                 <el-option
@@ -55,14 +55,14 @@
               <i style="margin-right: 0;margin-top: 5px;" @click="refundType(i, item)" :class="refund.indexOf(i) > -1 ? 'el-icon-circle-check' : 'el-icon-edit-outline'"></i>
             </div>
           </li>
-          <li :style="{'width': '9%','height': item.goodsList.length * 97 + 'px'}">
+          <li :style="{'width': '9%','height': item.goodsList.length * 87 + 10 + 'px'}">
             <div style="display: block;">
               <p>{{item.username}}</p>
               <p>{{item.mobilePhone}}</p>
             </div>
           </li>
-          <li :style="{'width': '9%','height': item.goodsList.length * 97 + 'px'}"><p>{{item.orderCreateTime}}</p></li>
-          <li :style="{'width': '14%','height': item.goodsList.length * 97 + 'px'}">
+          <li :style="{'width': '9%','height': item.goodsList.length * 87 + 10 + 'px'}"><p>{{item.orderCreateTime}}</p></li>
+          <li :style="{'width': '14%','height': item.goodsList.length * 87 + 10 + 'px'}">
             <div class="abs">
               ￥
               <el-input v-if="edit.indexOf(i) > -1" v-model="item.actualNeedMoney" autocomplete="off" autofocus="autofocus" onkeyup="value=value.replace(/[^\d^\.]+/g,'')"></el-input>
@@ -70,7 +70,7 @@
               <i style="margin-right: 0;margin-top: 5px;" @click="editL(i, item)" :class="edit.indexOf(i) > -1 ? 'el-icon-circle-check' : 'el-icon-edit-outline'"></i>
             </div>
           </li>
-          <li :style="{'width': '15%','height': item.goodsList.length * 97 + 'px'}">
+          <li :style="{'width': '15%','height': item.goodsList.length * 87 + 10 + 'px'}">
             <!-- <span style="line-height: 30px;">等待店家服务/发货</span> -->
             <!-- 1待付款, 2待发货, 3已发货, 4已收货, 5已关闭 orderStatus -->
             <div v-if="isFalse.indexOf(i) > -1" :style="{display: xs ? 'block' : 'none'}">
@@ -109,7 +109,7 @@
               </div>
             </div>
           </li>
-          <li :style="{'width': '15%','height': item.goodsList.length * 97 + 'px'}"><p style="text-align: left;">{{item.userRemark}}</p></li>
+          <li :style="{'width': '15%','height': item.goodsList.length * 87 + 10 + 'px'}"><p style="text-align: left;">{{item.userRemark}}</p></li>
         </ul>
       </li>
     </ul>
