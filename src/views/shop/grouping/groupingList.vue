@@ -1,51 +1,86 @@
 <template>
   <div class="app-container">
-    <el-button type="primary" @click="DialogVisible = true" size="small" icon="el-icon-edit">新增一级分类</el-button>
-    <el-button type="primary" size="small" icon="el-icon-edit">新增二级分类</el-button>
-    <el-table :data="list" v-loading.body="listLoading" border fit highlight-current-row style="width: 100%; margin-top: 20px;" @selection-change="handleSelectionChange" ref="multipleTable">
+    <el-button v-if="isParentId === 0" type="primary" @click="addKinds" size="small" icon="el-icon-circle-plus-outline">新增一级分类</el-button>
+    <el-button v-else type="primary" size="small" icon="el-icon-circle-plus-outline">新增二级分类</el-button>
+    <el-button type="success" size="small" icon="el-icon-sort">排序</el-button>
+    <el-button v-if="isParentId !== 0" @click="back" size="small" icon="el-icon-back">返回上一级</el-button>
 
-      <el-table-column align="center" label="一级分组">
+    <el-table :data="list" v-loading.body="listLoading" border fit highlight-current-row @row-click="rowClick" style="width: 100%; margin-top: 20px;">
+
+      <el-table-column width="100px" align="center" label="图标">
         <template slot-scope="scope">
-          <span>{{scope.row.timestamp | parseTime('{y}-{m}-{d} {h}:{i}')}}</span>
+          <img :src="scope.row.imageUrl" style="width: 50px;height: 50px;" >
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" :label="label">
+        <template slot-scope="scope">
+          <span>{{scope.row.name}}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" label="序号">
+        <template slot-scope="scope">
+          <span>{{scope.row.sortId}}</span>
         </template>
       </el-table-column>
 
       <el-table-column align="center" label="操作" width="300">
         <template slot-scope="scope">
-          <el-button type="primary" @click='scope.row.edit=!scope.row.edit' size="small" icon="el-icon-edit">修改</el-button>
-          <el-button type="danger" size="small" icon="el-icon-delete">删除</el-button>
+          <el-button type="primary" @click='updateKinds(scope.row)' size="small" icon="el-icon-edit">修改</el-button>
+          <el-button type="danger" @click="deleteKinds(scope.row)" size="small" icon="el-icon-delete">删除</el-button>
         </template>
       </el-table-column>
 
     </el-table>
 
     <el-dialog
-      title="修改"
+      :title="title"
       :visible.sync="DialogVisible"
       width="50%"
       center>
-      <v-dialog-img ref="DialogImg" :isTrue="isTrue" :selected="selected" :selectedImgList="selectedImgList" />
+      <div class="df">
+        <span>{{title}}：</span>
+        <el-input style="width: 68%" v-model="name" maxlength="18" placeholder="请输入内容" clearable></el-input>
+      </div>
+      <div class="df">
+        <span>序号：</span>
+        <el-input style="width: 68%" v-model="sortOrder" onkeyup="value=value.replace(/[^\d]/g,'')" placeholder="请输入内容" clearable></el-input>
+      </div>
+      <div class="df">
+        <span>当前等级：</span>
+        <el-input style="width: 68%" v-model="currentGrade" onkeyup="value=value.replace(/[^\d]/g,'')" placeholder="请输入内容" clearable></el-input>
+      </div>
+      <v-img ref="DialogImg" :KindsImageList="KindsImageList" :image="image" />
       <span slot="footer" class="dialog-footer">
         <el-button @click="DialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="sub">确 定</el-button>
+        <el-button type="primary" @click="sub(title)">确 定</el-button>
       </span>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import { fetchList } from '@/api/article'
-
-import vDialogImg from '../showcase/dialogImg.vue'
+import vImg from './img.vue'
 
 export default {
   data() {
     return {
+      label: '一级分组',
+      kindsId: '',
+      name: '',
+      currentGrade: '',
+      sortOrder: '',
+      title: '',
+      image: {},
+      isParentId: 0,
+      isGradeId: 1,
       selected: [],
       selectedImgList: [],
       isTrue: false,
       DialogVisible: false,
-      list: null,
+      KindsImageList: [],
+      list: [],
       listLoading: true,
       listQuery: {
         page: 1,
@@ -54,58 +89,157 @@ export default {
     }
   },
   components: {
-    vDialogImg
-  },
-  filters: {
-    statusFilter(status) {
-      const statusMap = {
-        published: 'success',
-        draft: 'info',
-        deleted: 'danger'
-      }
-      return statusMap[status]
-    }
+    vImg
   },
   created() {
-    this.getList()
+    this.kindsList(0, 1)
+    this.kindsimageList(1)
   },
   methods: {
-    getList() {
+    kindsList(parentId, gradeId) {
       this.listLoading = true
-      fetchList(this.listQuery).then(response => {
-        const items = response.data.items
-        this.list = items.map(v => {
-          this.$set(v, 'edit', false) // https://vuejs.org/v2/guide/reactivity.html
-
-          v.originalTitle = v.title //  will be used when user click the cancel botton
-
-          return v
-        })
-        this.listLoading = false
-      })
+      // GET /api/v1/shop/kindsList 获取商户分类
+      this.axios.get(`api/v1/shop/kindsList?parentId=${parentId}&&gradeId=${gradeId}`).then(res => {
+        if (res.status === 200) {
+          if (res.data.code === 200) {
+            this.list = res.data.data.kindlist
+          } else {
+            this.$message.error(res.data.msg)
+          }
+          this.listLoading = false
+        }
+      }).catch(err => console.log(err))
     },
-    cancelEdit(row) {
-      row.title = row.originalTitle
-      row.edit = false
-      this.$message({
-        message: 'The title has been restored to the original value',
+    kindsimageList(gradeId) {
+      // GET /api/v1/shop/kindsimage/list 查看分类图库列表
+      this.axios.get(`api/v1/shop/kindsimage/list?gradeId=${gradeId}`).then(res => {
+        if (res.status === 200) {
+          if (res.data.code === 200) {
+            this.KindsImageList = res.data.data
+          } else {
+            this.$message.error(res.data.msg)
+          }
+        }
+      }).catch(err => console.log(err))
+    },
+    // 新增分类
+    addKinds() {
+      this.DialogVisible = true
+      this.title = '新增分类'
+      this.name = ''
+      this.currentGrade = ''
+      this.sortOrder = ''
+      this.image = {}
+    },
+    addKindsList(list) {
+      // POST /api/v1/shop/addKinds 添加分类
+      this.axios.post(`api/v1/shop/addKinds`, list).then(res => {
+        if (res.status === 200) {
+          if (res.data.code === 200) {
+            this.$message({
+              type: 'success',
+              message: '新增成功!'
+            })
+            this.kindsList(this.isParentId, this.isGradeId)
+            this.$refs.DialogImg.close()
+            this.DialogVisible = false
+          } else {
+            this.$message.error(res.data.msg)
+          }
+        }
+      }).catch(err => console.log(err))
+    },
+    // 修改分类
+    updateKinds(val) {
+      event.stopPropagation()
+      this.DialogVisible = true
+      this.title = '修改分类'
+      this.name = val.name
+      this.currentGrade = this.isGradeId
+      this.sortOrder = val.sortId
+      this.kindsId = val.kindId
+      const a = this.KindsImageList.filter(res => res.url === val.imageUrl)[0]
+      this.image = a
+    },
+    updateKindsList(list) {
+      // POST /api/v1/shop/updateKinds 修改分类
+      this.axios.post(`api/v1/shop/updateKinds?kindsId=${this.kindsId}`, list).then(res => {
+        if (res.status === 200) {
+          if (res.data.code === 200) {
+            this.$message({
+              type: 'success',
+              message: '修改成功!'
+            })
+            this.kindsList(this.isParentId, this.isGradeId)
+            this.DialogVisible = false
+          } else {
+            this.$message.error(res.data.msg)
+          }
+        }
+      }).catch(err => console.log(err))
+    },
+    deleteKinds(val) {
+      event.stopPropagation()
+      // POST /api/v1/shop/deleteKinds 删除分类
+      this.$confirm('此操作将永久删除该分类, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
         type: 'warning'
+      }).then(() => {
+        this.axios.post(`api/v1/shop/deleteKinds?kindinfo=${val.kindId}`).then(res => {
+          if (res.status === 200) {
+            if (res.data.code === 200) {
+              this.$message({
+                type: 'success',
+                message: '删除成功!'
+              })
+              this.kindsList(this.isParentId, this.isGradeId)
+            } else {
+              this.$message.error(res.data.msg)
+            }
+          }
+        }).catch(err => console.log(err))
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
       })
     },
-    confirmEdit(row) {
-      row.edit = false
-      row.originalTitle = row.title
-      this.$message({
-        message: 'The title has been edited',
-        type: 'success'
-      })
+    rowClick(e) {
+      if (this.isParentId === 0) {
+        this.itemFn('二级分组', e.kindId, 2)
+      }
     },
-    handleSelectionChange(val) {
-      this.multipleSelection = val
+    back() {
+      this.itemFn('一级分组', 0, 1)
     },
-    sub() {
+    itemFn(label, isParentId, isGradeId) {
+      this.label = label
+      this.isParentId = isParentId
+      this.isGradeId = isGradeId
+      this.kindsList(isParentId, isGradeId)
+      this.kindsimageList(isGradeId)
+    },
+    sub(val) {
       this.selectedImgList = this.$refs.DialogImg.tpSub()
-      console.log(this.selectedImgList)
+      if (this.selectedImgList.length !== 1) {
+        this.$message.error('请选择一张图片作为分类的图标！')
+        return
+      }
+      const list = {
+        name: this.name,
+        currentGrade: this.currentGrade,
+        sortOrder: this.sortOrder,
+        parentId: this.isParentId,
+        imageUrl: this.selectedImgList[0].url
+      }
+      if (this.title === '新增分类') {
+        this.addKindsList(list)
+      }
+      if (this.title === '修改分类') {
+        this.updateKindsList(list)
+      }
     }
   }
 }
@@ -119,5 +253,14 @@ export default {
   position: absolute;
   right: 15px;
   top: 10px;
+}
+.df {
+  display: flex;
+  margin-bottom: 20px;
+  float: left;
+}
+.df span {
+  line-height: 36px;
+  margin-right: 5px;
 }
 </style>

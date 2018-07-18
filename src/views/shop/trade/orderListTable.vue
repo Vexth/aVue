@@ -18,7 +18,7 @@
       </li>
       <li class="contList">
         <ul>
-          <li style="width: 20%">
+          <li style="width: 20%; border-right: 0;" :style="{'padding-top: ': item.goodsList > 1 ? '20px' : '' }">
             <div class="imgName" v-for="(v, i) in item.goodsList" :key="i">
               <img class="fl" :src="v.imgUrl" />
               <div class="fl name">
@@ -27,7 +27,7 @@
               </div>
             </div>
           </li>
-          <li :style="{'width': '9%', 'height': item.goodsList.length * 97 + 'px'}">
+          <li :style="{'width': '9%', 'border-left': '1px solid rgb(216, 219, 227)', 'height': item.goodsList.length * 97 + 'px'}">
             <div class="imgName" style="display: block;" v-for="(v, i) in item.goodsList" :key="i">
               <p>￥{{v.unitPrice}}</p>
               <p>（{{v.count}}件）</p>

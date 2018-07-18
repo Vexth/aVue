@@ -140,7 +140,7 @@
                 </div>
                 <div>0</div>
                 <div>
-                  <el-button :type="primary" size="mini" @click="addTP('imageId', items)">{{scText}}<i class="el-icon--right" :class="iconCheck ? 'el-icon-circle-check-outline' : 'el-icon-upload'"></i></el-button>
+                  <el-button :type="iconCheck.indexOf(index) > -1 ? 'success' : 'primary'" size="mini" @click="addTP('imageId', items, index)">{{iconCheck.indexOf(index) > -1 ? '成功' : '上传'}}<i class="el-icon--right" :class="iconCheck.indexOf(index) > -1 ? 'el-icon-circle-check-outline' : 'el-icon-upload'"></i></el-button>
                 </div>
               </li>
             </ul>
@@ -273,9 +273,8 @@ import vImgList from './imgList.vue'
 export default {
   data() {
     return {
-      scText: '上传',
-      primary: 'primary',
-      iconCheck: false,
+      itemId: '',
+      iconCheck: [],
       disabled: true,
       title: '',
       titleName: '',
@@ -380,9 +379,7 @@ export default {
         this.tpDialogVisible = false
         this.imageId.imageId = this.selectedImgList[0]['id']
         this.skuList.push(this.imageId)
-        this.iconCheck = true
-        this.primary = 'success'
-        this.scText = '成功'
+        this.iconCheck.push(this.itemId)
         return
       }
       this.tpDialogVisible = false
@@ -483,7 +480,8 @@ export default {
       // }
       // this.dataList = list.length > 1 ? list[1]['children'] : data
     },
-    addTP(title, val) {
+    addTP(title, val, index) {
+      this.itemId = index
       this.selected = []
       this.selectedImgList = []
       this.tpDialogVisible = true
