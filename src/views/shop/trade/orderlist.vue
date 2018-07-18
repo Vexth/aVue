@@ -10,7 +10,7 @@
       <el-tab-pane v-for="item in navlist" :key="item.name" :label="item.label" :name="item.name"></el-tab-pane>
     </el-tabs>
 
-    <v-order-list-table :rows="rows" :list="list" @star="star" @cancel="cancel" @duo="duo" @edit="edit" />
+    <v-order-list-table :rows="rows" :list="list" @star="star" @cancel="cancel" @cancel1="cancel1" @duo="duo" @edit="edit" />
     <el-dialog title="更多详情" :visible.sync="dialogFormVisible">
       <v-order-list-more :form="form" />
       <div slot="footer" class="dialog-footer">
@@ -90,16 +90,6 @@ export default {
         page: 1,
         limit: 10
       }
-    }
-  },
-  filters: {
-    statusFilter(status) {
-      const statusMap = {
-        published: 'success',
-        draft: 'info',
-        deleted: 'danger'
-      }
-      return statusMap[status]
     }
   },
   created() {
@@ -196,6 +186,10 @@ export default {
         }
       }).catch(err => console.log(err))
     },
+    // 取消发货
+    cancel1() {
+      this.queryList({})
+    },
     // 取消订单
     cancel(val) {
       const list = {
@@ -209,6 +203,7 @@ export default {
               message: res.data.msg,
               type: 'success'
             })
+            this.queryList({})
           } else {
             this.$message.error(res.data.msg)
           }
@@ -278,6 +273,7 @@ export default {
                 message: res.data.msg,
                 type: 'success'
               })
+              this.queryList({})
             } else {
               this.$message.error(res.data.msg)
             }

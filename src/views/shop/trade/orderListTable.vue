@@ -44,7 +44,7 @@
                 </el-option>
               </el-select>
               <span v-else>
-                <span v-if="item.refundType === null || item.refundType === '-1' || item.refundType === 'null'">无</span>
+                <span v-if="item.refundType == null || item.refundType === '-1' || item.refundType == undefined">无</span>
                 <span v-if="item.refundType === '1' || item.refundType === 1">退货中</span>
                 <span v-if="item.refundType === '2' || item.refundType === 2">退货完成</span>
                 <span v-if="item.refundType === '3' || item.refundType === 3">退款中</span>
@@ -176,6 +176,8 @@ export default {
     },
     // 发货
     confirm(i, val) {
+      this.xs = true
+      this.input = ''
       this.isFalse.push(i)
     },
     sendGoods(list) {
@@ -239,6 +241,7 @@ export default {
                 message: res.data.msg,
                 type: 'success'
               })
+              this.$emit('cancel1')
             } else {
               this.$message.error(res.data.msg)
             }
@@ -386,8 +389,9 @@ i {
   position: absolute;
   left: 10px;
   right: 10px;
-  top: 50%;
-  margin-top: -18px;
+  top: 10px;
+  /* top: 50%;
+  margin-top: -18px; */
 }
 
 .el-select-dropdown__item{
