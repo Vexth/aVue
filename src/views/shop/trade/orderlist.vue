@@ -133,9 +133,6 @@ export default {
     // 查询
     query(val) {
       const list = {}
-      // <el-input v-if="formInline.queryType == '1'" v-model="formInline.orderId" placeholder="订单号" clearable></el-input>
-      // <el-input v-if="formInline.queryType == '2'" v-model="formInline.username" placeholder="收件人姓名" clearable></el-input>
-      // <el-input v-if="formInline.queryType == '3'" v-model="formInline.mobilePhone" placeholder="收件人手机号" clearable></el-input>
       if (val['queryType'] === '1' && val['orderId'] !== '') {
         list['orderId'] = val['orderId']
       }
