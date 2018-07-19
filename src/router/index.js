@@ -268,6 +268,20 @@ export const asyncRouterMap = [
   },
 */
   {
+    path: '/homepage1',
+    component: Layout,
+    redirect: 'noredirect',
+    meta: {
+      title: 'homepage1',
+      icon: 'table'
+    },
+    children: [
+      { path: 'banner', component: () => import('@/views/shop/homepage/banner'), name: 'banner', meta: { title: 'banner', noCache: true }},
+      { path: 'activity1', component: () => import('@/views/shop/homepage/activity'), name: 'activity1', meta: { title: 'activity1', noCache: true }},
+      { path: 'activity2', component: () => import('@/views/shop/homepage/activity'), name: 'activity2', meta: { title: 'activity2', noCache: true }}
+    ]
+  },
+  {
     path: '/showcase',
     component: Layout,
     redirect: 'noredirect',
@@ -353,7 +367,7 @@ export const asyncRouterMap = [
       title: 'system',
       icon: 'excel'
     },
-    children: [{ path: 'index', component: () => import('@/views/shop/grouping/groupinglist'), name: 'grouping', meta: { title: 'grouping', icon: 'excel', noCache: true }}]
+    children: [{ path: 'grouping', component: () => import('@/views/shop/grouping/groupinglist'), name: 'grouping', meta: { title: 'grouping', icon: 'excel', noCache: true }}]
   },
 
   {
@@ -364,7 +378,7 @@ export const asyncRouterMap = [
       title: 'system',
       icon: 'excel'
     },
-    children: [{ path: 'index', component: () => import('@/views/shop/img-cropper/index.vue'), name: 'cropper', meta: { title: 'cropper', icon: 'excel', noCache: true }}]
+    children: [{ path: 'cropper', component: () => import('@/views/shop/img-cropper/cropper'), name: 'cropper', meta: { title: 'cropper', icon: 'excel', noCache: true }}]
   },
 
   { path: '*', redirect: '/404', hidden: true }

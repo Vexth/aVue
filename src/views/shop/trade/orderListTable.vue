@@ -18,7 +18,7 @@
       </li>
       <li class="contList">
         <ul style="display: flex;">
-          <li style="width: 20%; border-right: 0;" :style="{'padding-top: ': item.goodsList > 1 ? '20px' : '' }">
+          <li style="width: 20%;" :style="{'padding-top: ': item.goodsList > 1 ? '20px' : '' }">
             <div class="imgName" v-for="(v, i) in item.goodsList" :key="i">
               <img class="fl" :src="v.imgUrl" />
               <div class="fl name">
@@ -27,7 +27,7 @@
               </div>
             </div>
           </li>
-          <li :style="{'width': '9%', 'border-left': '1px solid rgb(216, 219, 227)'}">
+          <li :style="{'width': '9%'}">
             <div class="imgName" style="display: block;" v-for="(v, i) in item.goodsList" :key="i">
               <p>￥{{v.unitPrice}}</p>
               <p>（{{v.count}}件）</p>
@@ -108,6 +108,7 @@
           </li>
           <li :style="{'width': '15%'}"><p style="text-align: left;">{{item.userRemark}}</p></li>
         </ul>
+        <!-- <a v-if="item.goodsList.length > 1" class="zkck" @click="zkClick(i)">展开查看更多</a> -->
       </li>
     </ul>
   </div>
@@ -117,6 +118,7 @@
 export default {
   data() {
     return {
+      zklist: [],
       xs: true,
       xsdd: true,
       input: '',
@@ -279,6 +281,13 @@ export default {
           }
         }).catch(err => console.log(err))
       }
+    },
+    zkClick(id) {
+      if (this.zklist.indexOf(id) > -1) {
+        console.log(id)
+      }
+      // this.zklist.push(id)
+      console.log(id)
     }
   }
 }
@@ -394,5 +403,16 @@ i {
 .el-select-dropdown__item{
   font-size: 14px;
   padding: 0 20px;
+}
+.zkck{
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 24px;
+  bottom: 0;
+  line-height: 24px;
+  font-size: 12px;
+  background: rgba(214, 113, 113, 0.3);
+  color: #cc1818;
 }
 </style>

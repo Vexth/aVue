@@ -67,7 +67,11 @@ export default {
     activity: '活动',
     system: '系统管理',
     navsys: '菜单配置',
-    grouping: '分组管理'
+    grouping: '分组管理',
+    homepage1: '首页配置',
+    banner: '轮播图配置',
+    activity1: '活动栏1设置',
+    activity2: '活动栏2设置'
   },
   navbar: {
     logOut: '退出登录',
