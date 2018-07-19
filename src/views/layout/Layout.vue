@@ -63,4 +63,7 @@ export default {
     position: absolute;
     z-index: 999;
   }
+  #app .main-container {
+    overflow-x: initial!important;
+  }
 </style>

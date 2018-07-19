@@ -285,5 +285,11 @@ export default {
 }
 </script>
 <style scoped>
-
+#app .main-container {
+  min-height: 100%;
+  -webkit-transition: margin-left 0.28s;
+  transition: margin-left 0.28s;
+  margin-left: 180px;
+  overflow-x: initial!important;
+}
 </style>

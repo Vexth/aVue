@@ -47,10 +47,10 @@
         <span>序号：</span>
         <el-input style="width: 68%" v-model="sortOrder" onkeyup="value=value.replace(/[^\d]/g,'')" placeholder="请输入内容" clearable></el-input>
       </div>
-      <div class="df">
+      <!-- <div class="df">
         <span>当前等级：</span>
         <el-input style="width: 68%" v-model="currentGrade" onkeyup="value=value.replace(/[^\d]/g,'')" placeholder="请输入内容" clearable></el-input>
-      </div>
+      </div> -->
       <v-img ref="DialogImg" :KindsImageList="KindsImageList" :image="image" />
       <span slot="footer" class="dialog-footer">
         <el-button @click="DialogVisible = false">取 消</el-button>
@@ -227,9 +227,17 @@ export default {
         this.$message.error('请选择一张图片作为分类的图标！')
         return
       }
+      if (this.sortOrder === '') {
+        this.$message.error('请填写序号！')
+        return
+      }
+      if (this.name === '') {
+        this.$message.error('请填写您要新增的分类！')
+        return
+      }
       const list = {
         name: this.name,
-        currentGrade: this.currentGrade,
+        currentGrade: this.isGradeId,
         sortOrder: this.sortOrder,
         parentId: this.isParentId,
         imageUrl: this.selectedImgList[0].url
@@ -255,7 +263,7 @@ export default {
   top: 10px;
 }
 .df {
-  display: flex;
+  /* display: flex; */
   margin-bottom: 20px;
   float: left;
 }

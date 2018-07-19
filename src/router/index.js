@@ -356,5 +356,16 @@ export const asyncRouterMap = [
     children: [{ path: 'index', component: () => import('@/views/shop/grouping/groupinglist'), name: 'grouping', meta: { title: 'grouping', icon: 'excel', noCache: true }}]
   },
 
+  {
+    path: '/cropper',
+    component: Layout,
+    redirect: 'noredirect',
+    meta: {
+      title: 'system',
+      icon: 'excel'
+    },
+    children: [{ path: 'index', component: () => import('@/views/shop/img-cropper/index.vue'), name: 'cropper', meta: { title: 'cropper', icon: 'excel', noCache: true }}]
+  },
+
   { path: '*', redirect: '/404', hidden: true }
 ]

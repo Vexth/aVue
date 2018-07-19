@@ -1,6 +1,6 @@
 <template>
   <div>
-    <ul class="row">
+    <ul class="row" style="top: 0px;position: sticky;z-index: 99;">
       <li :style="{width: item.width+'%'}" v-for="(item, i) in rows" :key="i">
         <span>{{item.label}}</span>
       </li>
@@ -17,7 +17,7 @@
         </div>
       </li>
       <li class="contList">
-        <ul>
+        <ul style="display: flex;">
           <li style="width: 20%; border-right: 0;" :style="{'padding-top: ': item.goodsList > 1 ? '20px' : '' }">
             <div class="imgName" v-for="(v, i) in item.goodsList" :key="i">
               <img class="fl" :src="v.imgUrl" />
@@ -27,13 +27,13 @@
               </div>
             </div>
           </li>
-          <li :style="{'width': '9%', 'border-left': '1px solid rgb(216, 219, 227)', 'height': item.goodsList.length * 87 + 10 + 'px'}">
+          <li :style="{'width': '9%', 'border-left': '1px solid rgb(216, 219, 227)'}">
             <div class="imgName" style="display: block;" v-for="(v, i) in item.goodsList" :key="i">
               <p>￥{{v.unitPrice}}</p>
               <p>（{{v.count}}件）</p>
             </div>
           </li>
-          <li :style="{'width': '9%','height': item.goodsList.length * 87 + 10 + 'px'}">
+          <li :style="{'width': '9%'}">
             <div class="abs">
               <el-select v-if="refund.indexOf(i) > -1" v-model="item.refundType" placeholder="请选择">
                 <el-option
@@ -55,22 +55,22 @@
               <i style="margin-right: 0;margin-top: 5px;" @click="refundType(i, item)" :class="refund.indexOf(i) > -1 ? 'el-icon-circle-check' : 'el-icon-edit-outline'"></i>
             </div>
           </li>
-          <li :style="{'width': '9%','height': item.goodsList.length * 87 + 10 + 'px'}">
+          <li :style="{'width': '9%'}">
             <div style="display: block;">
               <p>{{item.username}}</p>
               <p>{{item.mobilePhone}}</p>
             </div>
           </li>
-          <li :style="{'width': '9%','height': item.goodsList.length * 87 + 10 + 'px'}"><p>{{item.orderCreateTime}}</p></li>
-          <li :style="{'width': '14%','height': item.goodsList.length * 87 + 10 + 'px'}">
+          <li :style="{'width': '9%'}"><p>{{item.orderCreateTime}}</p></li>
+          <li :style="{'width': '14%'}">
             <div class="abs">
               ￥
               <el-input v-if="edit.indexOf(i) > -1" v-model="item.actualNeedMoney" autocomplete="off" autofocus="autofocus" onkeyup="value=value.replace(/[^\d^\.]+/g,'')"></el-input>
               <span v-else>{{item.actualNeedMoney}}</span>
-              <i style="margin-right: 0;margin-top: 5px;" @click="editL(i, item)" :class="edit.indexOf(i) > -1 ? 'el-icon-circle-check' : 'el-icon-edit-outline'"></i>
+              <i v-if="item.orderStatus === '1' || item.orderStatus === 1" style="margin-right: 0;margin-top: 5px;" @click="editL(i, item)" :class="edit.indexOf(i) > -1 ? 'el-icon-circle-check' : 'el-icon-edit-outline'"></i>
             </div>
           </li>
-          <li :style="{'width': '15%','height': item.goodsList.length * 87 + 10 + 'px'}">
+          <li :style="{'width': '15%'}">
             <!-- <span style="line-height: 30px;">等待店家服务/发货</span> -->
             <!-- 1待付款, 2待发货, 3已发货, 4已收货, 5已关闭 orderStatus -->
             <div v-if="isFalse.indexOf(i) > -1" :style="{display: xs ? 'block' : 'none'}">
@@ -87,9 +87,9 @@
             <div v-else>
               <span style="line-height: 30px;" v-if="item.orderStatus === '1' || item.orderStatus === 1">待付款</span>
               <span style="line-height: 30px;" v-if="item.orderStatus === '2' || item.orderStatus === 2">待发货</span>
-              <span style="line-height: 30px;" v-if="item.orderStatus === '4' || item.orderStatus === 4">已收货</span>
+              <span style="line-height: 30px;" v-if="item.orderStatus === '4' || item.orderStatus === 4">顾客已确认收货/完成服务</span>
               <span style="line-height: 30px;" v-if="item.orderStatus === '5' || item.orderStatus === 5">已关闭</span>
-              <div :style="{display: xsdd ? 'block' : 'none'}" v-if="item.orderStatus !== 3 && item.orderStatus !== 5">
+              <div :style="{display: xsdd ? 'block' : 'none'}" v-if="item.orderStatus !== 3 && item.orderStatus !== 4 && item.orderStatus !== 5 ">
                 <div class="fk">
                   <el-button size="mini" @click="cancel(item)">取消订单</el-button>
                 </div>
@@ -100,16 +100,13 @@
             </div>
 
             <div v-if="item.orderStatus === '3' || item.orderStatus === 3">
-              <span style="line-height: 30px;" >已发货</span>
-              <div class="fk">
-                <el-button size="mini">顾客确认收货/服务</el-button>
-              </div>
+              <span style="line-height: 30px;" >已发货，顾客确认收货/服务</span>
               <div class="fk">
                 <el-button size="mini" @click="cancel1(item)">取消发货</el-button>
               </div>
             </div>
           </li>
-          <li :style="{'width': '15%','height': item.goodsList.length * 87 + 10 + 'px'}"><p style="text-align: left;">{{item.userRemark}}</p></li>
+          <li :style="{'width': '15%'}"><p style="text-align: left;">{{item.userRemark}}</p></li>
         </ul>
       </li>
     </ul>
