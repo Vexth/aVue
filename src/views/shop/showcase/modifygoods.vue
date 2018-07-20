@@ -21,7 +21,17 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="商品分组：">
+      <el-form-item label="商品一级分组：">
+        <el-select v-model="groupId" placeholder="请选择">
+          <el-option
+            v-for="item in optionsFZ"
+            :key="item.value"
+            :label="item.name"
+            :value="item.id">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="商品二级分组：">
         <el-select v-model="groupId" placeholder="请选择">
           <el-option
             v-for="item in optionsFZ"

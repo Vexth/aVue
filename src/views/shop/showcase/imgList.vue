@@ -1,7 +1,7 @@
 <template>
   <div>
     <ul>
-      <li v-for="(img, i) in tpList" :key="i" class="uploadList">
+      <li v-for="(img, i) in tpList" :key="i" class="uploadList" :class="dome">
         <img style="width: 100%;height: 118px;" :src="img.url">
         <div class="cha" @click="cha(list, tpList, i)">×</div>
       </li>
@@ -15,7 +15,9 @@
 <script>
 export default {
   data() {
-    return {}
+    return {
+      dome: ''
+    }
   },
   props: {
     list: String,
@@ -25,8 +27,14 @@ export default {
     cha(title, val, id) {
       val.splice(id, 1)
       this[title] = val
+      if (this.list === 'banner') {
+        this.$emit('cha', id)
+      }
     },
     uploadList(val) {
+      if (val === 'banner') {
+        this.dome = 'dome'
+      }
       this.$emit('uploadList', this.list)
     }
   }
@@ -77,5 +85,9 @@ ul {
   border-radius: 50%;
   z-index: 2;
   display: none;
+}
+.dome {
+  margin-left: 50px;
+  margin-right: 50px;
 }
 </style>

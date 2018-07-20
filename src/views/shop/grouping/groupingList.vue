@@ -47,6 +47,7 @@
         <span>序号：</span>
         <el-input style="width: 68%" v-model="sortOrder" onkeyup="value=value.replace(/[^\d]/g,'')" placeholder="请输入内容" clearable></el-input>
       </div>
+      <div class="df" style="width: 100%;"></div>
       <!-- <div class="df">
         <span>当前等级：</span>
         <el-input style="width: 68%" v-model="currentGrade" onkeyup="value=value.replace(/[^\d]/g,'')" placeholder="请输入内容" clearable></el-input>
