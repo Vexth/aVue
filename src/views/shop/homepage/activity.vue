@@ -6,9 +6,12 @@
         <el-input v-model="input" placeholder="请输入内容"></el-input>
       </div>
 
-      <v-card v-for="i in selected" :key="i" :num="i" @clickInput="clickInput" />
-      <v-plus v-if="isXs" :form="form" @plus="plus" />
+      <div style="display: inline-block;">
+        <v-card v-for="i in selected" :key="i" :num="i" @clickInput="clickInput" />
+        <v-plus v-if="isXs" :form="form" @plus="plus" />
+      </div>
 
+      <p></p>
       <el-button style="margin-top: 20px;margin-left: 10px;" type="primary" @click="onSubmit">保存</el-button>
       
     </div>
