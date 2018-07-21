@@ -104,7 +104,7 @@
                 <el-button @click="addGuigeMing(options1, i, '规格名')">添加规格名</el-button>
                 <el-button type="danger" icon="el-icon-delete" @click="del(i)"></el-button>
               </div>
-              
+
               <div class="title mb0 bgf">
                 <span>规格值：</span>
                 <el-select
@@ -364,7 +364,7 @@ export default {
   },
   mounted() {
     // GET /api/v1/shop/product/getCategoryOption
-    this.axios.get('api/v1/shop/product/getCategoryOption').then(res => {
+    this.axios.get('/api/v1/shop/product/getCategoryOption').then(res => {
       if (res.status === 200) {
         this.options = res.data.data
       } else {
@@ -372,7 +372,7 @@ export default {
       }
     }).catch(err => console.log(err))
     // // GET /api/v1/shop/product/getGroupOption
-    this.axios.get('api/v1/shop/product/getGroupOption').then(res => {
+    this.axios.get('/api/v1/shop/product/group/tree').then(res => {
       if (res.status === 200) {
         this.optionsFZ = res.data.data
       } else {
@@ -505,7 +505,7 @@ export default {
     },
     getSkuAttrOption() {
       // GET /api/v1/shop/product/getSkuAttrOption
-      this.axios.get(`api/v1/shop/product/getSkuAttrOption`).then(res => {
+      this.axios.get(`/api/v1/shop/product/group/tree`).then(res => {
         if (res.status === 200) {
           this.options1 = res.data.data
         } else {
@@ -530,7 +530,7 @@ export default {
         return
       }
       this.iscfxz[i] = e
-      this.axios.get(`api/v1/shop/product/getSkuAttrOption`).then(res => {
+      this.axios.get(`/api/v1/shop/product/group/tree`).then(res => {
         console.log(this.form.items[i])
         if (res.status === 200) {
           this.options1 = res.data.data
@@ -691,7 +691,7 @@ export default {
       this.axios.post('api/v1/shop/product/productSkuAttrCreate', data).then(res => {
         if (res.data.code === 200) {
           this.centerDialogVisible = false
-          this.axios.get(`api/v1/shop/product/getSkuAttrOption`).then(res => {
+          this.axios.get(`/api/v1/shop/product/group/tree`).then(res => {
             if (res.status === 200) {
               this.formGuige = ''
               this.options1 = res.data.data
