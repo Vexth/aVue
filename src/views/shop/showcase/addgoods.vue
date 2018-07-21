@@ -364,7 +364,7 @@ export default {
   },
   mounted() {
     // GET /api/v1/shop/product/getCategoryOption
-    this.axios.get('/api/v1/shop/product/group/tree').then(res => {
+    this.axios.get('/api/v1/shop/product/getCategoryOption').then(res => {
       if (res.status === 200) {
         this.options = res.data.data
       } else {
