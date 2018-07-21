@@ -160,14 +160,12 @@ export default {
   created() {
     this.productLoad()
     this.getCategoryOption()
-    this.getGroupOption()
   },
   methods: {
     fz() {
       // GET /api/v1/shop/product/group/children 商家获取商品子分组接口 通过父级ID 获取 二级分类
       this.axios.get(`api/v1/shop/product/group/children?parentId=${this.groupId}`).then(res => {
         if (res.status === 200) {
-          this.groupId1 = null
           this.optionsFZ1 = res.data.data
         } else {
           console.error(res)
@@ -189,6 +187,7 @@ export default {
       this.axios.get('api/v1/shop/product/group/tree').then(res => {
         if (res.status === 200) {
           this.optionsFZ = res.data.data
+          this.fz()
         } else {
           console.error(res)
         }
@@ -214,6 +213,7 @@ export default {
         this.imgSpecList = product['imgSpecList']
         this.rows = data.thead
         this.list = data.tbody
+        this.getGroupOption()
       }).catch(err => console.log(err))
     },
     tpSub() {
@@ -262,10 +262,6 @@ export default {
         this.$message.error('请填写库存！')
         return
       }
-      if (this.groupId1 === null) {
-        this.$message.error('请选择二级分组！')
-        return
-      }
       this.modifyData.unitPrice = this.unitPrice
       this.modifyData.stockAmount = this.stockAmount
       this.modifyData.costPrice = this.costPrice
@@ -301,12 +297,16 @@ export default {
         this.$message.error('请上传规格参数图片！')
         return
       }
+      if (this.groupId1 === null) {
+        this.$message.error('请选择二级分组！')
+        return
+      }
       let data = {}
       data = { ...data, ...this.form }
       data['id'] = this.$route.query.id
       data['saleStatus'] = this.saleStatus ? 0 : 1
       data['categoryId'] = this.categoryId
-      data['groupId'] = this.groupId
+      data['groupId'] = this.groupId1
       data['imgPrimaryList'] = this.imgPrimaryList
       data['imgDescList'] = this.imgDescList
       data['imgSpecList'] = this.imgSpecList
