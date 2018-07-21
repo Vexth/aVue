@@ -8,6 +8,9 @@
 
       <v-card v-for="i in selected" :key="i" :num="i" @clickInput="clickInput" />
       <v-plus v-if="isXs" :form="form" @plus="plus" />
+
+      <el-button style="margin-top: 20px;margin-left: 10px;" type="primary" @click="onSubmit">保存</el-button>
+      
     </div>
   </div>
 </template>
@@ -18,7 +21,7 @@ import vPlus from './plus.vue'
 export default {
   data() {
     return {
-      input: 'xxxx',
+      input: '',
       isXs: true,
       img: '../../../../../static/img/demo.png',
       selected: [],
@@ -43,6 +46,9 @@ export default {
     },
     sel(val) {
       this.selected.indexOf(val) > -1 ? this.selected = this.selected.filter(k => k !== val) : this.selected.push(val)
+    },
+    onSubmit() {
+      console.log('xxx')
     }
   }
 }

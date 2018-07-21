@@ -1,57 +1,32 @@
 <template>
   <div class="app-container">
     <div class="banner-list">
-      <div style="height: 135px;">
-        <v-img-list :list="list" :tpList="tpList" @uploadList="uploadList" @cha="cha" />
-        <el-tooltip placement="right" style="line-height: 135px; color: #ccc;">
-          <div slot="content">最多只能上传5张轮播图</div>
-          <i class="el-icon-question"></i>
-        </el-tooltip>
+      <div style="display: flex;">
+        <v-b-img v-for="v in selected" :key="v" :item="v" :KindsImageList="KindsImageList" :options="options" @addImg="addImg" @selectedOptions="selectedOptions" />
+        <v-plus v-if="isXs" :form="form" @plus="plus" />
       </div>
-      <div>
-        <el-cascader style="margin-right: 10px;margin-left: 10px;" v-for="(v, i) in cascaderList" :key="i"
-          :options="options"
-          change-on-select
-          v-model="v.selectedOptions"
-          @change="handleChange">
-        </el-cascader>
-      </div>
-      <!-- <div style="display: flex;"><v-b-img v-for="v in 5" :key="v" :item="v" @uploadList="uploadList" /></div> -->
       <el-button style="margin-top: 20px;margin-left: 10px;" type="primary" @click="onSubmit">保存</el-button>
     </div>
-
-    <el-dialog
-      title="图库"
-      :visible.sync="dialogVisible"
-      width="50%"
-      :before-close="handleClose">
-      <el-upload
-        :before-upload="beforeUpload"
-        class="upload-demo"
-        :action="action">
-        <el-button size="small" type="primary">点击上传</el-button>
-        <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过2M</div>
-      </el-upload>
-      <v-img ref="imglist" :KindsImageList="KindsImageList" :image="image" />
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="handleClose">取 消</el-button>
-        <el-button type="primary" @click="sub">确 定</el-button>
-      </span>
-    </el-dialog>
   </div>
 </template>
 
 <script>
 import vImgList from '../showcase/imgList.vue'
-import vImg from '../grouping/img.vue'
+
 import vBImg from './bimg.vue'
+import vPlus from './plus.vue'
 
 export default {
   components: {
-    vImgList, vImg, vBImg
+    vImgList, vBImg, vPlus
   },
   data() {
     return {
+      isXs: true,
+      form: {
+        val: '点击添加轮播图',
+        item: '最多五个轮播图'
+      },
       options: [
         {
           value: 'zhinan',
@@ -320,30 +295,14 @@ export default {
           ]
         }
       ],
-      cascader: [],
-      cascaderList: [],
-      action: '123',
-      dialogVisible: false,
-      tpList: [],
-      list: 'banner',
-      KindsImageList: [],
-      image: {},
-      index: 0,
+      selected: [],
+      KindsImageList: []
     }
   },
   mounted() {
     this.getImg()
   },
-  watch: {
-    cascader(val) {
-      let a = val.map(k => JSON.parse(k))
-      this.cascaderList = a
-    }
-  },
   methods: {
-    uploadList(val) {
-      this.dialogVisible = true
-    },
     getImg() {
       this.axios.get('api/v1/shop/image/list').then(res => {
         if (res.data.code === 200) {
@@ -353,49 +312,16 @@ export default {
         }
       }).catch(err => console.log(err))
     },
-    handleClose() {
-      this.$confirm('确认关闭？').then(_ => {
-        this.dialogVisible = false
-        done()
-      }).catch(_ => {})
-    },
-    beforeUpload(file) {
-      const fd = new FormData()
-      fd.append('multipartFile', file)
-      // /api/v1/shop/image/upload
-      this.axios.post('api/v1/shop/image/upload', fd).then(res => {
-        if (res.data.code === 200) {
-          this.getImg()
-        } else {
-          this.$message.error(res.data.msg)
-        }
-      }).catch(err => console.log(err))
-      return false
-    },
-    sub() {
-      const that = this
-      const list = that.$refs.imglist.tpSub()
-      if (list.length > 1) {
-        this.$message.error('请选择一张图片作为轮播图片！')
-        return
+    plus(val) {
+      this.selected.push(val)
+      if (this.selected.length === 5) {
+        this.isXs = false
       }
-      if (this.tpList.length >= 5) {
-        this.$message.error('只能选择五张图片作为轮播图片！')
-        return
-      }
-      const a = list[0]
-      a['index'] = that.index
-      this.tpList.push(a)
-      this.cascader.push(JSON.stringify(a))
-      this.image = { url: '' }
-      this.dialogVisible = false
-      this.index++
     },
-    cha(val) {
-      this.cascaderList.splice(val, 1)
-      this.cascader.splice(val, 1)
+    addImg(val) {
+      console.log(val)
     },
-    handleChange(val) {
+    selectedOptions(val) {
       console.log(val)
     },
     onSubmit() {

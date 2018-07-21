@@ -1,303 +1,104 @@
 <template>
-  <div class="classImg">
-    <img :src="img" />
-    <p style="font-size: 14px;">轮播图{{item}}</p>
-    <el-button class="primary" type="primary" @click="uploadList">点击更换图片</el-button>
-    <p style="line-height: 60px;">图片点击跳转路径</p>
-    <el-cascader style="margin-right: 10px;margin-left: 10px;"
-      :options="options"
-      change-on-select
-      v-model="selectedOptions"
-      @change="handleChange">
-    </el-cascader>
+  <div class="classImg" @click="Click">
+    <div :class="isClick ? 'selected p5' : 'p5'">
+      <img :src="img" />
+      <p style="font-size: 14px;">轮播图{{item}}</p>
+      <el-button class="primary" type="primary" @click="uploadList">点击更换图片</el-button>
+      <p class="url">图片点击跳转路径</p>
+      <el-cascader class="cascader"
+        expand-trigger="hover"
+        :options="options"
+        v-model="selectedOptions"
+        @change="handleChange">
+      </el-cascader>
+
+      <i :class="isClick ? 'index el-icon-check' : 'dn'"></i>
+    </div>
+
+    <el-dialog
+      title="图库"
+      :visible.sync="dialogVisible"
+      width="50%"
+      :before-close="handleClose">
+      <el-upload
+        :before-upload="beforeUpload"
+        class="upload-demo"
+        :action="action">
+        <el-button size="small" type="primary">点击上传</el-button>
+        <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过2M</div>
+      </el-upload>
+      <v-img ref="imglist" :KindsImageList="KindsImageList" :image="image" />
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="handleClose">取 消</el-button>
+        <el-button type="primary" @click="sub">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+import vImg from '../grouping/img.vue'
 export default {
   data() {
     return {
-      options: [
-        {
-          value: 'zhinan',
-          label: '指南',
-          children: [
-            {
-              value: 'shejiyuanze',
-              label: '设计原则',
-              children: [
-                {
-                  value: 'yizhi',
-                  label: '一致'
-                },
-                {
-                  value: 'fankui',
-                  label: '反馈'
-                },
-                {
-                  value: 'xiaolv',
-                  label: '效率'
-                },
-                {
-                  value: 'kekong',
-                  label: '可控'
-                }
-              ]
-            },
-            {
-              value: 'daohang',
-              label: '导航',
-              children: [
-                {
-                  value: 'cexiangdaohang',
-                  label: '侧向导航'
-                },
-                {
-                  value: 'dingbudaohang',
-                  label: '顶部导航'
-                }
-              ]
-            }
-          ]
-        },
-        {
-          value: 'zujian',
-          label: '组件',
-          children: [
-            {
-              value: 'basic',
-              label: 'Basic',
-              children: [
-                {
-                  value: 'layout',
-                  label: 'Layout 布局'
-                },
-                {
-                  value: 'color',
-                  label: 'Color 色彩'
-                },
-                {
-                  value: 'typography',
-                  label: 'Typography 字体'
-                },
-                {
-                  value: 'icon',
-                  label: 'Icon 图标'
-                },
-                {
-                  value: 'button',
-                  label: 'Button 按钮'
-                }
-              ]
-            },
-            {
-              value: 'form',
-              label: 'Form',
-              children: [
-                {
-                  value: 'radio',
-                  label: 'Radio 单选框'
-                },
-                {
-                  value: 'checkbox',
-                  label: 'Checkbox 多选框'
-                },
-                {
-                  value: 'input',
-                  label: 'Input 输入框'
-                },
-                {
-                  value: 'input-number',
-                  label: 'InputNumber 计数器'
-                },
-                {
-                  value: 'select',
-                  label: 'Select 选择器'
-                },
-                {
-                  value: 'cascader',
-                  label: 'Cascader 级联选择器'
-                },
-                {
-                  value: 'switch',
-                  label: 'Switch 开关'
-                },
-                {
-                  value: 'slider',
-                  label: 'Slider 滑块'
-                },
-                {
-                  value: 'time-picker',
-                  label: 'TimePicker 时间选择器'
-                },
-                {
-                  value: 'date-picker',
-                  label: 'DatePicker 日期选择器'
-                },
-                {
-                  value: 'datetime-picker',
-                  label: 'DateTimePicker 日期时间选择器'
-                },
-                {
-                  value: 'upload',
-                  label: 'Upload 上传'
-                },
-                {
-                  value: 'rate',
-                  label: 'Rate 评分'
-                },
-                {
-                  value: 'form',
-                  label: 'Form 表单'
-                }
-              ]
-            },
-            {
-              value: 'data',
-              label: 'Data',
-              children: [
-                {
-                  value: 'table',
-                  label: 'Table 表格'
-                },
-                {
-                  value: 'tag',
-                  label: 'Tag 标签'
-                },
-                {
-                  value: 'progress',
-                  label: 'Progress 进度条'
-                },
-                {
-                  value: 'tree',
-                  label: 'Tree 树形控件'
-                },
-                {
-                  value: 'pagination',
-                  label: 'Pagination 分页'
-                },
-                {
-                  value: 'badge',
-                  label: 'Badge 标记'
-                }
-              ]
-            },
-            {
-              value: 'notice',
-              label: 'Notice',
-              children: [
-                {
-                  value: 'alert',
-                  label: 'Alert 警告'
-                },
-                {
-                  value: 'loading',
-                  label: 'Loading 加载'
-                },
-                {
-                  value: 'message',
-                  label: 'Message 消息提示'
-                },
-                {
-                  value: 'message-box',
-                  label: 'MessageBox 弹框'
-                },
-                {
-                  value: 'notification',
-                  label: 'Notification 通知'
-                }
-              ]
-            },
-            {
-              value: 'navigation',
-              label: 'Navigation',
-              children: [
-                {
-                  value: 'menu',
-                  label: 'NavMenu 导航菜单'
-                },
-                {
-                  value: 'tabs',
-                  label: 'Tabs 标签页'
-                },
-                {
-                  value: 'breadcrumb',
-                  label: 'Breadcrumb 面包屑'
-                },
-                {
-                  value: 'dropdown',
-                  label: 'Dropdown 下拉菜单'
-                },
-                {
-                  value: 'steps',
-                  label: 'Steps 步骤条'
-                }
-              ]
-            },
-            {
-              value: 'others',
-              label: 'Others',
-              children: [
-                {
-                  value: 'dialog',
-                  label: 'Dialog 对话框'
-                },
-                {
-                  value: 'tooltip',
-                  label: 'Tooltip 文字提示'
-                },
-                {
-                  value: 'popover',
-                  label: 'Popover 弹出框'
-                },
-                {
-                  value: 'card',
-                  label: 'Card 卡片'
-                },
-                {
-                  value: 'carousel',
-                  label: 'Carousel 走马灯'
-                },
-                {
-                  value: 'collapse',
-                  label: 'Collapse 折叠面板'
-                }
-              ]
-            }
-          ]
-        },
-        {
-          value: 'ziyuan',
-          label: '资源',
-          children: [
-            {
-              value: 'axure',
-              label: 'Axure Components'
-            },
-            {
-              value: 'sketch',
-              label: 'Sketch Templates'
-            },
-            {
-              value: 'jiaohu',
-              label: '组件交互文档'
-            }
-          ]
-        }
-      ],
+      isClick: false,
+      dialogVisible: false,
+      action: '123',
       selectedOptions: [],
-      img: '../../../../../static/img/demo.png'
+      image: {},
+      img: '../../../../../static/img/zw.png'
     }
   },
+  components: {
+    vImg
+  },
   props: {
-    item: Number
+    item: Number,
+    KindsImageList: Array,
+    options: Array
   },
   methods: {
+    Click() {
+      this.isClick = !this.isClick
+    },
+    sub() {
+      const that = this
+      const list = that.$refs.imglist.tpSub()
+      if (list.length > 1) {
+        this.$message.error('请选择一张图片作为轮播图片！')
+        return
+      }
+      this.img = list[0]['url']
+      this.$emit('addImg', { index: this.item, list: list[0] })
+      this.dialogVisible = false
+    },
     handleChange(val) {
-      console.log(val)
+      event.stopPropagation()
+      this.$emit('selectedOptions', { index: this.item, val: val })
     },
     uploadList() {
+      event.stopPropagation()
+      this.dialogVisible = true
       this.$emit('uploadList')
+    },
+    beforeUpload(file) {
+      const fd = new FormData()
+      fd.append('multipartFile', file)
+      // /api/v1/shop/image/upload
+      this.axios.post('api/v1/shop/image/upload', fd).then(res => {
+        if (res.data.code === 200) {
+          this.getImg()
+        } else {
+          this.$message.error(res.data.msg)
+        }
+      }).catch(err => console.log(err))
+      return false
+    },
+    handleClose() {
+      this.$confirm('确认关闭？').then(_ => {
+        this.dialogVisible = false
+        done()
+      }).catch(_ => {})
     }
   }
 }
@@ -307,17 +108,71 @@ export default {
 p {
   margin: 0;
 }
-.classImg {
-  width: 250px;
-  text-align: center;
+.dn {
+  display: none;
+}
+.cascader {
   margin-right: 10px;
+  margin-left: 10px;
+}
+.url {
+  line-height: 60px;
+  font-size: 15px;
+}
+.classImg {
+  width: 280px;
+  text-align: center;
+  margin-right: 20px;
+  float: left;
+  margin-top: 20px;
+  position: relative;
 }
 .classImg img{
-  width: 240px;
-  height: 150px;
+  width: 100%;
+  height: 180px;
   border: 1px dashed #c0ccda;
 }
 .classImg .primary{
   margin-top: 20px;
+}
+.p5{
+  padding: 10px;
+  border: 2px dashed #c0ccda;
+}
+.selected {
+  width: 100%;
+  height: 100%;
+  border: 2px solid #07d;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.selected:after {
+  position: absolute;
+  display: block;
+  content: " ";
+  right: 0;
+  top: 0;
+  border: 14px solid #07d;
+  border-left-color: transparent;
+  border-bottom-color: transparent;
+  z-index: 1;
+}
+.selected .index{
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  z-index: 2;
+  font-size: 12px;
+  color: #fff;
+  font-style: normal;
+  font-family: arial;
+  width: 13px;
+  text-align: center;
+  height: 15px;
+  line-height: 20px;
+}
+.upload-demo{
+  text-align: left;
 }
 </style>

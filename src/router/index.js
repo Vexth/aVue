@@ -367,7 +367,7 @@ export const asyncRouterMap = [
       title: 'system',
       icon: 'excel'
     },
-    children: [{ path: 'grouping', component: () => import('@/views/shop/grouping/groupinglist'), name: 'grouping', meta: { title: 'grouping', icon: 'excel', noCache: true }}]
+    children: [{ path: 'grouping', component: () => import('@/views/shop/grouping/grouping'), name: 'grouping', meta: { title: 'grouping', icon: 'excel', noCache: true }}]
   },
 
   {
