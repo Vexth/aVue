@@ -194,8 +194,8 @@ export default {
   },
   methods: {
     getCategoryOption() {
-      // GET /api/v1/shop/product/getCategoryOption
-      this.axios.get('api/v1/shop/product/getCategoryOption').then(res => {
+      // GET /api/v1/shop/product/category
+      this.axios.get('api/v1/shop/product/category').then(res => {
         if (res.status === 200) {
           this.optionsLX = res.data.data
         } else {
@@ -204,8 +204,8 @@ export default {
       }).catch(err => console.log(err))
     },
     getGroupOption() {
-      // // GET /api/v1/shop/product/getGroupOption
-      this.axios.get('api/v1/shop/product/getGroupOption').then(res => {
+      // // GET /api/v1/shop/product/group/tree
+      this.axios.get('api/v1/shop/product/group/tree').then(res => {
         if (res.status === 200) {
           this.optionsFZ = res.data.data
         } else {

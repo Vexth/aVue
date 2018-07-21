@@ -1,7 +1,7 @@
 <template>
-  <div class="classImg" @click="Click">
+  <div class="classImg">
     <div :class="isClick ? 'selected p5' : 'p5'">
-      <img :src="img" />
+      <img @click="Click" :src="img" />
       <p style="font-size: 14px;">轮播图{{item}}</p>
       <el-button class="primary" type="primary" @click="uploadList">点击更换图片</el-button>
       <p class="url">图片点击跳转路径</p>
@@ -69,12 +69,12 @@ export default {
         return
       }
       this.img = list[0]['url']
-      this.$emit('addImg', { index: this.item, list: list[0] })
+      this.$emit('addImg', { index: this.item, list: list[0], isClick: this.isClick })
       this.dialogVisible = false
     },
     handleChange(val) {
       event.stopPropagation()
-      this.$emit('selectedOptions', { index: this.item, val: val })
+      this.$emit('selectedOptions', { index: this.item, val: val, isClick: this.isClick })
     },
     uploadList() {
       event.stopPropagation()
@@ -131,6 +131,7 @@ p {
   width: 100%;
   height: 180px;
   border: 1px dashed #c0ccda;
+  cursor: pointer;
 }
 .classImg .primary{
   margin-top: 20px;

@@ -22,22 +22,22 @@
         </el-select>
       </el-form-item>
       <el-form-item label="商品一级分组：">
-        <el-select v-model="groupId" placeholder="请选择">
+        <el-select v-model="groupId" placeholder="请选择" @change="fz">
           <el-option
             v-for="item in optionsFZ"
             :key="item.value"
             :label="item.name"
-            :value="item.id">
+            :value="item.groupId">
           </el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="商品二级分组：">
-        <el-select v-model="groupId" placeholder="请选择">
+        <el-select v-model="groupId1" placeholder="请选择">
           <el-option
-            v-for="item in optionsFZ"
+            v-for="item in optionsFZ1"
             :key="item.value"
             :label="item.name"
-            :value="item.id">
+            :value="item.groupId">
           </el-option>
         </el-select>
       </el-form-item>
@@ -130,6 +130,7 @@ export default {
       },
       optionsLX: [],
       optionsFZ: [],
+      optionsFZ1: [],
       imgPrimaryList: [],
       imgDescList: [],
       imgSpecList: [],
@@ -141,6 +142,7 @@ export default {
       selectedImgList: [],
       categoryId: null,
       groupId: null,
+      groupId1: null,
       centerDialogVisible: false,
       modifyData: {},
       modifyStr: '',
@@ -161,9 +163,20 @@ export default {
     this.getGroupOption()
   },
   methods: {
+    fz() {
+      // GET /api/v1/shop/product/group/children 商家获取商品子分组接口 通过父级ID 获取 二级分类
+      this.axios.get(`api/v1/shop/product/group/children?parentId=${this.groupId}`).then(res => {
+        if (res.status === 200) {
+          this.groupId1 = null
+          this.optionsFZ1 = res.data.data
+        } else {
+          console.error(res)
+        }
+      }).catch(err => console.log(err))
+    },
     getCategoryOption() {
-      // GET /api/v1/shop/product/getCategoryOption
-      this.axios.get('api/v1/shop/product/getCategoryOption').then(res => {
+      // GET /api/v1/shop/product/category
+      this.axios.get('api/v1/shop/product/category').then(res => {
         if (res.status === 200) {
           this.optionsLX = res.data.data
         } else {
@@ -172,8 +185,8 @@ export default {
       }).catch(err => console.log(err))
     },
     getGroupOption() {
-      // // GET /api/v1/shop/product/getGroupOption
-      this.axios.get('api/v1/shop/product/getGroupOption').then(res => {
+      // // GET /api/v1/shop/product/group/tree
+      this.axios.get('api/v1/shop/product/group/tree').then(res => {
         if (res.status === 200) {
           this.optionsFZ = res.data.data
         } else {
@@ -194,7 +207,8 @@ export default {
         }
         this.form.priceUnderline = product['priceUnderline']
         this.categoryId = product['categoryId']
-        this.groupId = product['groupId']
+        this.groupId = product['groupParentId']
+        this.groupId1 = product['groupId']
         this.imgPrimaryList = product['imgPrimaryList']
         this.imgDescList = product['imgDescList']
         this.imgSpecList = product['imgSpecList']
@@ -246,6 +260,10 @@ export default {
       }
       if (this.stockAmount === '' || this.stockAmount === null) {
         this.$message.error('请填写库存！')
+        return
+      }
+      if (this.groupId1 === null) {
+        this.$message.error('请选择二级分组！')
         return
       }
       this.modifyData.unitPrice = this.unitPrice

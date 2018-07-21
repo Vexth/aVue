@@ -44,12 +44,12 @@
         </el-tooltip>
       </el-form-item>
       <el-form-item label="商品一级分组：">
-        <el-select v-model="groupId" placeholder="请选择">
+        <el-select v-model="groupId" placeholder="请选择" @change="fz">
           <el-option
             v-for="item in optionsFZ"
             :key="item.value"
             :label="item.name"
-            :value="item.id">
+            :value="item.groupId">
           </el-option>
         </el-select>
         <el-tooltip placement="right">
@@ -58,12 +58,12 @@
         </el-tooltip>
       </el-form-item>
       <el-form-item label="商品二级分组：">
-        <el-select v-model="groupId" placeholder="请选择">
+        <el-select v-model="groupId1" placeholder="请选择">
           <el-option
-            v-for="item in optionsFZ"
+            v-for="item in optionsFZ1"
             :key="item.value"
             :label="item.name"
-            :value="item.id">
+            :value="item.groupId">
           </el-option>
         </el-select>
         <el-tooltip placement="right">
@@ -248,7 +248,7 @@
 			</el-form-item> -->
 			<el-form-item>
 				<el-button type="primary" @click="onSubmit">立即创建</el-button>
-				<el-button>取消</el-button>
+				<el-button @click="qx">取消</el-button>
 			</el-form-item>
 		</el-form>
 
@@ -347,6 +347,8 @@ export default {
       options: [],
       value: '',
       optionsFZ: [],
+      optionsFZ1: [],
+      groupId1: null,
       valueFZ: '',
       driver: null,
       itemsList: {},
@@ -363,16 +365,16 @@ export default {
     Dropzone, DialogImg, vImgList
   },
   mounted() {
-    // GET /api/v1/shop/product/getCategoryOption
-    this.axios.get('/api/v1/shop/product/getCategoryOption').then(res => {
+    // GET /api/v1/shop/product/category
+    this.axios.get('api/v1/shop/product/category').then(res => {
       if (res.status === 200) {
         this.options = res.data.data
       } else {
         console.error(res)
       }
     }).catch(err => console.log(err))
-    // // GET /api/v1/shop/product/getGroupOption
-    this.axios.get('/api/v1/shop/product/group/tree').then(res => {
+    // // GET /api/v1/shop/product/group/tree
+    this.axios.get('api/v1/shop/product/group/tree').then(res => {
       if (res.status === 200) {
         this.optionsFZ = res.data.data
       } else {
@@ -383,6 +385,19 @@ export default {
     this.getSkuAttrOption()
   },
   methods: {
+    qx() {
+      history.go(-1)
+    },
+    fz() {
+      // GET /api/v1/shop/product/group/children 商家获取商品子分组接口 通过父级ID 获取 二级分类
+      this.axios.get(`api/v1/shop/product/group/children?parentId=${this.groupId}`).then(res => {
+        if (res.status === 200) {
+          this.optionsFZ1 = res.data.data
+        } else {
+          console.error(res)
+        }
+      }).catch(err => console.log(err))
+    },
     tpSub() {
       this.selectedImgList = this.$refs.DialogImg.tpSub()
       if (this.imageIdstr === 'imageId') {
@@ -596,6 +611,10 @@ export default {
       })
     },
     onSubmit() {
+      if (this.groupId1 === null) {
+        this.$message.error('请选择二级分组！')
+        return
+      }
       if (this.form.title === '') {
         this.$message.error('请填写商品名称！')
         return
@@ -626,7 +645,7 @@ export default {
       product['imgSpecList'] = this.imgSpecList
       product['saleStatus'] = this.saleStatus ? 0 : 1
       product['categoryId'] = this.categoryId
-      product['groupId'] = this.groupId
+      product['groupId'] = this.groupId1
       product['title'] = this.form.title
       product['sharetitle'] = this.form.sharetitle
       product['priceUnderline'] = this.form.priceUnderline
