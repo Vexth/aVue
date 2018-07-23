@@ -7,13 +7,9 @@
       </div>
 
       <div style="display: inline-block;">
-        <v-card v-for="i in selected" :key="i" :num="i" @clickInput="clickInput" />
+        <v-card v-for="i in selected" :key="i" :num="i" @clickInput="clickInput" @sel="sel" />
         <v-plus v-if="isXs" :form="form" @plus="plus" />
       </div>
-
-      <p></p>
-      <el-button style="margin-top: 20px;margin-left: 10px;" type="primary" @click="onSubmit">保存</el-button>
-      
     </div>
   </div>
 </template>
@@ -48,10 +44,8 @@ export default {
       }
     },
     sel(val) {
-      this.selected.indexOf(val) > -1 ? this.selected = this.selected.filter(k => k !== val) : this.selected.push(val)
-    },
-    onSubmit() {
-      console.log('xxx')
+      console.log(val)
+      // this.selected.indexOf(val) > -1 ? this.selected = this.selected.filter(k => k !== val) : this.selected.push(val)
     }
   }
 }
@@ -72,10 +66,11 @@ export default {
 .box-card{
   text-align: center;
   width: 300px;
-  height: 480px;
+  height: 510px;
   margin-top: 20px;
   float: left;
   margin-right: 10px;
+  position: relative;
 }
 .name {
   display: flex;

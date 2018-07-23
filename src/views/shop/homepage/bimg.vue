@@ -2,7 +2,7 @@
   <div class="classImg">
     <div :class="isClick ? 'selected p5' : 'p5'">
       <img @click="Click" :src="img" />
-      <p style="font-size: 14px;">轮播图{{item}}</p>
+      <p style="font-size: 14px;">轮播图{{i+1}}</p>
       <el-button class="primary" type="primary" @click="uploadList">点击更换图片</el-button>
       <p class="url">图片点击跳转路径</p>
       <el-cascader class="cascader"
@@ -13,6 +13,8 @@
       </el-cascader>
 
       <i :class="isClick ? 'index el-icon-check' : 'dn'"></i>
+
+      <el-button style="margin-top: 20px;margin-left: 10px;" type="primary" @click="onSubmit">保存</el-button>
     </div>
 
     <el-dialog
@@ -46,20 +48,24 @@ export default {
       action: '123',
       selectedOptions: [],
       image: {},
-      img: '../../../../../static/img/zw.png'
+      img: '../../../../../static/img/zw.png',
+      selectedOptionsImg: {}
     }
   },
   components: {
     vImg
   },
   props: {
-    item: Number,
+    i: Number,
+    item: Object,
     KindsImageList: Array,
     options: Array
   },
   methods: {
     Click() {
       this.isClick = !this.isClick
+      this.selectedOptionsImg['isClick'] = this.isClick
+      this.$emit('selectedOptionsImg', this.selectedOptionsImg)
     },
     sub() {
       const that = this
@@ -69,17 +75,16 @@ export default {
         return
       }
       this.img = list[0]['url']
-      this.$emit('addImg', { index: this.item, list: list[0], isClick: this.isClick })
+      this.selectedOptionsImg['img'] = list[0]
       this.dialogVisible = false
     },
     handleChange(val) {
       event.stopPropagation()
-      this.$emit('selectedOptions', { index: this.item, val: val, isClick: this.isClick })
+      this.selectedOptionsImg['selectedOptions'] = val
     },
     uploadList() {
       event.stopPropagation()
       this.dialogVisible = true
-      this.$emit('uploadList')
     },
     beforeUpload(file) {
       const fd = new FormData()
@@ -99,6 +104,9 @@ export default {
         this.dialogVisible = false
         done()
       }).catch(_ => {})
+    },
+    onSubmit() {
+      this.$emit('selectedOptionsImg', this.selectedOptionsImg)
     }
   }
 }

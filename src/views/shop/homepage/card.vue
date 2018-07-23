@@ -18,6 +18,9 @@
         <i v-if="isSelected" class="index el-icon-check"></i>
       </p>
     </div>
+    <div class="primary">
+      <el-button type="primary" @click="onSubmit">保存</el-button>
+    </div>
   </el-card>
 </template>
 
@@ -41,6 +44,10 @@ export default {
     },
     sel() {
       this.isSelected = !this.isSelected
+      this.$emit('sel', this.isSelected)
+    },
+    onSubmit() {
+      this.$emit('sel', this.isSelected)
     }
   }
 }
@@ -114,5 +121,12 @@ export default {
   text-align: center;
   height: 15px;
   line-height: 20px;
+}
+
+.primary {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 10px;
 }
 </style>
