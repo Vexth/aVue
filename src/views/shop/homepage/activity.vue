@@ -4,7 +4,7 @@
       <div class="item name">
         <span>设置活动栏名称：</span>
         <el-input style="float: left;width: 200px;" v-model="input" placeholder="请输入内容"></el-input>
-        <el-button style="margin-left: 20px;" type="primary">保存</el-button>
+        <el-button style="margin-left: 20px;" type="primary" @click="sub">保存</el-button>
       </div>
 
       <div style="display: inline-block;">
@@ -73,6 +73,24 @@ export default {
     sel(val) {
       // api/v1/shop/page/main/config/visable?cellId=xxx
       this.axios.get(`api/v1/shop/page/main/config/visable?cellId=${val}`).then(res => {
+        if (res.data.code === 200) {
+          this.$message({
+            message: res.data.msg,
+            type: 'success'
+          })
+          this.configList()
+        } else {
+          this.$message.error(res.data.msg)
+        }
+      }).catch(err => console.log(err))
+    },
+    sub() {
+      const list = {
+        cellId: this.cellId,
+        cellLabel: this.input
+      }
+      // api/v1/shop/page/main/config/group/name
+      this.axios.post('api/v1/shop/page/main/config/group/name', list).then(res => {
         if (res.data.code === 200) {
           this.$message({
             message: res.data.msg,
