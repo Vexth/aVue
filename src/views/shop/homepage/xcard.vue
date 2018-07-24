@@ -40,7 +40,21 @@ export default {
   },
   props: {
     num: Number,
-    bool: Boolean
+    bool: Boolean,
+    item: {
+      type: Object,
+      required: true,
+      default: {}
+    }
+  },
+  watch: {
+    item: {
+      immediate: true,
+      handler(newVal, oldVal) {
+        console.log(newVal)
+      },
+      deep: true
+    }
   },
   methods: {
     clickInput() {

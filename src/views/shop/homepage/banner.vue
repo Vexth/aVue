@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div class="banner-list">
-      <v-b-img v-for="(v, i) in selected" :key="i" :i="i" :item="v" :KindsImageList="KindsImageList" :options="options" @selectedOptionsImg="selectedOptionsImg" />
+      <v-b-img v-for="(v, i) in selected" :key="i" :i="i" :item="v" :KindsImageList="KindsImageList" :options="options" @isClick="click" @selectedOptionsImg="selectedOptionsImg" />
       <v-plus v-if="isXs" :form="form" @plus="plus" />
     </div>
   </div>
@@ -25,18 +25,30 @@ export default {
         item: '最多五个轮播图'
       },
       options: [],
-      selected: [
-        {test: '11111'}
-      ],
+      selected: [],
       KindsImageList: [],
-      cellType: 1
+      cellType: 1,
+      cellId: null
     }
   },
   mounted() {
     this.getImg()
     this.navigateTree()
+    this.configList()
   },
   methods: {
+    configList() {
+      // GET /api/v1/shop/page/main/config/list 微信主页配置 列表
+      this.axios.get(`api/v1/shop/page/main/config/list?cellType=${this.cellType}`).then(res => {
+        if (res.data.code === 200) {
+          const data = res.data.data
+          this.cellId = data.cellId
+          this.selected = data.children
+        } else {
+          this.$message.error(res.data.msg)
+        }
+      }).catch(err => console.log(err))
+    },
     navigateTree() {
       // GET /api/v1/shop/page/main/config/navigate/tree 微信主页配置 跳转路径树
       this.axios.get('api/v1/shop/page/main/config/navigate/tree').then(res => {
@@ -62,8 +74,60 @@ export default {
         this.isXs = false
       }
     },
+    click(val) {
+      // api/v1/shop/page/main/config/visable?cellId=xxx
+      this.axios.get(`api/v1/shop/page/main/config/visable?cellId=${val}`).then(res => {
+        if (res.data.code === 200) {
+          this.$message({
+            message: res.data.msg,
+            type: 'success'
+          })
+          this.configList()
+        } else {
+          this.$message.error(res.data.msg)
+        }
+      }).catch(err => console.log(err))
+    },
     selectedOptionsImg(val) {
-      console.log(val)
+      // console.log(val)
+      if (val['selectedOptions'] === undefined) {
+        this.$message.error('请选择图片跳转路径！')
+        return
+      }
+      const len = val.selectedOptions.length - 1
+      const list = {
+        cellType: this.cellType,
+        navigateType: val.selectedOptions[len],
+        imageId: val.imageUrl.id,
+        imageUrl: val.imageUrl.url,
+        isShow: val['isClick'] === undefined || val['isClick'] === false ? 1 : 0
+      }
+
+      if (val['cellId'] === undefined) {
+        // 新增
+        list['parentId'] = this.cellId
+      } else {
+        // 修改
+        list['cellId'] = val.cellId
+      }
+
+      if (val['list'] !== undefined) {
+        list['navigateParam'] = val.list['productId']
+      }
+
+      // console.log(list)
+      // POST /api/v1/shop/page/main/config/save 微信主页配置 保存单元格
+      this.axios.post('api/v1/shop/page/main/config/save', list).then(res => {
+        if (res.data.code === 200) {
+          this.$message({
+            message: res.data.msg,
+            type: 'success'
+          })
+          this.configList()
+        } else {
+          this.$message.error(res.data.msg)
+        }
+      }).catch(err => console.log(err))
     }
   }
 }

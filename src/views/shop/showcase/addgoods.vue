@@ -78,6 +78,13 @@
           <i class="el-icon-question"></i>
         </el-tooltip>
 			</el-form-item>
+      <el-form-item label="商品详情图片上传：" required>
+				<v-img-list :list="'imgSpecList'" :tpList="imgSpecList" @uploadList="uploadList" />
+        <el-tooltip placement="right">
+          <div slot="content">111111111111111111111</div>
+          <i class="el-icon-question"></i>
+        </el-tooltip>
+			</el-form-item>
       <el-form-item label="规格参数图片上传：" required>
 				<v-img-list :list="'imgSpecList'" :tpList="imgSpecList" @uploadList="uploadList" />
         <el-tooltip placement="right">

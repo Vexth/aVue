@@ -1,7 +1,7 @@
 <template>
   <div class="classImg">
     <div :class="isClick ? 'selected p5' : 'p5'">
-      <img @click="Click" :src="img" />
+      <img @click="Click" :src="item.imageUrl" />
       <p style="font-size: 14px;">轮播图{{i+1}}</p>
       <el-button class="primary" type="primary" @click="uploadList">点击更换图片</el-button>
       <p class="url">图片点击跳转路径</p>
@@ -35,15 +35,25 @@
         <el-button type="primary" @click="sub">确 定</el-button>
       </span>
     </el-dialog>
+
+    <el-dialog
+      title=""
+      :visible.sync="xxdialogVisible"
+      width="330px"
+      :before-close="handleClose">
+      <div style="height: 525px;margin-top: -25px;"><v-card :bool="false" @sel="sel" /></div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import vImg from '../grouping/img.vue'
+import vCard from './card.vue'
 export default {
   data() {
     return {
       isClick: false,
+      xxdialogVisible: false,
       dialogVisible: false,
       action: '123',
       selectedOptions: [],
@@ -53,19 +63,34 @@ export default {
     }
   },
   components: {
-    vImg
+    vImg, vCard
   },
   props: {
     i: Number,
-    item: Object,
+    item: {
+      type: Object,
+      required: true,
+      default: {}
+    },
     KindsImageList: Array,
     options: Array
+  },
+  watch: {
+    item: {
+      immediate: true,
+      handler(newVal, oldVal) {
+        this.isClick = newVal['isShow'] === 0 ? true : false
+        if (newVal['imageUrl'] === undefined) {
+          newVal['imageUrl'] = this.img
+        }
+      },
+      deep: true
+    }
   },
   methods: {
     Click() {
       this.isClick = !this.isClick
-      this.selectedOptionsImg['isClick'] = this.isClick
-      this.$emit('selectedOptionsImg', this.selectedOptionsImg)
+      this.$emit('isClick', this.item.cellId)
     },
     sub() {
       const that = this
@@ -74,12 +99,15 @@ export default {
         this.$message.error('请选择一张图片作为轮播图片！')
         return
       }
-      this.img = list[0]['url']
-      this.selectedOptionsImg['img'] = list[0]
+      this.item['imageUrl'] = list[0]['url']
+      this.selectedOptionsImg['imageUrl'] = list[0]
       this.dialogVisible = false
     },
     handleChange(val) {
       event.stopPropagation()
+      if (val[0] === -3) {
+        this.xxdialogVisible = true
+      }
       this.selectedOptionsImg['selectedOptions'] = val
     },
     uploadList() {
@@ -102,10 +130,17 @@ export default {
     handleClose() {
       this.$confirm('确认关闭？').then(_ => {
         this.dialogVisible = false
+        this.xxdialogVisible = false
         done()
       }).catch(_ => {})
     },
+    sel(val) {
+      this.xxdialogVisible = false
+      this.selectedOptionsImg = {...this.selectedOptionsImg, ...val}
+    },
     onSubmit() {
+      this.selectedOptionsImg['isClick'] = this.isClick
+      this.selectedOptionsImg['cellId'] = this.item.cellId
       this.$emit('selectedOptionsImg', this.selectedOptionsImg)
     }
   }
@@ -183,5 +218,9 @@ p {
 }
 .upload-demo{
   text-align: left;
+}
+
+.box-card {
+  margin-top: -20px;
 }
 </style>

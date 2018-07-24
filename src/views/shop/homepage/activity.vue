@@ -3,11 +3,12 @@
     <div class="banner-list">
       <div class="item name">
         <span>设置活动栏名称：</span>
-        <el-input v-model="input" placeholder="请输入内容"></el-input>
+        <el-input style="float: left;width: 200px;" v-model="input" placeholder="请输入内容"></el-input>
+        <el-button style="margin-left: 20px;" type="primary">保存</el-button>
       </div>
 
       <div style="display: inline-block;">
-        <v-card v-for="i in selected" :key="i" :num="i" @clickInput="clickInput" @sel="sel" />
+        <v-x-card v-for="(s, i) in selected" :key="i" :bool="true" :item="s" :num="i" @sel="sel" />
         <v-plus v-if="isXs" :form="form" @plus="plus" />
       </div>
     </div>
@@ -15,7 +16,7 @@
 </template>
 
 <script>
-import vCard from './card.vue'
+import vXCard from './xcard.vue'
 import vPlus from './plus.vue'
 export default {
   data() {
@@ -27,13 +28,29 @@ export default {
       form: {
         val: '点击添加活动物品栏',
         item: '最多八个'
-      }
+      },
+      cellType: 3
     }
   },
   components: {
-    vCard, vPlus
+    vXCard, vPlus
+  },
+  mounted() {
+    this.configList()
   },
   methods: {
+    configList() {
+      // GET /api/v1/shop/page/main/config/list 微信主页配置 列表
+      this.axios.get(`api/v1/shop/page/main/config/list?cellType=${this.cellType}`).then(res => {
+        if (res.data.code === 200) {
+          const data = res.data.data
+          this.cellId = data.cellId
+          this.selected = data.children
+        } else {
+          this.$message.error(res.data.msg)
+        }
+      }).catch(err => console.log(err))
+    },
     clickInput(val) {
       console.log(val)
     },
@@ -63,22 +80,14 @@ export default {
   margin: 0;
   width: 100%;
 }
-.box-card{
-  text-align: center;
-  width: 300px;
-  height: 510px;
-  margin-top: 20px;
-  float: left;
-  margin-right: 10px;
-  position: relative;
-}
 .name {
-  display: flex;
-  width: 320px;
+  /* display: flex;
+  width: 320px; */
 }
 .name span {
   line-height: 36px;
   display: inline-block;
-  width: 180px;
+  width: 115px;
+  float: left;
 }
 </style>
