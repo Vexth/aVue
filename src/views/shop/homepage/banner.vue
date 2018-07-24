@@ -43,7 +43,7 @@ export default {
         if (res.data.code === 200) {
           const data = res.data.data
           this.cellId = data.cellId
-          this.selected = data.children
+          this.selected = data['children'] === undefined ? [] : data['children']
         } else {
           this.$message.error(res.data.msg)
         }
@@ -69,6 +69,7 @@ export default {
       }).catch(err => console.log(err))
     },
     plus(val) {
+      console.log(val)
       this.selected.push({})
       if (this.selected.length === 5) {
         this.isXs = false

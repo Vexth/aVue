@@ -44,7 +44,7 @@ export default {
       this.axios.get(`api/v1/shop/page/main/config/list?cellType=${this.cellType}`).then(res => {
         if (res.data.code === 200) {
           const data = res.data.data
-          this.cellId = data.cellId
+          this.input = data.cellLabel
           this.selected = data.children
         } else {
           this.$message.error(res.data.msg)

@@ -51,6 +51,7 @@ export default {
     item: {
       immediate: true,
       handler(newVal, oldVal) {
+        this.isSelected = newVal['isShow'] === 0 ? true : false
         console.log(newVal)
       },
       deep: true
