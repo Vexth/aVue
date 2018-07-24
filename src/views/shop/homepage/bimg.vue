@@ -89,6 +89,10 @@ export default {
   },
   methods: {
     Click() {
+      if (this.item.cellId === undefined) {
+        this.$message.error('请先保存在做此操作！')
+        return
+      }
       this.isClick = !this.isClick
       this.$emit('isClick', this.item.cellId)
     },

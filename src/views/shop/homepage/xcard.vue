@@ -15,9 +15,9 @@
       <p><span>选中商品</span></p>
       <p class="selected1" :class="isSelected ? 'selected' : ''" @click="sel">
         <span class="img">
-          <img style="width: 68%;" :src="list.imageUrl" />
-          <span class="title">{{list.title}}</span>
-          <span style="display: block;text-align: left;padding-left: 5px;color: red;">￥ {{list.priceUnderline}}</span>
+          <img style="width: 68%;" :src="list['product']['imageUrl']" />
+          <span class="title">{{list['product']['title']}}</span>
+          <span style="display: block;text-align: left;padding-left: 5px;color: red;">￥ {{list['product']['priceUnderline']}}</span>
         </span>
         <i v-if="isSelected" class="index el-icon-check"></i>
       </p>
@@ -52,29 +52,41 @@ export default {
       immediate: true,
       handler(newVal, oldVal) {
         this.isSelected = newVal['isShow'] === 0 ? true : false
-        console.log(newVal)
+        if (newVal['isShow'] !== undefined) {
+          this.isXzsd = true
+        }
+        this.list = newVal['product'] === undefined ? {} : newVal
+        if (newVal['product'] !== undefined) {
+          this.input = newVal['navigateParam']
+        }
       },
       deep: true
     }
   },
   methods: {
     clickInput() {
+      this.list['navigateParam'] = this.input
       // GET /api/v1/shop/page/main/config/product/brief 微信主页配置 获取商品简要信息
       this.axios.get(`api/v1/shop/page/main/config/product/brief?productId=${this.input}`).then(res => {
         if (res.data.code === 200) {
-          this.list = res.data.data
+          this.list['product'] = res.data.data
           this.isXzsd = true
+          this.isSelected = false
         } else {
           this.$message.error(res.data.msg)
         }
       }).catch(err => console.log(err))
     },
     sel() {
+      if (this.item.cellId === undefined) {
+        this.$message.error('请先保存在做此操作！')
+        return
+      }
       this.isSelected = !this.isSelected
-      this.$emit('sel', {isSelected: this.isSelected, list: this.list})
+      this.$emit('sel', this.item.cellId)
     },
     onSubmit() {
-      this.$emit('sel', {isSelected: this.isSelected, list: this.list})
+      this.$emit('onSubmit', this.list)
     }
   }
 }

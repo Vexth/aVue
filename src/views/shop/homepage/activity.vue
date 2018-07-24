@@ -8,7 +8,7 @@
       </div>
 
       <div style="display: inline-block;">
-        <v-x-card v-for="(s, i) in selected" :key="i" :bool="true" :item="s" :num="i" @sel="sel" />
+        <v-x-card v-for="(s, i) in selected" :key="i" :bool="true" :item="s" :num="i" @sel="sel" @onSubmit="onSubmit" />
         <v-plus v-if="isXs" :form="form" @plus="plus" />
       </div>
     </div>
@@ -29,13 +29,25 @@ export default {
         val: '点击添加活动物品栏',
         item: '最多八个'
       },
-      cellType: 3
+      cellType: null,
+      cellId: null
     }
   },
   components: {
     vXCard, vPlus
   },
   mounted() {
+    console.log(this.$route.path)
+    switch (this.$route.path) {
+      case '/homepage1/activity1':
+        this.cellType = 3
+        break;
+      case '/homepage1/activity2':
+        this.cellType = 4
+        break;
+      default:
+        break;
+    }
     this.configList()
   },
   methods: {
@@ -45,24 +57,67 @@ export default {
         if (res.data.code === 200) {
           const data = res.data.data
           this.input = data.cellLabel
-          this.selected = data.children
+          this.cellId = data.cellId
+          this.selected = data['children'] === undefined ? [] : data['children']
         } else {
           this.$message.error(res.data.msg)
         }
       }).catch(err => console.log(err))
     },
-    clickInput(val) {
-      console.log(val)
-    },
     plus(val) {
-      this.selected.push(val)
+      this.selected.push({})
       if (this.selected.length === 8) {
         this.isXs = !this.isXs
       }
     },
     sel(val) {
-      console.log(val)
-      // this.selected.indexOf(val) > -1 ? this.selected = this.selected.filter(k => k !== val) : this.selected.push(val)
+      // api/v1/shop/page/main/config/visable?cellId=xxx
+      this.axios.get(`api/v1/shop/page/main/config/visable?cellId=${val}`).then(res => {
+        if (res.data.code === 200) {
+          this.$message({
+            message: res.data.msg,
+            type: 'success'
+          })
+          this.configList()
+        } else {
+          this.$message.error(res.data.msg)
+        }
+      }).catch(err => console.log(err))
+    },
+    onSubmit(val) {
+      // console.log(val)
+      const list = {
+        cellType: this.cellType,
+        navigateType: -3,
+        imageUrl: val.product.imageUrl,
+        isShow: val['isShow'] === undefined || val['isShow'] === 1 ? 1 : 0
+      }
+
+      if (val['cellId'] === undefined) {
+        // 新增
+        list['parentId'] = this.cellId
+      } else {
+        // 修改
+        list['cellId'] = val.cellId
+      }
+
+      if (val['product'] !== undefined) {
+        list['navigateParam'] = val['product']['productId']
+      }
+
+      // console.log(list)
+      // POST /api/v1/shop/page/main/config/save 微信主页配置 保存单元格
+      this.axios.post('api/v1/shop/page/main/config/save', list).then(res => {
+        if (res.data.code === 200) {
+          this.$message({
+            message: res.data.msg,
+            type: 'success'
+          })
+          this.configList()
+        } else {
+          this.$message.error(res.data.msg)
+        }
+      }).catch(err => console.log(err))
     }
   }
 }
