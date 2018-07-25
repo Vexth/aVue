@@ -145,6 +145,9 @@ export default {
     onSubmit() {
       this.selectedOptionsImg['isClick'] = this.isClick
       this.selectedOptionsImg['cellId'] = this.item.cellId
+      if (this.selectedOptionsImg['imageUrl'] === undefined) {
+        this.selectedOptionsImg['imageUrl'] = this.item
+      }
       this.$emit('selectedOptionsImg', this.selectedOptionsImg)
     }
   }

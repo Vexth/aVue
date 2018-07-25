@@ -99,8 +99,8 @@ export default {
       const list = {
         cellType: this.cellType,
         navigateType: val.selectedOptions[len],
-        imageId: val.imageUrl.id,
-        imageUrl: val.imageUrl.url,
+        imageId: val.imageUrl['id'] || val.imageUrl['imageId'],
+        imageUrl: val.imageUrl['url'] || val.imageUrl['imageUrl'],
         isShow: val['isClick'] === undefined || val['isClick'] === false ? 1 : 0
       }
 

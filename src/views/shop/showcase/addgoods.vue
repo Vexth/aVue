@@ -202,7 +202,7 @@
       <!-- <el-form-item label="价格：">
 				<el-input v-model="form['价格']" :disabled="isXS"></el-input>
 			</el-form-item> -->
-      <el-form-item label="市场价：">
+      <el-form-item label="市场价：" required>
 				<el-input v-model="form.priceUnderline"></el-input>
         <el-tooltip placement="right">
           <div slot="content">111111111111111111111</div>
@@ -658,6 +658,10 @@ export default {
       }
       if (this.shareImage.length === 0) {
         this.$message.error('请上传分享图片！')
+        return
+      }
+      if (this.form.priceUnderline === '') {
+        this.$message.error('请填写市场价格！')
         return
       }
       const product = {}
