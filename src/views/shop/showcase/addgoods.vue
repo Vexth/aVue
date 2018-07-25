@@ -537,7 +537,7 @@ export default {
     },
     getSkuAttrOption() {
       // GET /api/v1/shop/product/getSkuAttrOption
-      this.axios.get(`/api/v1/shop/product/group/tree`).then(res => {
+      this.axios.get(`api/v1/shop/product/getSkuAttrOption`).then(res => {
         if (res.status === 200) {
           this.options1 = res.data.data
         } else {
