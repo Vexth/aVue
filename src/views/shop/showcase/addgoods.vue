@@ -562,7 +562,7 @@ export default {
         return
       }
       this.iscfxz[i] = e
-      this.axios.get(`/api/v1/shop/product/group/tree`).then(res => {
+      this.axios.get(`/api/v1/shop/product/getSkuAttrOption`).then(res => {
         console.log(this.form.items[i])
         if (res.status === 200) {
           this.options1 = res.data.data
@@ -732,7 +732,7 @@ export default {
       this.axios.post('api/v1/shop/product/productSkuAttrCreate', data).then(res => {
         if (res.data.code === 200) {
           this.centerDialogVisible = false
-          this.axios.get(`/api/v1/shop/product/group/tree`).then(res => {
+          this.axios.get(`/api/v1/shop/product/getSkuAttrOption`).then(res => {
             if (res.status === 200) {
               this.formGuige = ''
               this.options1 = res.data.data

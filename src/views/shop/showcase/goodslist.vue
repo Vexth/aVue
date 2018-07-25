@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    
+
     <el-button style="margin-bottom: 20px;" type="primary" @click="add">新增商品</el-button>
     <el-row>
       <el-col :span="4">
@@ -90,6 +90,12 @@
           <span>{{scope.row.id}}</span>
         </template>
       </el-table-column> -->
+
+      <el-table-column align="center" label="商品ID">
+        <template slot-scope="scope">
+          <span :title="scope.row.product.id" style="text-align: left;display: inline-block;text-overflow: ellipsis;white-space: nowrap;">{{scope.row.product.id}}</span>
+        </template>
+      </el-table-column>
 
       <el-table-column align="center" label="商品">
         <template slot-scope="scope">
