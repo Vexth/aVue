@@ -40,7 +40,26 @@ export default {
   },
   props: {
     num: Number,
-    bool: Boolean
+    bool: Boolean,
+    item: Object
+  },
+  watch: {
+    item: {
+      immediate: true,
+      handler(newVal, oldVal) {
+        if (newVal['title'] !== undefined) {
+          this.input = newVal['productId']
+          this.list = {
+            imageUrl: newVal['imageUrl'],
+            title: newVal['title'],
+            priceUnderline: newVal['priceUnderline']
+          }
+          this.isXzsd = true
+          // console.log(newVal)
+        }
+      },
+      deep: true
+    }
   },
   methods: {
     clickInput() {

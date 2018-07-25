@@ -41,7 +41,7 @@
       :visible.sync="xxdialogVisible"
       width="330px"
       :before-close="handleClose">
-      <div style="height: 525px;margin-top: -25px;"><v-card :bool="false" @sel="sel" /></div>
+      <div style="height: 525px;margin-top: -25px;"><v-card :item="product" :bool="false" @sel="sel" /></div>
     </el-dialog>
   </div>
 </template>
@@ -59,7 +59,8 @@ export default {
       selectedOptions: [],
       image: {},
       img: '../../../../../static/img/zw.png',
-      selectedOptionsImg: {}
+      selectedOptionsImg: {},
+      product: {}
     }
   },
   components: {
@@ -79,9 +80,19 @@ export default {
     item: {
       immediate: true,
       handler(newVal, oldVal) {
+        // console.log(newVal)
         this.isClick = newVal['isShow'] === 0 ? true : false
         if (newVal['imageUrl'] === undefined) {
           newVal['imageUrl'] = this.img
+        }
+        if (newVal['navigateType'] !== undefined) {
+          this.selectedOptions = [newVal['navigateType']]
+          if (newVal['navigateType'] > 0) {
+            this.selectedOptions = [-2, newVal['navigateType']]
+          }
+        }
+        if (newVal['product'] !== undefined) {
+          this.product = newVal['product']
         }
       },
       deep: true

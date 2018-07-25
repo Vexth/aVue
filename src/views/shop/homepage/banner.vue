@@ -69,7 +69,6 @@ export default {
       }).catch(err => console.log(err))
     },
     plus(val) {
-      console.log(val)
       this.selected.push({})
       if (this.selected.length === 5) {
         this.isXs = false
