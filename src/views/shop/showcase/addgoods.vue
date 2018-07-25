@@ -278,10 +278,11 @@
       title="我的图片"
       :visible.sync="tpDialogVisible"
       width="50%"
+      :before-close="handleClose"
       center>
       <DialogImg ref="DialogImg" :selected="selected" :selectedImgList="selectedImgList"/>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="tpDialogVisible = false">取 消</el-button>
+        <el-button @click="handleClose">取 消</el-button>
         <el-button type="primary" @click="tpSub">确 定</el-button>
       </span>
     </el-dialog>
@@ -394,6 +395,10 @@ export default {
     this.getSkuAttrOption()
   },
   methods: {
+    handleClose() {
+      this.tpDialogVisible = false
+      this.isShareImage = true
+    },
     qx() {
       history.go(-1)
     },

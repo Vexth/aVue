@@ -8,8 +8,12 @@
 			<el-form-item label="分享描述：">
 				<el-input class="name" v-model="form.sharetitle"></el-input>
 			</el-form-item>
-      <el-form-item label="描述图片上传：" required>
-        <v-img-list :list="'imgDescList'" :tpList="imgDescList" @uploadList="uploadList" />
+      <el-form-item label="分享图片上传：" required>
+        <v-img-list :list="'shareImage'" :tpList="shareImage" :bool="isShareImage" @cha="cha" @uploadList="uploadList" />
+        <el-tooltip placement="right">
+          <div slot="content">111111111111111111111</div>
+          <i class="el-icon-question"></i>
+        </el-tooltip>
 			</el-form-item>
       <el-form-item label="商品类目：">
         <el-select v-model="categoryId" disabled placeholder="请选择">
@@ -43,6 +47,9 @@
       </el-form-item>
       <el-form-item label="主图上传：" required>
         <v-img-list :list="'imgPrimaryList'" :tpList="imgPrimaryList" @uploadList="uploadList" />
+			</el-form-item>
+      <el-form-item label="商品详情图片上传：" required>
+        <v-img-list :list="'imgDescList'" :tpList="imgDescList" @uploadList="uploadList" />
 			</el-form-item>
       <el-form-item label="规格参数图片上传：" required>
 				<v-img-list :list="'imgSpecList'" :tpList="imgSpecList" @uploadList="uploadList" />
@@ -99,10 +106,11 @@
       title="我的图片"
       :visible.sync="tpDialogVisible"
       width="50%"
+      :before-close="handleClose"
       center>
       <DialogImg ref="DialogImg" :selected="selected" :selectedImgList="selectedImgList"/>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="tpDialogVisible = false">取 消</el-button>
+        <el-button @click="handleClose">取 消</el-button>
         <el-button type="primary" @click="tpSub">确 定</el-button>
       </span>
     </el-dialog>
@@ -131,6 +139,8 @@ export default {
       optionsLX: [],
       optionsFZ: [],
       optionsFZ1: [],
+      shareImage: [],
+      isShareImage: true,
       imgPrimaryList: [],
       imgDescList: [],
       imgSpecList: [],
@@ -162,6 +172,10 @@ export default {
     this.getCategoryOption()
   },
   methods: {
+    handleClose() {
+      this.tpDialogVisible = false
+      this.isShareImage = true
+    },
     fz() {
       // GET /api/v1/shop/product/group/children 商家获取商品子分组接口 通过父级ID 获取 二级分类
       this.axios.get(`api/v1/shop/product/group/children?parentId=${this.groupId}`).then(res => {
@@ -252,6 +266,9 @@ export default {
       this.stockBarcode = value.stockBarcode
       this.centerDialogVisible = true
     },
+    cha(val) {
+      this.isShareImage = true
+    },
     // 修改单品信息
     subModify() {
       if (this.unitPrice === '' || this.unitPrice === null) {
@@ -301,8 +318,13 @@ export default {
         this.$message.error('请选择二级分组！')
         return
       }
+      if (this.shareImage.length === 0) {
+        this.$message.error('请上传分享图片！')
+        return
+      }
       let data = {}
       data = { ...data, ...this.form }
+      data['shareImage'] = this.shareImage[0]
       data['id'] = this.$route.query.id
       data['saleStatus'] = this.saleStatus ? 0 : 1
       data['categoryId'] = this.categoryId
