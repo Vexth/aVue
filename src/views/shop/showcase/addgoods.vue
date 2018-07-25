@@ -281,7 +281,7 @@
       :before-close="handleClose"
       center>
       <DialogImg ref="DialogImg" :selected="selected" :selectedImgList="selectedImgList"/>
-      <span slot="footer" class="dialog-footer">
+      <span style="position: absolute;top: 60px;right: 30px;" slot="footer" class="dialog-footer">
         <el-button @click="handleClose">取 消</el-button>
         <el-button type="primary" @click="tpSub">确 定</el-button>
       </span>
