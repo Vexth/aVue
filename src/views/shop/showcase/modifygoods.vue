@@ -225,6 +225,8 @@ export default {
         this.imgPrimaryList = product['imgPrimaryList']
         this.imgDescList = product['imgDescList']
         this.imgSpecList = product['imgSpecList']
+        this.shareImage = product['shareImage']
+        this.isShareImage = product['shareImage'].length !== 1 ? true : false
         this.rows = data.thead
         this.list = data.tbody
         this.getGroupOption()
