@@ -46,13 +46,13 @@
         </el-select>
       </el-form-item>
       <el-form-item label="主图上传：" required>
-        <v-img-list :list="'imgPrimaryList'" :tpList="imgPrimaryList" @uploadList="uploadList" />
+        <v-img-list :list="'imgPrimaryList'" :tpList="imgPrimaryList" :bool="true" @uploadList="uploadList" />
 			</el-form-item>
       <el-form-item label="商品详情图片上传：" required>
-        <v-img-list :list="'imgDescList'" :tpList="imgDescList" @uploadList="uploadList" />
+        <v-img-list :list="'imgDescList'" :tpList="imgDescList" :bool="true" @uploadList="uploadList" />
 			</el-form-item>
       <el-form-item label="规格参数图片上传：" required>
-				<v-img-list :list="'imgSpecList'" :tpList="imgSpecList" @uploadList="uploadList" />
+				<v-img-list :list="'imgSpecList'" :tpList="imgSpecList" :bool="true" @uploadList="uploadList" />
 			</el-form-item>
       <el-form-item label="划线价：">
 				<el-input v-model="form.priceUnderline"></el-input>
@@ -225,8 +225,8 @@ export default {
         this.imgPrimaryList = product['imgPrimaryList']
         this.imgDescList = product['imgDescList']
         this.imgSpecList = product['imgSpecList']
-        this.shareImage = product['shareImage']
-        this.isShareImage = product['shareImage'].length !== 1 ? true : false
+        this.shareImage = [product['shareImage']]
+        this.isShareImage = this.shareImage.length !== 1 ? true : false
         this.rows = data.thead
         this.list = data.tbody
         this.getGroupOption()
