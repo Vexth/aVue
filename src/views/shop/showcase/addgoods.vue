@@ -22,8 +22,8 @@
           <i class="el-icon-question"></i>
         </el-tooltip>
 			</el-form-item>
-      <el-form-item label="描述图片上传：" required>
-        <v-img-list :list="'imgDescList'" :tpList="imgDescList" @uploadList="uploadList" />
+      <el-form-item label="分享图片上传：" required>
+        <v-img-list :list="'shareImage'" :tpList="shareImage" :bool="isShareImage" @cha="cha" @uploadList="uploadList" />
         <el-tooltip placement="right">
           <div slot="content">111111111111111111111</div>
           <i class="el-icon-question"></i>
@@ -72,21 +72,21 @@
         </el-tooltip>
       </el-form-item>
       <el-form-item label="主图上传：" required>
-        <v-img-list :list="'imgPrimaryList'" :tpList="imgPrimaryList" @uploadList="uploadList" />
+        <v-img-list :list="'imgPrimaryList'" :tpList="imgPrimaryList" :bool="true" @uploadList="uploadList" />
         <el-tooltip placement="right">
           <div slot="content">111111111111111111111</div>
           <i class="el-icon-question"></i>
         </el-tooltip>
 			</el-form-item>
       <el-form-item label="商品详情图片上传：" required>
-				<v-img-list :list="'imgSpecList'" :tpList="imgSpecList" @uploadList="uploadList" />
+        <v-img-list :list="'imgDescList'" :tpList="imgDescList" :bool="true" @uploadList="uploadList" />
         <el-tooltip placement="right">
           <div slot="content">111111111111111111111</div>
           <i class="el-icon-question"></i>
         </el-tooltip>
 			</el-form-item>
       <el-form-item label="规格参数图片上传：" required>
-				<v-img-list :list="'imgSpecList'" :tpList="imgSpecList" @uploadList="uploadList" />
+				<v-img-list :list="'imgSpecList'" :tpList="imgSpecList" :bool="true" @uploadList="uploadList" />
         <el-tooltip placement="right">
           <div slot="content">111111111111111111111</div>
           <i class="el-icon-question"></i>
@@ -340,6 +340,8 @@ export default {
         // desc: '',
         items: []
       },
+      shareImage: [],
+      isShareImage: true,
       imgPrimaryList: [],
       imgDescList: [],
       imgSpecList: [],
@@ -426,6 +428,9 @@ export default {
       this.selectedImgList = []
       this.selectedImg = val
       this.tpDialogVisible = true
+      if (val === 'shareImage') {
+        this.isShareImage = false
+      }
     },
     addTale() {
       var list = []
@@ -635,7 +640,7 @@ export default {
         return
       }
       if (this.imgDescList.length === 0) {
-        this.$message.error('请上传描述图片！')
+        this.$message.error('请上传商品详情图片！')
         return
       }
       if (this.imgSpecList.length === 0) {
@@ -646,7 +651,12 @@ export default {
         this.$message.error('请填写规格明细！')
         return
       }
+      if (this.shareImage.length === 0) {
+        this.$message.error('请上传分享图片！')
+        return
+      }
       const product = {}
+      product['shareImage'] = this.shareImage[0]
       product['imgPrimaryList'] = this.imgPrimaryList
       product['imgDescList'] = this.imgDescList
       product['imgSpecList'] = this.imgSpecList
@@ -749,6 +759,9 @@ export default {
       if (this.form.items.length >= 5) {
         this.isdisabled = true
       }
+    },
+    cha(val) {
+      this.isShareImage = true
     }
   }
 }

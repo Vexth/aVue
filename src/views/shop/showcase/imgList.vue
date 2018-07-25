@@ -6,7 +6,7 @@
         <div class="cha" @click="cha(list, tpList, i)">×</div>
       </li>
     </ul>
-    <div class="uploadList" @click="uploadList(list)">
+    <div v-if="bool" class="uploadList" @click="uploadList(list)">
       <i class="el-icon-plus"></i>
     </div>
   </div>
@@ -21,13 +21,14 @@ export default {
   },
   props: {
     list: String,
-    tpList: Array
+    tpList: Array,
+    bool: Boolean
   },
   methods: {
     cha(title, val, id) {
       val.splice(id, 1)
       this[title] = val
-      if (this.list === 'banner') {
+      if (this.list === 'banner' || this.list === 'shareImage') {
         this.$emit('cha', id)
       }
     },
