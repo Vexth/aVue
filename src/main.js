@@ -1,5 +1,7 @@
 import Vue from 'vue'
 
+import VueLazyLoad from 'vue-lazyload'
+
 import 'normalize.css/normalize.css'// A modern alternative to CSS resets
 
 import Element from 'element-ui'
@@ -25,6 +27,11 @@ Vue.prototype.axios = request
 Vue.use(Element, {
   size: 'medium', // set element-ui default size
   i18n: (key, value) => i18n.t(key, value)
+})
+
+Vue.use(VueLazyLoad,{
+  error:'./static/img/loading.png',
+  loading:'./static/img/loading.png'
 })
 
 // register global utility filters.

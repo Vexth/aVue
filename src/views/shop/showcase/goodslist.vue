@@ -251,7 +251,7 @@ export default {
       // })
     },
     add() {
-      this.$router.push({ path: '/showcase/addgoods' })
+      this.$router.push({ path: '/showcase/addlist' })
     },
     onSubmit() {
       this.getList()

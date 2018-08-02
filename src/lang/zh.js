@@ -55,7 +55,9 @@ export default {
     i18n: '国际化',
 
     showcase: '商品',
-    addgoods: '新增商品',
+    // addgoods: '新增商品',
+    member: '会员卡服务',
+    addlist: '新增商品',
     goodslist: '商品列表',
     modifygoods: '修改商品',
     trade: '订单',

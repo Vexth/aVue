@@ -5,9 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="renderer" content="webkit">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <title>vue-element-admin</title>
+    <title>后台管理系统</title>
   </head>
-  <body>
+  <body onunload="fn">
     <script src=<%= htmlWebpackPlugin.options.path %>/tinymce4.7.5/tinymce.min.js></script>
     <div id="app"></div>
     <!-- built files will be auto injected -->
@@ -16,5 +16,13 @@
         overflow-x: hidden;
       }
     </style>
+    <script type="text/javascript">
+      function fn() {
+        console.log('刷新啦')
+      }
+      window.onload = function () {
+        sessionStorage.removeItem('list')
+      }
+    </script>
   </body>
 </html>

@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
 		<el-form ref="form" :model="form" label-width="150px">
-      <div class="title">商品类型</div>
+      <div class="title">物流类型</div>
 			<el-form-item label="" style="margin-left: -150px;">
 				<el-radio v-model="radio7" label="1" border>物流发货</el-radio>
         <el-radio v-model="radio7" label="2" border>无需物流</el-radio>
@@ -92,6 +92,10 @@
           <i class="el-icon-question"></i>
         </el-tooltip>
 			</el-form-item>
+      <el-form-item label="商品类型：">
+        <el-radio v-model="form.productType" label="0" >普通商品</el-radio>
+        <el-radio v-model="form.productType" label="1" >套餐</el-radio>
+      </el-form-item>
 
 			<div class="title">价格库存</div>
 			<el-form-item label="商品规格：">
@@ -330,6 +334,7 @@ export default {
         title: '',
         sharetitle: '',
         priceUnderline: '',
+        productType: '0',
         // name: '',
         // brief: '',
         // region: '',
