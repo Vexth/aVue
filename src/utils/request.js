@@ -82,7 +82,7 @@ service.interceptors.response.use(
   error => {
     console.log('err' + error)// for debug
     Message({
-      message: error.message,
+      message: error.message === 'Network Error' ? '网络错误' : error.message,
       type: 'error',
       duration: 5 * 1000
     })

@@ -341,7 +341,7 @@ export const asyncRouterMap = [
       icon: 'international'
     },
     children: [
-      { path: 'ump', component: () => import('@/views/shop/ump/ump'), name: 'ump', meta: { icon: 'international', title: 'ump', noCache: true }},
+      { path: 'ump1', component: () => import('@/views/shop/ump/ump'), name: 'ump', meta: { icon: 'international', title: 'ump', noCache: true }},
       { path: 'activity', component: () => import('@/views/shop/ump/activity'), name: 'activity', meta: { title: 'activity', noCache: true }, hidden: true }
     ]
   },

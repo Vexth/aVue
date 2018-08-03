@@ -164,7 +164,7 @@ export default {
       this.tpDialogVisible = false
     },
     next() {
-      console.log(this.form)
+      // console.log(this.form)
       if (this.groupId2 === null) {
         this.$message.error('请选择二级分组！')
         return
@@ -189,10 +189,6 @@ export default {
         this.$message.error('请上传规格参数图片！')
         return
       }
-      // if (this.form.skuList.length === 0) {
-      //   this.$message.error('请填写规格明细！')
-      //   return
-      // }
       if (this.form.shareImage['url'] === undefined) {
         this.$message.error('请上传分享图片！')
         return

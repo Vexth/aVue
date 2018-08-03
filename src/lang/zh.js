@@ -73,7 +73,8 @@ export default {
     homepage1: '首页配置',
     banner: '轮播图配置',
     activity1: '活动栏1设置',
-    activity2: '活动栏2设置'
+    activity2: '活动栏2设置',
+    cropper: '图片剪裁'
   },
   navbar: {
     logOut: '退出登录',

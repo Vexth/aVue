@@ -1,51 +1,56 @@
 <template>
   <div class="app-container">
 
-    <el-table :data="list" v-loading.body="listLoading" border fit highlight-current-row style="width: 100%" @selection-change="handleSelectionChange" ref="multipleTable">
+    <el-table :data="list" v-loading.body="listLoading" border fit highlight-current-row style="width: 100%" ref="multipleTable">
       <el-table-column align="center" label="预约号ID" width="80">
         <template slot-scope="scope">
-          <span>{{scope.row.id}}</span>
+          <span>{{scope.row.reservationId}}</span>
         </template>
       </el-table-column>
 
       <el-table-column width="180" align="center" label="预约申请时间">
         <template slot-scope="scope">
-          <span>{{scope.row.timestamp | parseTime('{y}-{m}-{d} {h}:{i}')}}</span>
+          <span>{{scope.row.createTime}}</span>
         </template>
       </el-table-column>
 
       <el-table-column width="300" align="center" label="客户/电话">
         <template slot-scope="scope">
-          <span>{{scope.row.author}}</span>
+          <span>{{scope.row.userName}}/{{scope.row.userPhone}}</span>
         </template>
       </el-table-column>
 
       <el-table-column align="center" label="申请项目内容">
         <template slot-scope="scope">
           <el-table
-            :data="tableData"
+            :data="scope.row.itemList"
             border
             style="width: 100%">
             <el-table-column
-              prop="date"
+              prop="userPackageItemId"
               label="ID"
               width="180" align="center">
             </el-table-column>
             <el-table-column
-              prop="date"
+              prop="userPackageItemName"
               label="服务项目"
               width="180" align="center">
             </el-table-column>
             <el-table-column
-              prop="name"
+              prop="amount"
               label="数量"
               width="180" align="center">
+              <template slot-scope="scope">
+                <i class="el-icon-remove" @click="remove(scope.row.userPackageItemId)"></i>
+                <span>{{scope.row.amount}}</span>
+                <i class="el-icon-circle-plus" @click="plus(scope.row.userPackageItemId)"></i>
+              </template>
             </el-table-column>
             <el-table-column
               prop="address"
               label="操作" align="center">
               <template slot-scope="scope">
-                <el-button type="primary" size="mini" icon="el-icon-edit">修改数量</el-button>
+                <el-button type="danger" size="mini" @click="del(scope.row.userPackageItemId)" icon="el-icon-delete">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -54,53 +59,116 @@
 
       <el-table-column class-name="status-col" label="服务车辆" width="110">
         <template slot-scope="scope">
-          <span>{{scope.row.id}}</span>
+          <span>{{scope.row.userRemark}}</span>
         </template>
       </el-table-column>
 
       <el-table-column align="center" label="更多" width="120">
         <template slot-scope="scope">
-          <el-button type="primary" @click='scope.row.edit=!scope.row.edit' size="mini" icon="el-icon-edit">修改数量</el-button>
+          <el-button type="primary" @click='edit(scope.row)' size="mini">查看更多</el-button>
         </template>
       </el-table-column>
 
       <el-table-column width="110" align="center" label="状态">
         <template slot-scope="scope">
-          <span>{{scope.row.id}}</span>
+          <div v-if="scope.row.reservationStatus === 1">
+            <span>预约已提交</span>
+            <el-button style="margin-top: 5px;margin-bottom: 8px;" type="primary" size="mini" @click="yueQuery">预约确认</el-button>
+            <el-button style="margin-left: 0px;" size="mini" @click="quexiao">预约取消</el-button>
+          </div>
+          <div v-else-if="scope.row.reservationStatus === 2">
+            <span>预约已确认</span>
+            <el-button style="margin-top: 5px;margin-bottom: 8px;" type="primary" size="mini" @click="completion">服务完成</el-button>
+            <el-button style="margin-left: 0px;" size="mini" @click="quexiao">预约取消</el-button>
+          </div>
+          <div v-else-if="scope.row.reservationStatus === 3">
+            <span>预约已取消</span>
+          </div>
+          <div v-else>
+            <span>服务已完成</span>
+          </div>
+          <!-- <span>{{scope.row.reservationStatus}}</span> -->
         </template>
       </el-table-column>
     </el-table>
+
+    <el-dialog title="更多详情" :visible.sync="dialogFormVisible" :before-close="beforeClose">
+      <el-form :model="form">
+        <el-form-item label="服务项目所属套餐：" :label-width="formLabelWidth">
+          <span>{{form.userPackageName}}</span>
+        </el-form-item>
+        <el-form-item label="备注：" :label-width="formLabelWidth">
+          <el-input v-model="form.vendorRemark" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="预约服务时间：" :label-width="formLabelWidth">
+          <el-date-picker
+            v-model="value"
+            type="datetimerange"
+            :picker-options="pickerOptions"
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+            align="right">
+          </el-date-picker>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="beforeClose">取 消</el-button>
+        <el-button type="primary" @click="sub">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { fetchList } from '@/api/article'
+import { reservationList, itemDecrease, itemDelete, itemIncrease, modifyRemark, modifyStatus } from '../server'
+import formatDate from '../timeToString.js'
 
 export default {
   data() {
     return {
-      tableData: [
-        {
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        },
-        {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄'
-        },
-        {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        },
-        {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
-        }
-      ],
+      visible2: false,
+      dialogFormVisible: false,
+      form: {
+        reservationId: null,
+        userPackageName: '',
+        vendorRemark: '',
+        appointmentServiceTimeBegin: '',
+        appointmentServiceTimeEnd: ''
+      },
+      formLabelWidth: '140px',
+      pickerOptions: {
+        shortcuts: [
+          {
+            text: '最近一周',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+              picker.$emit('pick', [start, end]);
+            }
+          },
+          {
+            text: '最近一个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+              picker.$emit('pick', [start, end]);
+            }
+          },
+          {
+            text: '最近三个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+              picker.$emit('pick', [start, end]);
+            }
+          }
+        ]
+      },
+      value: [],
       list: null,
       listLoading: true,
       listQuery: {
@@ -109,61 +177,90 @@ export default {
       }
     }
   },
-  filters: {
-    statusFilter(status) {
-      const statusMap = {
-        published: 'success',
-        draft: 'info',
-        deleted: 'danger'
-      }
-      return statusMap[status]
-    }
-  },
   created() {
-    this.getList()
+    this.dataList()
   },
   methods: {
-    getList() {
-      this.listLoading = true
-      fetchList(this.listQuery).then(response => {
-        const items = response.data.items
-        this.list = items.map(v => {
-          this.$set(v, 'edit', false) // https://vuejs.org/v2/guide/reactivity.html
-
-          v.originalTitle = v.title //  will be used when user click the cancel botton
-
-          return v
+    pClick(title) {
+      return new Promise(resolve => {
+        this.$confirm(`${title}, 是否继续?`, '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          resolve()
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消!'
+          })        
         })
-        this.listLoading = false
-      })
+      }, reject => reject)
     },
-    cancelEdit(row) {
-      row.title = row.originalTitle
-      row.edit = false
-      this.$message({
-        message: 'The title has been restored to the original value',
-        type: 'warning'
-      })
-    },
-    confirmEdit(row) {
-      row.edit = false
-      row.originalTitle = row.title
-      this.$message({
-        message: 'The title has been edited',
-        type: 'success'
-      })
-    },
-    toggleSelection(rows) {
-      if (rows) {
-        rows.forEach(row => {
-          this.$refs.multipleTable.toggleRowSelection(row)
+    pRes(res, title) {
+      if (res.code === 200) {
+        this.$message({
+          type: 'info',
+          message: `${title}成功`
         })
+        this.dataList()
       } else {
-        this.$refs.multipleTable.clearSelection()
+        console.log(res)
       }
     },
-    handleSelectionChange(val) {
-      this.multipleSelection = val
+    dataList() {
+      reservationList().then(res => {
+        res.code === 200 ? this.list = res.data : console.log(res)
+        this.listLoading = false
+      }).catch(err => console.log(err))
+    },
+    edit(v) {
+      this.form.reservationId = v.reservationId
+      this.form.userPackageName = v.userPackageName
+      // if (v.appointmentServiceTimeBegin === undefined) {
+        
+      // }
+      // this.form.appointmentServiceTimeBegin = v.appointmentServiceTimeBegin === undefined ? 
+      // this.form.appointmentServiceTimeEnd = v.appointmentServiceTimeEnd
+      this.dialogFormVisible = true
+    },
+    beforeClose() {
+      this.dialogFormVisible = false
+      this.value = []
+    },
+    remove(v) {
+      this.pClick('此操作会减少服务数量').then(res => itemDecrease(v).then(res => this.pRes(res, '减少')).catch(err => console.log(err)))
+    },
+    plus(v) {
+      this.pClick('此操作会增加服务数量').then(res => itemIncrease(v).then(res => this.pRes(res, '增加')).catch(err => console.log(err)))
+    },
+    del(v) {
+      this.pClick('此操作会删除服务数量').then(res => itemDelete(v).then(res => this.pRes(res, '删除')).catch(err => console.log(err)))
+    },
+    yueQuery() {
+      this.pClick('预约确认').then(() => console.log('2222'))
+    },
+    completion() {
+      this.pClick('服务完成').then(() => console.log('2222'))
+    },
+    quexiao() {
+      this.pClick('预约取消').then(() => console.log('2222'))
+    },
+    sub() {
+      if (this.form.vendorRemark === '') {
+        this.$message.error('请填写备注！')
+        return
+      }
+      if (this.value.length === 0) {
+        this.$message.error('请选择服务开始与结束时间！')
+        return
+      }
+      this.form.appointmentServiceTimeBegin = formatDate(this.value[0])
+      this.form.appointmentServiceTimeEnd = formatDate(this.value[1])
+      delete this.form.userPackageName
+
+      modifyRemark(this.form).then(res => this.pRes(res, '修改备注') && this.dialogFormVisible === true).catch(err => console.log(err))
+      // console.log(this.form)
     }
   }
 }
@@ -177,5 +274,8 @@ export default {
   position: absolute;
   right: 15px;
   top: 10px;
+}
+.el-icon-remove, .el-icon-circle-plus {
+  cursor: pointer;
 }
 </style>

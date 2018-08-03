@@ -53,27 +53,21 @@
 			</el-form-item>
 
       <el-form-item label="套餐卡颜色：" v-if="productType === '1'" required>
-        <div class="color">
-          <span style="background: rgb(235,82,50);"></span>
-          <span style="background: rgb(0,166,97);"></span>
-          <span style="background: rgb(255,133,133);"></span>
-          <span style="background: rgb(142,142,142);"></span>
-          <span style="background: rgb(4,146,230);"></span>
-          <span style="background: rgb(164,33,255);"></span>
-        </div>
-				<!-- <el-color-picker v-model="suite.colorType"></el-color-picker> -->
-        <!-- <el-dropdown trigger="click">
-          <span class="el-dropdown-link">
-            下拉菜单<i class="el-icon-arrow-down el-icon--right"></i>
-          </span>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>黄金糕</el-dropdown-item>
-            <el-dropdown-item>狮子头</el-dropdown-item>
-            <el-dropdown-item>螺蛳粉</el-dropdown-item>
-            <el-dropdown-item>双皮奶</el-dropdown-item>
-            <el-dropdown-item>蚵仔煎</el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown> -->
+        <el-popover
+          placement="top"
+          width="315"
+          v-model="visible2">
+          <div class="color">
+            <el-button class="span" @click="colorSize" style="background: rgb(235,82,50);"></el-button>
+            <el-button class="span" @click="colorSize" style="background: rgb(0,166,97);"></el-button>
+            <el-button class="span" @click="colorSize" style="background: rgb(255,133,133);"></el-button>
+            <el-button class="span" @click="colorSize" style="background: rgb(142,142,142);"></el-button>
+            <el-button class="span" @click="colorSize" style="background: rgb(4,146,230);"></el-button>
+            <el-button class="span" @click="colorSize" style="background: rgb(164,33,255);"></el-button>
+          </div>
+          <el-button class="span" :style="{background: color}" slot="reference"></el-button>
+        </el-popover>
+
         <el-tooltip placement="right">
           <div slot="content">111111111111111111111</div>
           <i class="el-icon-question"></i>
@@ -104,6 +98,7 @@ export default {
   name: 'vInfoList',
   data() {
     return {
+      visible2: false,
       isAdd: false,
       isSc: true,
       isBool: false,
@@ -114,14 +109,14 @@ export default {
       saleStatus: false,
       priceUnderline: '',
       textarea: '',
-      color1: '#409EFF',
+      color: 'rgb(4, 146, 230)',
       row: [],
       tableData: [],
       hander: [],
       stat: [],
       fw: [],
       suite: {
-        colorType: '#409EFF',
+        colorType: '',
         remark: ''
       }
     }
@@ -209,6 +204,11 @@ export default {
       if (this.items.length === 0) {
         this.isBool = false
       }
+    },
+    colorSize(e) {
+      this.visible2 = false
+      this.color = e.target.style.background
+      this.suite.colorType = e.target.style.background
     },
     productTypeClick(e) {
       this.productType = '1'
@@ -369,9 +369,14 @@ export default {
   width: 120px;
 }
 
-.color span {
+.color {
+  display: flex;
+}
+.span {
   width: 38px;
   height: 38px;
-  display: inline-block;
+  background: rgb(4, 146, 230);
+  border-radius: 0;
+  border: 0;
 }
 </style>
