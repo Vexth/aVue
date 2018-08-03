@@ -108,17 +108,21 @@ export default {
     },
     confirmEdit(row) {
       this.id = null
-      row.originalTitle = row.title
+      // row.originalTitle = row.title
       const list = {
         advisoryId: row.id,
         remark: row.remark
       }
       advisoryRemark(list).then(res => {
-        res.code === 200 ? this.advisoryFind() : console.log(res)
-        this.$message({
-          message: '修改成功',
-          type: 'success'
-        })
+        if (res.code === 200) {
+          this.advisoryFind()
+          this.$message({
+            message: '修改成功',
+            type: 'success'
+          })
+        } else {
+          console.log(res)
+        }
       }).catch(err => console.log(err))
     }
   }
