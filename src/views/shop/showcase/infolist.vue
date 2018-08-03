@@ -118,7 +118,8 @@ export default {
       suite: {
         colorType: '',
         remark: ''
-      }
+      },
+      varlist: []
     }
   },
   components: {
@@ -196,14 +197,19 @@ export default {
       this.tableData = this.ArrayFun(this.stat).map(res => JSON.parse(res))
     },
     del(val) {
+      this.varlist = JSON.parse(sessionStorage.getItem('list'))
+      sessionStorage.removeItem('list')
       this.isAdd = false
       this.items.splice(val, 1)
       this.hander.splice(val, 1)
       this.stat.splice(val, 1)
+      this.varlist.splice(val, 1)
+
       this.isSc = this.items.length === 0 ? true : false
       if (this.items.length === 0) {
         this.isBool = false
       }
+      sessionStorage.setItem('list', JSON.stringify(this.varlist))
     },
     colorSize(e) {
       this.visible2 = false

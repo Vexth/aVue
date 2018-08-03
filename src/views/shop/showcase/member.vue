@@ -215,13 +215,15 @@ export default {
       }).catch(err => console.log(err))
     },
     edit(v) {
+      console.log(v)
       this.form.reservationId = v.reservationId
       this.form.userPackageName = v.userPackageName
-      // if (v.appointmentServiceTimeBegin === undefined) {
-        
-      // }
-      // this.form.appointmentServiceTimeBegin = v.appointmentServiceTimeBegin === undefined ? 
-      // this.form.appointmentServiceTimeEnd = v.appointmentServiceTimeEnd
+      this.form.vendorRemark = v.vendorRemark
+      if (v.appointmentServiceTimeBegin === undefined && v.appointmentServiceTimeEnd === undefined) {
+        this.value = []
+      } else {
+        this.value = [v.appointmentServiceTimeBegin, v.appointmentServiceTimeEnd]
+      }
       this.dialogFormVisible = true
     },
     beforeClose() {
@@ -255,12 +257,17 @@ export default {
         this.$message.error('请选择服务开始与结束时间！')
         return
       }
-      this.form.appointmentServiceTimeBegin = formatDate(this.value[0])
-      this.form.appointmentServiceTimeEnd = formatDate(this.value[1])
+      if (Object.prototype.toString.call(this.value[0])) {
+        
+      }
+      this.form.appointmentServiceTimeBegin = Object.prototype.toString.call(this.value[0]) === '[object Date]' ? formatDate(this.value[0]) : this.value[0]
+      this.form.appointmentServiceTimeEnd = Object.prototype.toString.call(this.value[1]) === '[object Date]' ? formatDate(this.value[1]) : this.value[1]
       delete this.form.userPackageName
 
-      modifyRemark(this.form).then(res => this.pRes(res, '修改备注') && this.dialogFormVisible === true).catch(err => console.log(err))
-      // console.log(this.form)
+      modifyRemark(this.form).then(res => {
+        this.pRes(res, '修改备注')
+        this.dialogFormVisible = false
+      }).catch(err => console.log(err))
     }
   }
 }

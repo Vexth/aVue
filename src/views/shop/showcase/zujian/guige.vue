@@ -120,23 +120,26 @@ export default {
         sessionStorage.setItem('list', JSON.stringify(list))
       } else {
         let a = JSON.parse(sessionStorage.getItem('list'))
-        for (let i = 0; i < a.length; i++) {
-          const res = a[i]
-          if (res !== null && res.id === +this.value1) {
-            this.$alert('规格名不能选择相同的', '提示', {
-              confirmButtonText: '确定',
-              callback: action => {
-                this.$message({
-                  type: 'error',
-                  message: '规格名选择相同了，请重新选择'
-                })
-                this.value1 = null
-                list[this.i] = null
-              }
-            })
-            return
+        if (this.title !== '添加规格值' && this.title !== '添加规格名') {
+          for (let i = 0; i < a.length; i++) {
+            const res = a[i]
+            if (res !== null && res.id === +this.value1) {
+              this.$alert('规格名不能选择相同的', '提示', {
+                confirmButtonText: '确定',
+                callback: action => {
+                  this.$message({
+                    type: 'error',
+                    message: '规格名选择相同了，请重新选择'
+                  })
+                  this.value1 = null
+                  list[this.i] = null
+                }
+              })
+              return
+            }
           }
         }
+        
         a[this.i] = this.list
         sessionStorage.setItem('list', JSON.stringify(a))
       }
