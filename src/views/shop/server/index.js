@@ -30,3 +30,9 @@ export const itemIncrease = data => post(`api/v1/shop/reservation/item/increase?
 export const modifyRemark = data => post('api/v1/shop/reservation/modify/remark', data)
 // POST /api/v1/shop/reservation/modify/status 修改状态
 export const modifyStatus = data => post('api/v1/shop/reservation/modify/status', data)
+
+// 后台查看咨询列表
+// GET /api/v1/vendor/advisory/find 后台查看咨询列表
+export const advisoryFind = data => get('api/v1/vendor/advisory/find', data)
+// POST /api/v1/vendor/advisory/remark 商家设置备注
+export const advisoryRemark = data => post(`api/v1/vendor/advisory/remark?advisoryId=${data.advisoryId}&remark=${data.remark}`)

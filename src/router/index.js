@@ -382,6 +382,17 @@ export const asyncRouterMap = [
     },
     children: [{ path: 'cropper', component: () => import('@/views/shop/img-cropper/cropper'), name: 'cropper', meta: { title: 'cropper', icon: 'excel', noCache: true }}]
   },
+  
+  {
+    path: '/cooperation',
+    component: Layout,
+    redirect: 'noredirect',
+    meta: {
+      title: 'system',
+      icon: 'user'
+    },
+    children: [{ path: 'cooperation', component: () => import('@/views/shop/cooperation/cooperation'), name: 'cooperation', meta: { title: 'cooperation', icon: 'user', noCache: true }}]
+  },
 
   { path: '*', redirect: '/404', hidden: true }
 ]

@@ -73,21 +73,23 @@
         <template slot-scope="scope">
           <div v-if="scope.row.reservationStatus === 1">
             <span>预约已提交</span>
-            <el-button style="margin-top: 5px;margin-bottom: 8px;" type="primary" size="mini" @click="yueQuery">预约确认</el-button>
-            <el-button style="margin-left: 0px;" size="mini" @click="quexiao">预约取消</el-button>
+            <el-button style="margin-top: 5px;margin-bottom: 8px;" type="primary" size="mini" @click="yueQuery(scope.row)">预约确认</el-button>
+            <el-button style="margin-left: 0px;" size="mini" @click="quexiao(scope.row)">预约取消</el-button>
           </div>
           <div v-else-if="scope.row.reservationStatus === 2">
             <span>预约已确认</span>
-            <el-button style="margin-top: 5px;margin-bottom: 8px;" type="primary" size="mini" @click="completion">服务完成</el-button>
+            <el-button style="margin-top: 5px;margin-bottom: 8px;" type="primary" size="mini" @click="completion(scope.row)">服务完成</el-button>
             <el-button style="margin-left: 0px;" size="mini" @click="quexiao">预约取消</el-button>
           </div>
           <div v-else-if="scope.row.reservationStatus === 3">
             <span>预约已取消</span>
           </div>
-          <div v-else>
-            <span>服务已完成</span>
+          <div v-else-if="scope.row.reservationStatus === 4">
+            <span>商家确认服务完成</span>
           </div>
-          <!-- <span>{{scope.row.reservationStatus}}</span> -->
+          <div v-else-if="scope.row.reservationStatus === 0">
+            <span>用户确认服务完成</span>
+          </div>
         </template>
       </el-table-column>
     </el-table>
@@ -239,14 +241,26 @@ export default {
     del(v) {
       this.pClick('此操作会删除服务数量').then(res => itemDelete(v).then(res => this.pRes(res, '删除')).catch(err => console.log(err)))
     },
-    yueQuery() {
-      this.pClick('预约确认').then(() => console.log('2222'))
+    yueQuery(v) {
+      const list = {
+        reservationId: v.reservationId,
+        statusCode: 2
+      }
+      this.pClick('预约确认').then(() => modifyStatus(list).then(res => this.pRes(res, '预约确认')).catch(err => console.log(err)))
     },
-    completion() {
-      this.pClick('服务完成').then(() => console.log('2222'))
+    completion(v) {
+      const list = {
+        reservationId: v.reservationId,
+        statusCode: 4
+      }
+      this.pClick('服务完成').then(() => modifyStatus(list).then(res => this.pRes(res, '服务完成')).catch(err => console.log(err)))
     },
-    quexiao() {
-      this.pClick('预约取消').then(() => console.log('2222'))
+    quexiao(v) {
+      const list = {
+        reservationId: v.reservationId,
+        statusCode: 3
+      }
+      this.pClick('预约取消').then(() => modifyStatus(list).then(res => this.pRes(res, '预约取消')).catch(err => console.log(err)))
     },
     sub() {
       if (this.form.vendorRemark === '') {
