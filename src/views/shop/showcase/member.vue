@@ -94,6 +94,8 @@
       </el-table-column>
     </el-table>
 
+    <v-pagination :pagination="pagination" />
+
     <el-dialog title="更多详情" :visible.sync="dialogFormVisible" :before-close="beforeClose">
       <el-form :model="form">
         <el-form-item label="服务项目所属套餐：" :label-width="formLabelWidth">
@@ -125,10 +127,16 @@
 <script>
 import { reservationList, itemDecrease, itemDelete, itemIncrease, modifyRemark, modifyStatus } from '../server'
 import formatDate from '../timeToString.js'
+import vPagination from '../pagination/pagination.vue'
 
 export default {
   data() {
     return {
+      pagination: {
+        total: null,
+        size: null,
+        sizes: null
+      },
       visible2: false,
       dialogFormVisible: false,
       form: {
@@ -179,8 +187,16 @@ export default {
       }
     }
   },
+  components: {
+    vPagination
+  },
   created() {
     this.dataList()
+    this.pagination = {
+      total: 100,
+      size: 10,
+      sizes: [10, 20, 50, 100]
+    }
   },
   methods: {
     pClick(title) {
@@ -282,6 +298,12 @@ export default {
         this.pRes(res, '修改备注')
         this.dialogFormVisible = false
       }).catch(err => console.log(err))
+    },
+    handleSizeChange(val) {
+      console.log(`每页 ${val} 条`);
+    },
+    handleCurrentChange(val) {
+      console.log(`当前页: ${val}`);
     }
   }
 }

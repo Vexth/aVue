@@ -23,9 +23,10 @@ export default {
     ])
   },
   created() {
-    if (!this.roles.includes('admin')) {
-      this.currentRole = 'editorDashboard'
-    }
+    console.log(this.roles.username.includes('admin'))
+    // if (!this.roles.username.includes('admin')) {
+    //   this.currentRole = 'editorDashboard'
+    // }
   }
 }
 </script>

@@ -29,10 +29,7 @@
 
       <el-table-column label="咨询项目">
         <template slot-scope="scope">
-          <p>{{ splitList(scope.row.advisoryGroup)[0] }}</p>
-          <p>{{ splitList(scope.row.advisoryGroup)[1] }}</p>
-          <p>{{ splitList(scope.row.advisoryGroup)[2] }}</p>
-          <p>{{ splitList(scope.row.advisoryGroup)[3] }}</p>
+          <p v-for="(v, i) in scope.row.advisoryGroup" :key="i">{{ v }}</p>
         </template>
       </el-table-column>
 
@@ -81,22 +78,6 @@ export default {
     this.advisoryFind()
   },
   methods: {
-    splitList(res) {
-      let a = res.split('|').map(res => {
-        let a = ''
-        if (res === '1') {
-          a = '小程序功能'
-        } else if (res === '2') {
-          a = '微信公众号功能'
-        } else if (res === '3') {
-          a = '微信公众号运营'
-        } else if (res === '4') {
-          a = '小程序注册'
-        }
-        return a
-      })
-      return a
-    },
     advisoryFind() {
       advisoryFind().then(res => {
         res.code === 200 ? this.list = res.data : console.log(res)
