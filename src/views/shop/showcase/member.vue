@@ -41,16 +41,16 @@
               label="数量"
               width="180" align="center">
               <template slot-scope="scope">
-                <i class="el-icon-remove" @click="remove(scope.row.userPackageItemId)"></i>
+                <i class="el-icon-remove" @click="remove(scope.row)"></i>
                 <span>{{scope.row.amount}}</span>
-                <i class="el-icon-circle-plus" @click="plus(scope.row.userPackageItemId)"></i>
+                <i class="el-icon-circle-plus" @click="plus(scope.row)"></i>
               </template>
             </el-table-column>
             <el-table-column
               prop="address"
               label="操作" align="center">
               <template slot-scope="scope">
-                <el-button type="danger" size="mini" @click="del(scope.row.userPackageItemId)" icon="el-icon-delete">删除</el-button>
+                <el-button type="danger" size="mini" @click="del(scope.row)" icon="el-icon-delete">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -211,7 +211,7 @@ export default {
           this.$message({
             type: 'info',
             message: '已取消!'
-          })        
+          })
         })
       }, reject => reject)
     },
@@ -288,7 +288,7 @@ export default {
         return
       }
       if (Object.prototype.toString.call(this.value[0])) {
-        
+
       }
       this.form.appointmentServiceTimeBegin = Object.prototype.toString.call(this.value[0]) === '[object Date]' ? formatDate(this.value[0]) : this.value[0]
       this.form.appointmentServiceTimeEnd = Object.prototype.toString.call(this.value[1]) === '[object Date]' ? formatDate(this.value[1]) : this.value[1]

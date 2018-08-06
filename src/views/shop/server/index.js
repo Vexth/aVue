@@ -20,12 +20,14 @@ export const productSkuAttrCreate = data => post('api/v1/shop/product/productSku
 export const productCreate = data => post('api/v1/shop/product/productCreate', data)
 // GET /api/v1/shop/reservation/list 动态查询订单
 export const reservationList = data => get('api/v1/shop/reservation/list', data)
+
 // POST /api/v1/shop/reservation/item/decrease 服务项目次数: 减少1次
-export const itemDecrease = data => post(`api/v1/shop/reservation/item/decrease?itemId=${data}`)
+export const itemDecrease = data => post(`api/v1/shop/reservation/item/decrease`, data)
 // POST /api/v1/shop/reservation/item/delete 删除项目, 次数为0!
-export const itemDelete = data => post(`api/v1/shop/reservation/item/delete?itemId=${data}`)
+export const itemDelete = data => post(`api/v1/shop/reservation/item/delete`, data)
 // POST /api/v1/shop/reservation/item/increase 服务项目次数: 增加1次
-export const itemIncrease = data => post(`api/v1/shop/reservation/item/increase?itemId=${data}`)
+export const itemIncrease = data => post(`api/v1/shop/reservation/item/increase`, data)
+
 // POST /api/v1/shop/reservation/modify/remark 修改备注和时间
 export const modifyRemark = data => post('api/v1/shop/reservation/modify/remark', data)
 // POST /api/v1/shop/reservation/modify/status 修改状态
