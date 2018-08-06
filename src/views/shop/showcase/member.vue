@@ -233,7 +233,6 @@ export default {
       }).catch(err => console.log(err))
     },
     edit(v) {
-      console.log(v)
       this.form.reservationId = v.reservationId
       this.form.userPackageName = v.userPackageName
       this.form.vendorRemark = v.vendorRemark
@@ -286,9 +285,6 @@ export default {
       if (this.value.length === 0) {
         this.$message.error('请选择服务开始与结束时间！')
         return
-      }
-      if (Object.prototype.toString.call(this.value[0])) {
-
       }
       this.form.appointmentServiceTimeBegin = Object.prototype.toString.call(this.value[0]) === '[object Date]' ? formatDate(this.value[0]) : this.value[0]
       this.form.appointmentServiceTimeEnd = Object.prototype.toString.call(this.value[1]) === '[object Date]' ? formatDate(this.value[1]) : this.value[1]
