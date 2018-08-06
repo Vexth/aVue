@@ -92,7 +92,7 @@ export default {
       // row.originalTitle = row.title
       const list = {
         advisoryId: row.id,
-        remark: row.remark
+        remark: row.remark === null ? '' : row.remark
       }
       advisoryRemark(list).then(res => {
         if (res.code === 200) {

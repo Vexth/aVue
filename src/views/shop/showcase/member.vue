@@ -94,7 +94,7 @@
       </el-table-column>
     </el-table>
 
-    <v-pagination :pagination="pagination" />
+    <v-pagination :pagination="pagination" @handleSizeChange="handleSizeChange" @handleCurrentChange="handleCurrentChange" />
 
     <el-dialog title="更多详情" :visible.sync="dialogFormVisible" :before-close="beforeClose">
       <el-form :model="form">
