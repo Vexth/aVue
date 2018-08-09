@@ -33,7 +33,7 @@ export default {
         total: 100,
         size: 21,
         page: 1,
-        sizes: [21, 50, 100]
+        sizes: [21, 63, 126]
       }
     }
   },
