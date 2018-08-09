@@ -37,6 +37,9 @@ export default {
       }
     }
   },
+  components: {
+    vPagination
+  },
   props: {
     selected: Array,
     selectedImgList: Array
@@ -47,7 +50,11 @@ export default {
   methods: {
     ImgList() {
       // api/v1/shop/image/list
-      shopImageList().then(res => {
+      let list = {
+        pageNum: this.pagination.page,
+        pageSize: this.pagination.size
+      }
+      shopImageList(list).then(res => {
         if (res.code === 200) {
           this.imgList = res.data
           this.pagination.total = res.total
