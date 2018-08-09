@@ -18,10 +18,12 @@
         </li>
       </ul>
     </div>
+    <v-pagination :pagination="pagination" @handleSizeChange="handleSizeChange" @handleCurrentChange="handleCurrentChange" />
   </div>
 </template>
 
 <script>
+import vPagination from '../../pagination/pagination.vue'
 import { shopImageList, shopImageUpload } from '../../server'
 export default {
   data() {
@@ -29,13 +31,17 @@ export default {
       action: '123',
       imgList: [],
       selected: [],
-      selectedImgList: []
+      selectedImgList: [],
+      pagination: {
+        total: 100,
+        size: 21,
+        page: 1,
+        sizes: [21, 50, 100]
+      }
     }
   },
-  watch: {
-    imgList(val) {
-      console.log(val)
-    }
+  components: {
+    vPagination
   },
   mounted() {
     this.ImgList()
@@ -43,10 +49,14 @@ export default {
   methods: {
     ImgList() {
       // api/v1/shop/image/list
-      shopImageList().then(res => {
-        this.imgList = []
+      let list = {
+        pageNum: this.pagination.page,
+        pageSize: this.pagination.size
+      }
+      shopImageList(list).then(res => {
         if (res.code === 200) {
           this.imgList = res.data
+          this.pagination.total = res.total
         } else {
           this.$message.error(res.msg)
         }
@@ -80,6 +90,14 @@ export default {
     },
     sub() {
       return this.selectedImgList
+    },
+    handleSizeChange(val) {
+      this.pagination.size = val
+      this.ImgList()
+    },
+    handleCurrentChange(val) {
+      this.pagination.page = val
+      this.ImgList()
     }
   }
 }

@@ -117,7 +117,8 @@
   </div>
 </template>
 <script>
-// import Dropzone from '@/components/Dropzone/index.vue'
+import { category, tree, shopProductLoad, groupchildren, shopProductModifySku, shopProductModifyBasic } from '../server'
+
 import DialogImg from './dialogImg.vue'
 import vImgList from './imgList.vue'
 export default {
@@ -178,39 +179,20 @@ export default {
     },
     fz() {
       // GET /api/v1/shop/product/group/children 商家获取商品子分组接口 通过父级ID 获取 二级分类
-      this.axios.get(`api/v1/shop/product/group/children?parentId=${this.groupId}`).then(res => {
-        if (res.status === 200) {
-          this.optionsFZ1 = res.data.data
-        } else {
-          console.error(res)
-        }
-      }).catch(err => console.log(err))
+      groupchildren({parentId: this.groupId}).then(res => res => res.code === 200 ? this.optionsFZ1 = res.data : console.log(res)).catch(err => console.log(err))
     },
     getCategoryOption() {
       // GET /api/v1/shop/product/category
-      this.axios.get('api/v1/shop/product/category').then(res => {
-        if (res.status === 200) {
-          this.optionsLX = res.data.data
-        } else {
-          console.error(res)
-        }
-      }).catch(err => console.log(err))
+      category().then(res => res.code === 200 ? this.optionsLX = res.data : console.log(res)).catch(err => console.log(err))
     },
     getGroupOption() {
       // // GET /api/v1/shop/product/group/tree
-      this.axios.get('api/v1/shop/product/group/tree').then(res => {
-        if (res.status === 200) {
-          this.optionsFZ = res.data.data
-          this.fz()
-        } else {
-          console.error(res)
-        }
-      }).catch(err => console.log(err))
+      tree().then(res => res.code === 200 ? this.optionsFZ = res.data : console.log(res)).catch(err => console.log(err))
     },
     productLoad() {
       // GET /api/v1/shop/product/productLoad
-      this.axios.get(`api/v1/shop/product/productLoad?productId=${this.$route.query.id}`).then(res => {
-        const data = res.data.data
+      shopProductLoad(this.$route.query.id).then(res => {
+        const data = res.data
         const product = data['product']
         this.product = product
         this.form.title = product['title']
@@ -287,8 +269,8 @@ export default {
       this.modifyData.stockBarcode = this.stockBarcode
       this.modifyData['imageId'] = this.modifyData.image.id
       // /api/v1/shop/product/productModifySku
-      this.axios.post('api/v1/shop/product/productModifySku', this.modifyData).then(res => {
-        if (res.data.code === 200) {
+      shopProductModifySku(this.modifyData).then(res => {
+        if (res.code === 200) {
           this.centerDialogVisible = false
           this.$message({
             message: '修改成功',
@@ -340,8 +322,8 @@ export default {
         type: 'warning'
       }).then(() => {
         // /api/v1/shop/product/productModifyBasic
-        this.axios.post(`api/v1/shop/product/productModifyBasic`, data).then(res => {
-          if (res.data.code === 200) {
+        shopProductModifyBasic(data).then(res => {
+          if (res.code === 200) {
             this.productLoad()
             this.$message({
               type: 'success',

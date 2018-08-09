@@ -17,15 +17,24 @@
         </li>
       </ul>
     </div>
+    <v-pagination :pagination="pagination" @handleSizeChange="handleSizeChange" @handleCurrentChange="handleCurrentChange" />
   </div>
 </template>
 
 <script>
+import vPagination from '../pagination/pagination.vue'
+import { shopImageList, shopImageUpload } from '../server'
 export default {
   data() {
     return {
       action: '123',
-      imgList: []
+      imgList: [],
+      pagination: {
+        total: 100,
+        size: 21,
+        page: 1,
+        sizes: [21, 50, 100]
+      }
     }
   },
   props: {
@@ -38,11 +47,12 @@ export default {
   methods: {
     ImgList() {
       // api/v1/shop/image/list
-      this.axios.get('api/v1/shop/image/list').then(res => {
-        if (res.data.code === 200) {
-          this.imgList = res.data.data
+      shopImageList().then(res => {
+        if (res.code === 200) {
+          this.imgList = res.data
+          this.pagination.total = res.total
         } else {
-          this.$message.error(res.data.msg)
+          this.$message.error(res.msg)
         }
       }).catch(err => console.log(err))
     },
@@ -50,11 +60,11 @@ export default {
       const fd = new FormData()
       fd.append('multipartFile', file)
       // /api/v1/shop/image/upload
-      this.axios.post('api/v1/shop/image/upload', fd).then(res => {
-        if (res.data.code === 200) {
+      shopImageUpload(fd).then(res => {
+        if (res.code === 200) {
           this.ImgList()
         } else {
-          this.$message.error(res.data.msg)
+          this.$message.error(res.msg)
         }
       }).catch(err => console.log(err))
       return false
@@ -70,6 +80,14 @@ export default {
     },
     tpSub() {
       return this.selectedImgList
+    },
+    handleSizeChange(val) {
+      this.pagination.size = val
+      this.ImgList()
+    },
+    handleCurrentChange(val) {
+      this.pagination.page = val
+      this.ImgList()
     }
   }
 }

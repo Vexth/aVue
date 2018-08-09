@@ -386,7 +386,7 @@ export default {
     },
     qx() {
       console.log(this.resource)
-      // history.go(-1)
+      history.go(-1)
     }
   }
 }

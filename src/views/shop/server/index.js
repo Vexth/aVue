@@ -23,6 +23,14 @@ export const productSkuAttrCreate = data => post('api/v1/shop/product/productSku
 export const productCreate = data => post('api/v1/shop/product/productCreate', data)
 // GET /api/v1/shop/reservation/list 动态查询订单
 export const reservationList = data => get('api/v1/shop/reservation/list', data)
+// POST api/v1/shop/product/productList
+export const shopProductList = data => post('api/v1/shop/product/productList', data)
+// GET /api/v1/shop/product/productLoad
+export const shopProductLoad = data => post(`api/v1/shop/product/productLoad?productId=${data}`)
+// POST /api/v1/shop/product/productModifySku
+export const shopProductModifySku = data => post('api/v1/shop/product/productModifySku', data)
+// POST /api/v1/shop/product/productModifyBasic
+export const shopProductModifyBasic = data => post('api/v1/shop/product/productModifyBasic', data)
 
 // POST /api/v1/shop/reservation/item/decrease 服务项目次数: 减少1次
 export const itemDecrease = data => post(`api/v1/shop/reservation/item/decrease`, data)
@@ -54,7 +62,7 @@ export const shopConfigSave = data => post(`api/v1/shop/page/main/config/save`, 
 // GET /api/v1/shop/page/main/config/navigate/tree 微信主页配置 跳转路径树
 export const shopConfigNavigateTree = data => get(`api/v1/shop/page/main/config/navigate/tree`, data)
 // api/v1/shop/image/list
-export const shopImageList = data => get(`api/v1/shop/image/list`, data)
+export const shopImageList = data => get(`api/v1/shop/image/list?pageNum=${data.pageNum}&pageSize=${data.pageSize}`)
 
 // POST /api/v1/shop/image/upload
 export const shopImageUpload = data => post(`api/v1/shop/image/upload`, data)

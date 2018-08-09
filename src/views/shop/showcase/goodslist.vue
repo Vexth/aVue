@@ -150,6 +150,7 @@
 </template>
 
 <script>
+import { category, tree, shopProductList } from '../server'
 export default {
   data() {
     return {
@@ -183,16 +184,6 @@ export default {
       }
     }
   },
-  filters: {
-    statusFilter(status) {
-      const statusMap = {
-        published: 'success',
-        draft: 'info',
-        deleted: 'danger'
-      }
-      return statusMap[status]
-    }
-  },
   created() {
     this.getList()
     this.getCategoryOption()
@@ -201,29 +192,17 @@ export default {
   methods: {
     getCategoryOption() {
       // GET /api/v1/shop/product/category
-      this.axios.get('api/v1/shop/product/category').then(res => {
-        if (res.status === 200) {
-          this.optionsLX = res.data.data
-        } else {
-          console.error(res)
-        }
-      }).catch(err => console.log(err))
+      category().then(res => res.code === 200 ? this.optionsLX = res.data : console.log(res)).catch(err => console.log(err))
     },
     getGroupOption() {
       // // GET /api/v1/shop/product/group/tree
-      this.axios.get('api/v1/shop/product/group/tree').then(res => {
-        if (res.status === 200) {
-          this.optionsFZ = res.data.data
-        } else {
-          console.error(res)
-        }
-      }).catch(err => console.log(err))
+      tree().then(res => res.code === 200 ? this.optionsFZ = res.data : console.log(res)).catch(err => console.log(err))
     },
     getList() {
       this.listLoading = false
       const params = this.formInline
-      this.axios.post('api/v1/shop/product/productList', params).then(res => {
-        const items = res.data.data
+      shopProductList(params).then(res => {
+        const items = res.data
         this.list = items
         this.listLoading = false
       }).catch(err => console.log(err))
