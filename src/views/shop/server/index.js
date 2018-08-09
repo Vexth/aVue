@@ -26,7 +26,7 @@ export const reservationList = data => get('api/v1/shop/reservation/list', data)
 // POST api/v1/shop/product/productList
 export const shopProductList = data => post('api/v1/shop/product/productList', data)
 // GET /api/v1/shop/product/productLoad
-export const shopProductLoad = data => post(`api/v1/shop/product/productLoad?productId=${data}`)
+export const shopProductLoad = data => get(`api/v1/shop/product/productLoad?productId=${data}`)
 // POST /api/v1/shop/product/productModifySku
 export const shopProductModifySku = data => post('api/v1/shop/product/productModifySku', data)
 // POST /api/v1/shop/product/productModifyBasic
