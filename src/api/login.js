@@ -6,8 +6,8 @@ export function loginByUsername(username, password) {
     password
   }
   return request({
-    url: 'https://shop.jxxykj.cn/auth/login',
-    // url: 'http://shop.bbwork.cn/auth/login',
+    // url: 'https://shop.jxxykj.cn/auth/login',
+    url: 'http://192.168.10.153:8080/auth/login',
     method: 'post',
     data
   })

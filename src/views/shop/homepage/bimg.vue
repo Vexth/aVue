@@ -49,6 +49,8 @@
 <script>
 import vImg from '../grouping/img.vue'
 import vCard from './card.vue'
+
+import { shopImageUpload } from '../server'
 export default {
   data() {
     return {
@@ -133,13 +135,7 @@ export default {
       const fd = new FormData()
       fd.append('multipartFile', file)
       // /api/v1/shop/image/upload
-      this.axios.post('api/v1/shop/image/upload', fd).then(res => {
-        if (res.data.code === 200) {
-          this.getImg()
-        } else {
-          this.$message.error(res.data.msg)
-        }
-      }).catch(err => console.log(err))
+      shopImageUpload(fd).then(res => res.code === 200 ? this.getImg() : this.$message.error(res.msg)).catch(err => console.log(err))
       return false
     },
     handleClose() {

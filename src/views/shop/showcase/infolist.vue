@@ -73,6 +73,29 @@
           <i class="el-icon-question"></i>
         </el-tooltip>
 			</el-form-item>
+      <el-form-item label="套餐卡时间期限：" v-if="productType === '1'" required>
+        <el-radio-group class="resource" v-model="resource">
+          <el-radio label="1">固定日期
+            <el-date-picker
+              v-model="value5"
+              type="datetimerange"
+              :picker-options="pickerOptions2"
+              range-separator="至"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+              align="right">
+            </el-date-picker>
+          </el-radio>
+          <el-radio label="2">购买<span style="color: red;">当</span>日起<el-input class="input1" v-model="input" placeholder="请输入内容" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"></el-input>天内可用</el-radio>
+          <el-radio label="3">购买<span style="color: red;">次</span>日起<el-input class="input2" v-model="input" placeholder="请输入内容" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"></el-input>天内可用</el-radio>
+          <el-radio label="4">永远不过期</el-radio>
+        </el-radio-group>
+
+        <!-- <el-tooltip placement="right">
+          <div slot="content">111111111111111111111</div>
+          <i class="el-icon-question"></i>
+        </el-tooltip> -->
+			</el-form-item>
       <el-form-item label="是否上架：" required>
 				<el-checkbox v-model="saleStatus">是否立即上架</el-checkbox>
         <el-tooltip placement="right">
@@ -94,10 +117,46 @@
 import vTab from './zujian/tab.vue'
 import vGuiGe from './zujian/guige.vue'
 import vFw from './zujian/fw.vue'
+
+import formatDate from '../timeToString'
 export default {
   name: 'vInfoList',
   data() {
     return {
+      value5: [],
+      pickerOptions2: {
+        shortcuts: [
+          {
+            text: '最近一周',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+              picker.$emit('pick', [start, end]);
+            }
+          },
+          {
+            text: '最近一个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+              picker.$emit('pick', [start, end]);
+            }
+          },
+          {
+            text: '最近三个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+              picker.$emit('pick', [start, end]);
+            }
+          }
+        ]
+      },
+      input1: '',
+      input2: '',
       visible2: false,
       isAdd: false,
       isSc: true,
@@ -105,6 +164,7 @@ export default {
       ggNmaeList: [],
       items: [],
       form: {},
+      resource: '',
       productType: '0',
       saleStatus: false,
       priceUnderline: '',
@@ -274,6 +334,20 @@ export default {
           return
         }
         list['suite'] = this.suite
+        list['suite']['limitedTimeType'] = +this.resource
+        if (this.resource === '1' && this.value5.length === 0) {
+          this.$message.error('请选择固定日期！')
+          return
+        } else {
+          list['suite']['limitedStartTime'] = formatDate(this.value5[0])
+          list['suite']['limitedEndTime'] = formatDate(this.value5[1])
+        }
+        if (this.resource === '2') {
+          list['suite']['limitedTimeDays'] = this.input1
+        }
+        if (this.resource === '3') {
+          list['suite']['limitedTimeDays'] = this.input2
+        }
         const a = this.$refs.vfw.bc()
         for (let index = 0; index < a.length; index++) {
           const element = a[index]
@@ -311,7 +385,8 @@ export default {
       this.$emit('onSubmit', list)
     },
     qx() {
-      history.go(-1)
+      console.log(this.resource)
+      // history.go(-1)
     }
   }
 }
@@ -384,5 +459,15 @@ export default {
   background: rgb(4, 146, 230);
   border-radius: 0;
   border: 0;
+}
+
+.resource .el-radio {
+  display: block;
+  margin-left: 0;
+  margin-bottom: 10px;
+}
+.resource .input {
+  width: 120px;
+  margin: 0 5px;
 }
 </style>

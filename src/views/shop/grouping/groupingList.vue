@@ -64,6 +64,7 @@
 <script>
 import vImg from './img.vue'
 
+import { shopKindsList, shopKindsImageList, shopAddKinds, shopUpdateKinds, shopDeleteKinds } from '../server'
 export default {
   data() {
     return {
@@ -99,29 +100,23 @@ export default {
   methods: {
     kindsList(parentId, gradeId) {
       this.listLoading = true
+      let list = {
+        parentId,
+        gradeId
+      }
       // GET /api/v1/shop/kindsList 获取商户分类
-      this.axios.get(`api/v1/shop/kindsList?parentId=${parentId}&&gradeId=${gradeId}`).then(res => {
-        if (res.status === 200) {
-          if (res.data.code === 200) {
-            this.list = res.data.data.kindlist
-          } else {
-            this.$message.error(res.data.msg)
-          }
-          this.listLoading = false
+      shopKindsList(list).then(res => {
+        if (res.code === 200) {
+          this.list = res.data.kindlist
+        } else {
+          this.$message.error(res.msg)
         }
+        this.listLoading = false
       }).catch(err => console.log(err))
     },
     kindsimageList(gradeId) {
       // GET /api/v1/shop/kindsimage/list 查看分类图库列表
-      this.axios.get(`api/v1/shop/kindsimage/list?gradeId=${gradeId}`).then(res => {
-        if (res.status === 200) {
-          if (res.data.code === 200) {
-            this.KindsImageList = res.data.data
-          } else {
-            this.$message.error(res.data.msg)
-          }
-        }
-      }).catch(err => console.log(err))
+      shopKindsImageList(gradeId).then(res => res.code === 200 ? this.KindsImageList = res.data : this.$message.error(res.msg)).catch(err => console.log(err))
     },
     // 新增分类
     addKinds() {
@@ -134,19 +129,17 @@ export default {
     },
     addKindsList(list) {
       // POST /api/v1/shop/addKinds 添加分类
-      this.axios.post(`api/v1/shop/addKinds`, list).then(res => {
-        if (res.status === 200) {
-          if (res.data.code === 200) {
-            this.$message({
-              type: 'success',
-              message: '新增成功!'
-            })
-            this.kindsList(this.isParentId, this.isGradeId)
-            this.$refs.DialogImg.close()
-            this.DialogVisible = false
-          } else {
-            this.$message.error(res.data.msg)
-          }
+      shopAddKinds(list).then(res => {
+        if (res.code === 200) {
+          this.$message({
+            type: 'success',
+            message: '新增成功!'
+          })
+          this.kindsList(this.isParentId, this.isGradeId)
+          this.$refs.DialogImg.close()
+          this.DialogVisible = false
+        } else {
+          this.$message.error(res.msg)
         }
       }).catch(err => console.log(err))
     },
@@ -164,18 +157,16 @@ export default {
     },
     updateKindsList(list) {
       // POST /api/v1/shop/updateKinds 修改分类
-      this.axios.post(`api/v1/shop/updateKinds?kindsId=${this.kindsId}`, list).then(res => {
-        if (res.status === 200) {
-          if (res.data.code === 200) {
-            this.$message({
-              type: 'success',
-              message: '修改成功!'
-            })
-            this.kindsList(this.isParentId, this.isGradeId)
-            this.DialogVisible = false
-          } else {
-            this.$message.error(res.data.msg)
-          }
+      shopUpdateKinds(this.kindsId, list).then(res => {
+        if (res.code === 200) {
+          this.$message({
+            type: 'success',
+            message: '修改成功!'
+          })
+          this.kindsList(this.isParentId, this.isGradeId)
+          this.DialogVisible = false
+        } else {
+          this.$message.error(res.msg)
         }
       }).catch(err => console.log(err))
     },
@@ -187,17 +178,15 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.axios.post(`api/v1/shop/deleteKinds?kindinfo=${val.kindId}`).then(res => {
-          if (res.status === 200) {
-            if (res.data.code === 200) {
-              this.$message({
-                type: 'success',
-                message: '删除成功!'
-              })
-              this.kindsList(this.isParentId, this.isGradeId)
-            } else {
-              this.$message.error(res.data.msg)
-            }
+        shopDeleteKinds(val.kindId).then(res => {
+          if (res.code === 200) {
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            })
+            this.kindsList(this.isParentId, this.isGradeId)
+          } else {
+            this.$message.error(res.msg)
           }
         }).catch(err => console.log(err))
       }).catch(() => {

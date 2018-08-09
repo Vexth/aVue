@@ -16,6 +16,7 @@
 </template>
 
 <script>
+import { shopConfigList, shopConfigVisable, shopConfigGroupName, shopConfigSave } from '../server'
 import vXCard from './xcard.vue'
 import vPlus from './plus.vue'
 export default {
@@ -37,7 +38,7 @@ export default {
     vXCard, vPlus
   },
   mounted() {
-    console.log(this.$route.path)
+    // console.log(this.$route.path)
     switch (this.$route.path) {
       case '/homepage1/activity1':
         this.cellType = 3
@@ -51,16 +52,27 @@ export default {
     this.configList()
   },
   methods: {
+    pulibfn(res) {
+      if (res.code === 200) {
+        this.$message({
+          message: res.msg,
+          type: 'success'
+        })
+        this.configList()
+      } else {
+        this.$message.error(res.msg)
+      }
+    },
     configList() {
       // GET /api/v1/shop/page/main/config/list 微信主页配置 列表
-      this.axios.get(`api/v1/shop/page/main/config/list?cellType=${this.cellType}`).then(res => {
-        if (res.data.code === 200) {
-          const data = res.data.data
+      shopConfigList(this.cellType).then(res => {
+        if (res.code === 200) {
+          const data = res.data
           this.input = data.cellLabel
           this.cellId = data.cellId
           this.selected = data['children'] === undefined ? [] : data['children']
         } else {
-          this.$message.error(res.data.msg)
+          this.$message.error(res.msg)
         }
       }).catch(err => console.log(err))
     },
@@ -72,35 +84,15 @@ export default {
     },
     sel(val) {
       // api/v1/shop/page/main/config/visable?cellId=xxx
-      this.axios.get(`api/v1/shop/page/main/config/visable?cellId=${val}`).then(res => {
-        if (res.data.code === 200) {
-          this.$message({
-            message: res.data.msg,
-            type: 'success'
-          })
-          this.configList()
-        } else {
-          this.$message.error(res.data.msg)
-        }
-      }).catch(err => console.log(err))
+      shopConfigVisable(val).then(res => this.pulibfn(res)).catch(err => console.log(err))
     },
     sub() {
       const list = {
         cellId: this.cellId,
         cellLabel: this.input
       }
-      // api/v1/shop/page/main/config/group/name
-      this.axios.post('api/v1/shop/page/main/config/group/name', list).then(res => {
-        if (res.data.code === 200) {
-          this.$message({
-            message: res.data.msg,
-            type: 'success'
-          })
-          this.configList()
-        } else {
-          this.$message.error(res.data.msg)
-        }
-      }).catch(err => console.log(err))
+      // POST api/v1/shop/page/main/config/group/name
+      shopConfigGroupName(list).then(res => this.pulibfn(res)).catch(err => console.log(err))
     },
     onSubmit(val) {
       // console.log(val)
@@ -123,19 +115,8 @@ export default {
         list['navigateParam'] = val['product']['productId']
       }
 
-      // console.log(list)
       // POST /api/v1/shop/page/main/config/save 微信主页配置 保存单元格
-      this.axios.post('api/v1/shop/page/main/config/save', list).then(res => {
-        if (res.data.code === 200) {
-          this.$message({
-            message: res.data.msg,
-            type: 'success'
-          })
-          this.configList()
-        } else {
-          this.$message.error(res.data.msg)
-        }
-      }).catch(err => console.log(err))
+      shopConfigSave(list).then(res => this.pulibfn(res)).catch(err => console.log(err))
     }
   }
 }

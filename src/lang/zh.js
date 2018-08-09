@@ -56,7 +56,8 @@ export default {
 
     showcase: '商品',
     // addgoods: '新增商品',
-    member: '会员卡服务',
+    member: '套餐会员卡服务',
+    hyk_manage: '套餐会员卡管理',
     addlist: '新增商品',
     goodslist: '商品列表',
     modifygoods: '修改商品',

@@ -35,6 +35,8 @@
 
 <script>
 import vImg from './img.vue'
+
+import { shopImageList, tree, shopProductGropAdd, shopProductGropDelete, shopProductGropModify } from '../server'
 export default {
   data() {
     return {
@@ -70,18 +72,12 @@ export default {
 
   methods: {
     getImg() {
-      this.axios.get('api/v1/shop/image/list').then(res => {
-        if (res.data.code === 200) {
-          this.KindsImageList = res.data.data
-        } else {
-          this.$message.error(res.data.msg)
-        }
-      }).catch(err => console.log(err))
+      shopImageList().then(res => res.code === 200 ? this.KindsImageList = res.data: this.$message.error(res.msg)).catch(err => console.log(err))
     },
     getTreeList() {
       // GET /api/v1/shop/product/group/tree 商家获取商品分组
-      this.axios.get('api/v1/shop/product/group/tree').then(res => {
-        const data = res.data.data
+      tree().then(res => {
+        const data = res.data
         this.treeList(data)
       }).catch(err => console.log(err))
     },
@@ -148,7 +144,7 @@ export default {
         sortOrder: this.form.sortOrder
       }
       // POST /api/v1/shop/product/group/add 商家添加商品分组
-      this.axios.post('api/v1/shop/product/group/add', list).then(res => {
+      shopProductGropAdd(list).then(res => {
         this.getTreeList()
         this.dialogFormVisible = false
         this.success('新增成功')
@@ -159,7 +155,7 @@ export default {
     remove(node, data) {
       this.$confirm('确认是否删除？').then(_ => {
         // DELETE /api/v1/shop/product/group/delete 商家删除商品分组
-        this.axios.delete(`api/v1/shop/product/group/delete?groupId=${data.groupId}`).then(res => {
+        shopProductGropDelete(data.groupId).then(res => {
           this.getTreeList()
           this.success('删除成功')
         }).catch(err => console.log(err))
@@ -176,7 +172,7 @@ export default {
         sortOrder: this.form.sortOrder
       }
       // POST /api/v1/shop/product/group/modify 商家修改商品分组
-      this.axios.post('api/v1/shop/product/group/modify', list).then(res => {
+      shopProductGropModify(list).then(res => {
         this.getTreeList()
         this.dialogFormVisible = false
         this.success('修改成功')

@@ -13,6 +13,7 @@ import vImgList from '../showcase/imgList.vue'
 import vBImg from './bimg.vue'
 import vPlus from './plus.vue'
 
+import { shopConfigList, shopConfigNavigateTree, shopImageList, shopConfigVisable, shopConfigSave } from '../server'
 export default {
   components: {
     vImgList, vBImg, vPlus
@@ -39,34 +40,22 @@ export default {
   methods: {
     configList() {
       // GET /api/v1/shop/page/main/config/list 微信主页配置 列表
-      this.axios.get(`api/v1/shop/page/main/config/list?cellType=${this.cellType}`).then(res => {
-        if (res.data.code === 200) {
-          const data = res.data.data
+      shopConfigList(this.cellType).then(res => {
+        if (res.code === 200) {
+          const data = res.data
           this.cellId = data.cellId
           this.selected = data['children'] === undefined ? [] : data['children']
         } else {
-          this.$message.error(res.data.msg)
+          this.$message.error(res.msg)
         }
       }).catch(err => console.log(err))
     },
     navigateTree() {
       // GET /api/v1/shop/page/main/config/navigate/tree 微信主页配置 跳转路径树
-      this.axios.get('api/v1/shop/page/main/config/navigate/tree').then(res => {
-        if (res.data.code === 200) {
-          this.options = res.data.data
-        } else {
-          this.$message.error(res.data.msg)
-        }
-      }).catch(err => console.log(err))
+      shopConfigNavigateTree().then(res => res.code === 200 ? this.options = res.data : this.$message.error(res.msg)).catch(err => console.log(err))
     },
     getImg() {
-      this.axios.get('api/v1/shop/image/list').then(res => {
-        if (res.data.code === 200) {
-          this.KindsImageList = res.data.data
-        } else {
-          this.$message.error(res.data.msg)
-        }
-      }).catch(err => console.log(err))
+      shopImageList().then(res => res.code === 200 ? this.KindsImageList = res.data : this.$message.error(res.msg)).catch(err => console.log(err))
     },
     plus(val) {
       this.selected.push({})
@@ -74,19 +63,20 @@ export default {
         this.isXs = false
       }
     },
+    pulibfn(res) {
+      if (res.code === 200) {
+        this.$message({
+          message: res.msg,
+          type: 'success'
+        })
+        this.configList()
+      } else {
+        this.$message.error(res.msg)
+      }
+    },
     click(val) {
       // api/v1/shop/page/main/config/visable?cellId=xxx
-      this.axios.get(`api/v1/shop/page/main/config/visable?cellId=${val}`).then(res => {
-        if (res.data.code === 200) {
-          this.$message({
-            message: res.data.msg,
-            type: 'success'
-          })
-          this.configList()
-        } else {
-          this.$message.error(res.data.msg)
-        }
-      }).catch(err => console.log(err))
+      shopConfigVisable(val).then(res => this.pulibfn(res)).catch(err => console.log(err))
     },
     selectedOptionsImg(val) {
       // console.log(val)
@@ -117,17 +107,7 @@ export default {
 
       // console.log(list)
       // POST /api/v1/shop/page/main/config/save 微信主页配置 保存单元格
-      this.axios.post('api/v1/shop/page/main/config/save', list).then(res => {
-        if (res.data.code === 200) {
-          this.$message({
-            message: res.data.msg,
-            type: 'success'
-          })
-          this.configList()
-        } else {
-          this.$message.error(res.data.msg)
-        }
-      }).catch(err => console.log(err))
+      shopConfigSave(list).then(res => this.pulibfn(res)).catch(err => console.log(err))
     }
   }
 }

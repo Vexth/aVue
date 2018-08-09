@@ -25,6 +25,8 @@ import vOrderListTable from './orderListTable.vue'
 import vOrderListHander from './orderListHander.vue'
 import vOrderListMore from './orderListMore.vue'
 import formatDate from '@/views/shop/timeToString'
+
+import { shopOrderList, shopOrderModifyStar, shopOrderClose, shopOrderDetail, shopOrderModifyRemark, shopOrderModifyPrice } from '../server'
 export default {
   data() {
     return {
@@ -111,13 +113,11 @@ export default {
     },
     queryList(list) {
       // post /api/v1/shop/order/list 查询订单列表
-      this.axios.post(`/api/v1/shop/order/list`, list).then(res => {
-        if (res.status === 200) {
-          res.data.data.forEach(e => {
-            e.refundType = `${e.refundType}`
-          })
-          this.list = res.data.data
-        }
+      shopOrderList(list).then(res => {
+        res.data.forEach(e => {
+          e.refundType = `${e.refundType}`
+        })
+        this.list =res.data
       }).catch(err => console.log(err))
     },
     // 查询
@@ -173,17 +173,15 @@ export default {
         isStar: val.isStar
       }
       // POST /api/v1/shop/order/modify/star 设置订单加星状态
-      this.axios.post(`api/v1/shop/order/modify/star`, list).then(res => {
-        if (res.status === 200) {
-          if (res.data.code === 200) {
+      shopOrderModifyStar(list).then(res => {
+          if (res.code === 200) {
             this.$message({
-              message: res.data.msg,
+              message: res.msg,
               type: 'success'
             })
           } else {
-            this.$message.error(res.data.msg)
+            this.$message.error(res.msg)
           }
-        }
       }).catch(err => console.log(err))
     },
     // 取消发货
@@ -196,17 +194,15 @@ export default {
         orderId: val.orderId
       }
       // DELETE /api/v1/shop/order/close 关闭订单
-      this.axios.delete('api/v1/shop/order/close', { params: list }).then(res => {
-        if (res.status === 200) {
-          if (res.data.code === 200) {
-            this.$message({
-              message: res.data.msg,
-              type: 'success'
-            })
-            this.queryList({})
-          } else {
-            this.$message.error(res.data.msg)
-          }
+      shopOrderClose({ params: list }).then(res => {
+        if (res.code === 200) {
+          this.$message({
+            message: res.msg,
+            type: 'success'
+          })
+          this.queryList({})
+        } else {
+          this.$message.error(res.msg)
         }
       }).catch(err => console.log(err))
     },
@@ -214,18 +210,16 @@ export default {
     duo(val) {
       this.dialogFormVisible = true
       // GET /api/v1/shop/order/detail 获取订单详情
-      this.axios.get(`api/v1/shop/order/detail?orderId=${val.orderId}`).then(res => {
-        if (res.status === 200) {
-          const list = res.data.data
-          this.form = {
-            orderId: list.orderId,
-            receiveAddress: list.receiveAddress,
-            vendorRemark: list.vendorRemark,
-            userCarInfo: list.userCarInfo,
-            appointmentServiceTimeBegin: list.appointmentServiceTimeBegin,
-            appointmentServiceTimeEnd: list.appointmentServiceTimeEnd,
-            isTrue: true
-          }
+      shopOrderDetail(val.orderId).then(res => {
+        const list = res.data
+        this.form = {
+          orderId: list.orderId,
+          receiveAddress: list.receiveAddress,
+          vendorRemark: list.vendorRemark,
+          userCarInfo: list.userCarInfo,
+          appointmentServiceTimeBegin: list.appointmentServiceTimeBegin,
+          appointmentServiceTimeEnd: list.appointmentServiceTimeEnd,
+          isTrue: true
         }
       }).catch(err => console.log(err))
     },
@@ -243,18 +237,16 @@ export default {
       if (this.form.appointmentServiceTimeEnd !== null) {
         list['appointmentServiceTimeEnd'] = formatDate(this.form.appointmentServiceTimeEnd)
       }
-      // POST /api/v1/shop/order/remark/modify 更新商家备注信息
-      this.axios.post(`api/v1/shop/order/modify/remark`, list).then(res => {
-        if (res.status === 200) {
-          if (res.data.code === 200) {
-            this.$message({
-              message: res.data.msg,
-              type: 'success'
-            })
-            this.dialogFormVisible = false
-          } else {
-            this.$message.error(res.data.msg)
-          }
+      // POST /api/v1/shop/order/modify/remark 更新商家备注信息
+      shopOrderModifyRemark(list).then(res => {
+        if (res.code === 200) {
+          this.$message({
+            message: res.msg,
+            type: 'success'
+          })
+          this.dialogFormVisible = false
+        } else {
+          this.$message.error(res.msg)
         }
       }).catch(err => console.log(err))
     },
@@ -266,17 +258,15 @@ export default {
           orderId: val.orderId,
           modifyPrice: val.actualNeedMoney
         }
-        this.axios.post('api/v1/shop/order/modify/price', list).then(res => {
-          if (res.status === 200) {
-            if (res.data.code === 200) {
-              this.$message({
-                message: res.data.msg,
-                type: 'success'
-              })
-              this.queryList({})
-            } else {
-              this.$message.error(res.data.msg)
-            }
+        shopOrderModifyPrice(list).then(res => {
+          if (res.code === 200) {
+            this.$message({
+              message: res.msg,
+              type: 'success'
+            })
+            this.queryList({})
+          } else {
+            this.$message.error(res.msg)
           }
         }).catch(err => console.log(err))
       }

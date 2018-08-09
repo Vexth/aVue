@@ -115,6 +115,7 @@
 </template>
 
 <script>
+import { shopOrderSendGoods, shopOrderModifyRefund } from '../server'
 export default {
   data() {
     return {
@@ -181,16 +182,14 @@ export default {
     },
     sendGoods(list) {
       // POST /api/v1/shop/order/send/goods 设置发货状态
-      this.axios.post('api/v1/shop/order/send/goods', list).then(res => {
-        if (res.status === 200) {
-          if (res.data.code === 200) {
-            this.$message({
-              message: res.data.msg,
-              type: 'success'
-            })
-          } else {
-            this.$message.error(res.data.msg)
-          }
+      shopOrderSendGoods(list).then(res => {
+        if (res.code === 200) {
+          this.$message({
+            message: res.msg,
+            type: 'success'
+          })
+        } else {
+          this.$message.error(res.msg)
         }
       }).catch(err => console.log(err))
     },
@@ -208,18 +207,16 @@ export default {
         list['shipmentNo'] = item
       }
       // POST /api/v1/shop/order/send/goods 设置发货状态
-      this.axios.post('api/v1/shop/order/send/goods', list).then(res => {
-        if (res.status === 200) {
-          if (res.data.code === 200) {
-            val.orderStatus = '3'
-            this.xs = false
-            this.$message({
-              message: res.data.msg,
-              type: 'success'
-            })
-          } else {
-            this.$message.error(res.data.msg)
-          }
+      shopOrderSendGoods(list).then(res => {
+        if (res.code === 200) {
+          val.orderStatus = '3'
+          this.xs = false
+          this.$message({
+            message: res.msg,
+            type: 'success'
+          })
+        } else {
+          this.$message.error(res.msg)
         }
       }).catch(err => console.log(err))
     },
@@ -231,19 +228,17 @@ export default {
           orderStatus: '2'
         }
         // POST /api/v1/shop/order/send/goods 设置发货状态
-        this.axios.post('api/v1/shop/order/send/goods', list).then(res => {
-          if (res.status === 200) {
-            if (res.data.code === 200) {
-              this.isFalse = []
-              val.orderStatus = '1'
-              this.$message({
-                message: res.data.msg,
-                type: 'success'
-              })
-              this.$emit('cancel1')
-            } else {
-              this.$message.error(res.data.msg)
-            }
+        shopOrderSendGoods(list).then(res => {
+          if (res.code === 200) {
+            this.isFalse = []
+            val.orderStatus = '1'
+            this.$message({
+              message: res.msg,
+              type: 'success'
+            })
+            this.$emit('cancel1')
+          } else {
+            this.$message.error(res.msg)
           }
         }).catch(err => console.log(err))
       }).catch(_ => {})
@@ -268,16 +263,14 @@ export default {
           orderId: item.orderId,
           refundStatus: item.refundType
         }
-        this.axios.post('api/v1/shop/order/modify/refund', list).then(res => {
-          if (res.status === 200) {
-            if (res.data.code === 200) {
-              this.$message({
-                message: res.data.msg,
-                type: 'success'
-              })
-            } else {
-              this.$message.error(res.data.msg)
-            }
+        shopOrderModifyRefund(list).then(res => {
+          if (res.code === 200) {
+            this.$message({
+              message: res.msg,
+              type: 'success'
+            })
+          } else {
+            this.$message.error(res.msg)
           }
         }).catch(err => console.log(err))
       }

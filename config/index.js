@@ -28,6 +28,7 @@ module.exports = {
       '/api': {  
         target: 'https://shop.jxxykj.cn/api/',
         // target: 'http://shop.bbwork.cn/api/',
+        // target: 'http://192.168.10.153:8080/api/',
         changeOrigin: true,
         pathRewrite: {
           '^/api': '/'

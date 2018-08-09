@@ -29,6 +29,7 @@
 </template>
 
 <script>
+import { shopProductBrief } from '../server'
 export default {
   data() {
     return {
@@ -64,12 +65,12 @@ export default {
   methods: {
     clickInput() {
       // GET /api/v1/shop/page/main/config/product/brief 微信主页配置 获取商品简要信息
-      this.axios.get(`api/v1/shop/page/main/config/product/brief?productId=${this.input}`).then(res => {
-        if (res.data.code === 200) {
-          this.list = res.data.data
+      shopProductBrief(this.input).then(res => {
+        if (res.code === 200) {
+          this.list = res.data
           this.isXzsd = true
         } else {
-          this.$message.error(res.data.msg)
+          this.$message.error(res.msg)
         }
       }).catch(err => console.log(err))
     },

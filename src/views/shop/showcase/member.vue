@@ -134,8 +134,9 @@ export default {
     return {
       pagination: {
         total: null,
-        size: null,
-        sizes: null
+        size: 10,
+        page: null,
+        sizes: [10, 20, 50, 100]
       },
       visible2: false,
       dialogFormVisible: false,
@@ -192,11 +193,6 @@ export default {
   },
   created() {
     this.dataList()
-    this.pagination = {
-      total: 100,
-      size: 10,
-      sizes: [10, 20, 50, 100]
-    }
   },
   methods: {
     pClick(title) {
@@ -228,7 +224,14 @@ export default {
     },
     dataList() {
       reservationList().then(res => {
-        res.code === 200 ? this.list = res.data : console.log(res)
+        if (res.code === 200) {
+          this.list = res.data
+          let total = res.data.length
+          this.pagination.total = total
+          this.pagination.page = 1
+        } else {
+          console.log(res)
+        }
         this.listLoading = false
       }).catch(err => console.log(err))
     },
