@@ -12,7 +12,8 @@
     <div class="rigth">
       <ul>
         <li v-for="(img, i) in imgList" :key="i" class="uploadList" @click="liClick(img)">
-          <img style="width: 100%;height: 100%;" v-lazy="img.url">
+          <img style="width: 100%;height: 100%;" :src="img.url" >
+          <!-- v-lazy="img.url" -->
           <div :style="{ display: selected.indexOf(img.id) > -1 ? 'inline-block' : 'none' }" class="selected"><i class="index el-icon-check"></i></div>
         </li>
       </ul>
@@ -21,6 +22,7 @@
 </template>
 
 <script>
+import { shopImageList, shopImageUpload } from '../../server'
 export default {
   data() {
     return {
@@ -30,17 +32,23 @@ export default {
       selectedImgList: []
     }
   },
+  watch: {
+    imgList(val) {
+      console.log(val)
+    }
+  },
   mounted() {
     this.ImgList()
   },
   methods: {
     ImgList() {
       // api/v1/shop/image/list
-      this.axios.get('api/v1/shop/image/list').then(res => {
-        if (res.data.code === 200) {
-          this.imgList = res.data.data
+      shopImageList().then(res => {
+        this.imgList = []
+        if (res.code === 200) {
+          this.imgList = res.data
         } else {
-          this.$message.error(res.data.msg)
+          this.$message.error(res.msg)
         }
       }).catch(err => console.log(err))
     },
@@ -48,11 +56,11 @@ export default {
       const fd = new FormData()
       fd.append('multipartFile', file)
       // /api/v1/shop/image/upload
-      this.axios.post('api/v1/shop/image/upload', fd).then(res => {
-        if (res.data.code === 200) {
+      shopImageUpload(fd).then(res => {
+        if (res.code === 200) {
           this.ImgList()
         } else {
-          this.$message.error(res.data.msg)
+          this.$message.error(res.msg)
         }
       }).catch(err => console.log(err))
       return false

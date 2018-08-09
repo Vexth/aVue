@@ -1,5 +1,20 @@
 <template>
   <div class="app-container">
+    <el-form :inline="true" :model="formInline" class="demo-form-inline">
+      <el-form-item label="会员套餐卡名称：">
+        <el-input v-model="formInline.packageName" placeholder="会员套餐卡名称"></el-input>
+      </el-form-item>
+      <el-form-item label="会员套餐卡持有人昵称：">
+        <el-input v-model="formInline.nickName" placeholder="会员套餐卡持有人昵称"></el-input>
+      </el-form-item>
+      <el-form-item label="会员套餐卡持有人联系电话：">
+        <el-input v-model="formInline.mobilePhone" placeholder="会员套餐卡持有人联系电话"></el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click="query">查询</el-button>
+      </el-form-item>
+    </el-form>
+
     <el-table :data="list" v-loading.body="listLoading" border fit highlight-current-row style="width: 100%" ref="multipleTable">
       <el-table-column align="center" label="会员套餐卡ID" >
         <template slot-scope="scope">
@@ -126,6 +141,11 @@ import vPagination from '../pagination/pagination.vue'
 export default {
   data() {
     return {
+      formInline: {
+        packageName: '',
+        nickName: '',
+        mobilePhone: ''
+      },
       vendorRemark: '',
       isTimes: null,
       nickList: {},
@@ -204,6 +224,9 @@ export default {
           console.log(res)
         }
       }).catch(err => console.log(err))
+    },
+    query() {
+      console.log(this.formInline)
     }
   }
 }
