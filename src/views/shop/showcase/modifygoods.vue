@@ -179,7 +179,7 @@ export default {
     },
     fz() {
       // GET /api/v1/shop/product/group/children 商家获取商品子分组接口 通过父级ID 获取 二级分类
-      groupchildren({parentId: this.groupId}).then(res => res => res.code === 200 ? this.optionsFZ1 = res.data : console.log(res)).catch(err => console.log(err))
+      groupchildren({parentId: this.groupId}).then(res => res.code === 200 ? this.optionsFZ1 = res.data : console.log(res)).catch(err => console.log(err))
     },
     getCategoryOption() {
       // GET /api/v1/shop/product/category
@@ -192,6 +192,7 @@ export default {
     productLoad() {
       // GET /api/v1/shop/product/productLoad
       shopProductLoad(this.$route.query.id).then(res => {
+        // console.log(res)
         const data = res.data
         const product = data['product']
         this.product = product
@@ -212,6 +213,7 @@ export default {
         this.rows = data.thead
         this.list = data.tbody
         this.getGroupOption()
+        this.fz()
       }).catch(err => console.log(err))
     },
     tpSub() {
