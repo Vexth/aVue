@@ -8,7 +8,7 @@
         <el-input v-model="formInline.nickName" placeholder="会员套餐卡持有人昵称"></el-input>
       </el-form-item>
       <el-form-item label="会员套餐卡持有人联系电话：">
-        <el-input v-model="formInline.mobilePhone" placeholder="会员套餐卡持有人联系电话"></el-input>
+        <el-input v-model="formInline.mobilePhone" placeholder="会员套餐卡持有人联系电话" onKeyUp="if(this.value.length>4){this.value=this.value.substr(0,11)};this.value=this.value.replace(/[^\d]/g,'');"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="query">查询</el-button>
@@ -45,7 +45,7 @@
       </el-table-column>
 
     </el-table>
-    <v-pagination :pagination="pagination" @handleSizeChange="handleSizeChange" @handleCurrentChange="handleCurrentChange" />
+    <v-pagination v-if="pagination.total !== 0" :pagination="pagination" @handleSizeChange="handleSizeChange" @handleCurrentChange="handleCurrentChange" />
 
     <el-dialog title="" width="80%" :visible.sync="outerVisible">
       <el-dialog
@@ -152,19 +152,15 @@ export default {
       outerVisible: false,
       innerVisible: false,
       pagination: {
-        total: null,
+        total: 100,
         size: 10,
-        page: null,
+        page: 1,
         sizes: [10, 20, 50, 100]
       },
       itemRow: {},
       tableData: [],
       list: null,
-      listLoading: true,
-      listQuery: {
-        page: 1,
-        limit: 10
-      }
+      listLoading: true
     }
   },
   components: {
@@ -175,10 +171,16 @@ export default {
   },
   methods: {
     PackageList() {
-      shopUserPackageList().then(res => {
+      let list = {
+        pageNum: this.pagination.page,
+        pageSize: this.pagination.size,
+        formInline: this.formInline
+      }
+      shopUserPackageList(list).then(res => {
         if (res.code === 200) {
           this.listLoading = false
           this.list = res.data
+          this.pagination.total = res.total
         } else {
           console.log(res)
         }
@@ -188,10 +190,14 @@ export default {
       shopUserPackageDetail(v).then(res => res.code === 200 ? this.nickList = res.data : console.log(res)).catch(err => console.log(err))
     },
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
+      this.pagination.size = val
+      this.PackageList()
+      // console.log(`每页 ${val} 条`);
     },
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
+      this.pagination.page = val
+      this.PackageList()
+      // console.log(`当前页: ${val}`);
     },
     clickTimes(row) {
       this.isTimes = row['itemId']
@@ -227,6 +233,7 @@ export default {
     },
     query() {
       console.log(this.formInline)
+      this.PackageList()
     }
   }
 }

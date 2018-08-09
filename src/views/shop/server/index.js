@@ -104,8 +104,8 @@ export const shopOrderSendGoods = data => post(`api/v1/shop/order/send/goods`, d
 // // POST /api/v1/shop/order/modify/refund 更新售后状态  orderId refundStatus
 export const shopOrderModifyRefund = data => post(`api/v1/shop/order/modify/refund`, data)
 
-// api/v1/shop/user/package/list
-export const shopUserPackageList = data => get(`api/v1/shop/user/package/list`, data)
+// POST api/v1/shop/user/package/list
+export const shopUserPackageList = data => post(`api/v1/shop/user/package/list?pageNum=${data.pageNum}&pageSize=${data.pageSize}`, data.formInline)
 // POST api/v1/shop/user/package/detail 查询修改和服务记录
 export const shopUserPackageDetail = data => post(`api/v1/shop/user/package/detail`, data)
 // POST /api/v1/shop/user/package/modify 商户修改项目服务

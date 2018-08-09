@@ -86,8 +86,8 @@
               align="right">
             </el-date-picker>
           </el-radio>
-          <el-radio label="2">购买<span style="color: red;">当</span>日起<el-input class="input1" v-model="input" placeholder="请输入内容" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"></el-input>天内可用</el-radio>
-          <el-radio label="3">购买<span style="color: red;">次</span>日起<el-input class="input2" v-model="input" placeholder="请输入内容" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"></el-input>天内可用</el-radio>
+          <el-radio label="2">购买<span style="color: red;">当</span>日起<el-input class="input1" v-model="input1" placeholder="请输入内容" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"></el-input>天内可用</el-radio>
+          <el-radio label="3">购买<span style="color: red;">次</span>日起<el-input class="input2" v-model="input2" placeholder="请输入内容" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"></el-input>天内可用</el-radio>
           <el-radio label="4">永远不过期</el-radio>
         </el-radio-group>
 
@@ -325,7 +325,7 @@ export default {
           this.$message.error('请填写商家备注！')
           return
         }
-        if (this.suite.colorType === '') {
+        if (this.color === '') {
           this.$message.error('请选择套餐卡颜色！')
           return
         }
@@ -338,7 +338,8 @@ export default {
         if (this.resource === '1' && this.value5.length === 0) {
           this.$message.error('请选择固定日期！')
           return
-        } else {
+        }
+        if (this.resource === '1' && this.value5.length !== 0) {
           list['suite']['limitedStartTime'] = formatDate(this.value5[0])
           list['suite']['limitedEndTime'] = formatDate(this.value5[1])
         }
@@ -348,6 +349,7 @@ export default {
         if (this.resource === '3') {
           list['suite']['limitedTimeDays'] = this.input2
         }
+        list['suite']['colorType'] = this.color
         const a = this.$refs.vfw.bc()
         for (let index = 0; index < a.length; index++) {
           const element = a[index]
