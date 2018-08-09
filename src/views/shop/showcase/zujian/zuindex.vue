@@ -9,7 +9,7 @@
       :before-close="handleClose"
       center>
       <v-img ref="Img" />
-      <span style="position: absolute;top: 60px;right: 30px;" slot="footer" class="dialog-footer">
+      <span slot="footer" class="dialog-footer">
         <el-button @click="handleClose">取 消</el-button>
         <el-button type="primary" @click="sub">确 定</el-button>
       </span>
