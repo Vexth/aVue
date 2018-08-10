@@ -7,7 +7,10 @@
         :expand-on-click-node="false"
         >
         <div class='custom-tree-node' slot-scope="{ node, data }">
-          <div><img style="width: 20px;height: 20px;vertical-align: middle;margin-right: 10px;background: #ccc;" :src="data.imageUrl" />{{node.label}}</div>
+          <div>
+            <img v-if="data.imageUrl" style="width: 20px;height: 20px;vertical-align: middle;margin-right: 10px;" :src="data.imageUrl" />
+            <span>{{node.label}}</span>
+          </div>
           <span>
             <el-button size='mini' type='text' @click="append(data, '新增')">新增</el-button>
             <el-button size='mini' type='text' @click="append(data, '修改')">修改</el-button>
@@ -92,7 +95,14 @@ export default {
         pageNum: this.pagination.page,
         pageSize: this.pagination.size
       }
-      shopImageList(list).then(res => res.code === 200 ? this.KindsImageList = res.data: this.$message.error(res.msg)).catch(err => console.log(err))
+      shopImageList(list).then(res => {
+        if (res.code === 200) {
+          this.KindsImageList = res.data
+          this.pagination.total = res.total
+        } else {
+          this.$message.error(res.msg)
+        }
+      }).catch(err => console.log(err))
     },
     getTreeList() {
       // GET /api/v1/shop/product/group/tree 商家获取商品分组
