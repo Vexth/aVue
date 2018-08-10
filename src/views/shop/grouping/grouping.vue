@@ -8,7 +8,7 @@
         >
         <div class='custom-tree-node' slot-scope="{ node, data }">
           <div>
-            <img v-if="data.imageUrl" style="width: 20px;height: 20px;vertical-align: middle;margin-right: 10px;" :src="data.imageUrl" />
+            <img v-if="data.imageUrl" class="img" :src="data.imageUrl" />
             <span>{{node.label}}</span>
           </div>
           <span>
@@ -229,5 +229,11 @@ export default {
   justify-content: space-between;
   font-size: 14px;
   padding-right: 8px;
+}
+.img {
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
+  margin-right: 10px;
 }
 </style>
