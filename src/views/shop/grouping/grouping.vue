@@ -25,6 +25,7 @@
         </el-form-item>
       </el-form>
       <v-img ref="DialogImg" :KindsImageList="KindsImageList" :image="image" />
+      <v-pagination v-if="pagination.total !== 0" :pagination="pagination" @handleSizeChange="handleSizeChange" @handleCurrentChange="handleCurrentChange" />
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
         <el-button type="primary" @click="sub(title)">确 定</el-button>
