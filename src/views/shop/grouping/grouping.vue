@@ -5,7 +5,15 @@
         :data="data"
         node-key="id"
         :expand-on-click-node="false"
-        :render-content="renderContent">
+        >
+        <div class='custom-tree-node' slot-scope="{ node, data }">
+          <div><img style="width: 20px;height: 20px;vertical-align: middle;margin-right: 10px;background: #ccc;" :src="data.imageUrl" />{{node.label}}</div>
+          <span>
+            <el-button size='mini' type='text' @click="append(data, '新增')">新增</el-button>
+            <el-button size='mini' type='text' @click="append(data, '修改')">修改</el-button>
+            <el-button size='mini' type='text' @click="remove(node, data)">删除</el-button>
+          </span>
+        </div>
       </el-tree>
     </div>
 
@@ -135,8 +143,9 @@ export default {
     },
     sub(data) {
       const list = this.$refs.DialogImg.tpSub()
-      if (list.length > 1) {
-        this.$message.error('请选择一张图片作为轮播图片！')
+      console.log(list)
+      if (list.length !== 1) {
+        this.$message.error('请选择一张图片作为展示图标！')
         return
       }
       this.form.imageId = list[0]['id']
@@ -189,18 +198,6 @@ export default {
         this.dialogFormVisible = false
         this.success('修改成功')
       }).catch(err => console.log(err))
-    },
-
-    renderContent(h, { node, data, store }) {
-      return (
-        <span class='custom-tree-node'>
-          <span>{node.label}</span>
-          <span>
-            <el-button size='mini' type='text' on-click={ () => this.append(data, '新增') }>新增</el-button>
-            <el-button size='mini' type='text' on-click={ () => this.append(data, '修改') }>修改</el-button>
-            <el-button size='mini' type='text' on-click={ () => this.remove(node, data) }>删除</el-button>
-          </span>
-        </span>)
     },
     handleSizeChange(val) {
       this.pagination.size = val

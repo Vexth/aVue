@@ -51,6 +51,7 @@ export default {
       }
     },
     tpSub() {
+      this.selected = []
       return this.selectedImgList
     },
     close() {
