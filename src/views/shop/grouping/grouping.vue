@@ -35,6 +35,7 @@
 
 <script>
 import vImg from './img.vue'
+import vPagination from '../pagination/pagination.vue'
 
 import { shopImageList, tree, shopProductGropAdd, shopProductGropDelete, shopProductGropModify } from '../server'
 export default {
@@ -57,12 +58,18 @@ export default {
       title: '',
       dialogFormVisible: false,
       KindsImageList: [],
-      image: {}
+      image: {},
+      pagination: {
+        total: 100,
+        size: 21,
+        page: 1,
+        sizes: [21, 63, 126]
+      }
     }
   },
 
   components: {
-    vImg
+    vImg, vPagination
   },
 
   created() {
@@ -72,7 +79,11 @@ export default {
 
   methods: {
     getImg() {
-      shopImageList().then(res => res.code === 200 ? this.KindsImageList = res.data: this.$message.error(res.msg)).catch(err => console.log(err))
+      let list = {
+        pageNum: this.pagination.page,
+        pageSize: this.pagination.size
+      }
+      shopImageList(list).then(res => res.code === 200 ? this.KindsImageList = res.data: this.$message.error(res.msg)).catch(err => console.log(err))
     },
     getTreeList() {
       // GET /api/v1/shop/product/group/tree 商家获取商品分组
@@ -189,6 +200,14 @@ export default {
             <el-button size='mini' type='text' on-click={ () => this.remove(node, data) }>删除</el-button>
           </span>
         </span>)
+    },
+    handleSizeChange(val) {
+      this.pagination.size = val
+      this.getImg()
+    },
+    handleCurrentChange(val) {
+      this.pagination.page = val
+      this.getImg()
     }
   }
 }
