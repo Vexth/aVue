@@ -3,6 +3,7 @@
     <div class="left">
       <el-upload
         :before-upload="beforeUpload"
+        multiple="multiple"
         class="upload-demo"
         :action="action">
         <el-button size="small" type="primary">点击上传</el-button>
@@ -63,6 +64,7 @@ export default {
       }).catch(err => console.log(err))
     },
     beforeUpload(file) {
+      // console.log(file)
       const fd = new FormData()
       fd.append('multipartFile', file)
       // /api/v1/shop/image/upload

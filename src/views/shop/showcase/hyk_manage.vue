@@ -95,13 +95,15 @@
             <div v-for="(item, i) in nickList.operationLogList" :key="i" class="list listName">
               <p>修改时间：{{item.createTime}}</p>
               <p>操作人员：{{item.operatorUser}}</p>
-              <p>修改内容：{{item.operatorContent}}</p>
-              <!-- <p style="display: inline-block;width: 100%;min-height: 30px;">
-                <span style="float: left;">修改内容：</span>
-                <ul style="float: left;margin: 0;list-style-type: none;padding: 0;">
-                  <li v-for="(items, i) in item.itemList" :key="i">{{items.userPackageItemName}}(数量×{{items.amount}})</li>
+              <!-- <p>修改内容：{{item.operatorContent}}</p> -->
+              <p class="p">
+                <span>修改内容：</span>
+                <ul>
+                  <li v-for="(items, i) in contSplit(item.operatorContent)" :key="i">
+                    <span v-if="items !== ''">{{i+1}}. {{items}}</span>
+                  </li>
                 </ul>
-              </p> -->
+              </p>
               <p>操作备注：{{item.operatorRemark}}</p>
             </div>
             <!-- {{nickList.operationLogList}} -->
@@ -170,6 +172,9 @@ export default {
     this.PackageList()
   },
   methods: {
+    contSplit(v) {
+      return v.split(';')
+    },
     PackageList() {
       let list = {
         pageNum: this.pagination.page,
@@ -187,7 +192,16 @@ export default {
       }).catch(err => console.log(err))
     },
     PackageDetail(v) {
-      shopUserPackageDetail(v).then(res => res.code === 200 ? this.nickList = res.data : console.log(res)).catch(err => console.log(err))
+      shopUserPackageDetail(v).then(res => {
+        if (res.code === 200) {
+          this.nickList = res.data
+          res.data.operationLogList.map(res => {
+            console.log(res.operatorContent.split(';'))
+          })
+        } else {
+          console.log(res)
+        }
+      }).catch(err => console.log(err))
     },
     handleSizeChange(val) {
       this.pagination.size = val
@@ -226,6 +240,8 @@ export default {
           console.log(res)
           this.PackageDetail(this.itemRow)
           this.innerVisible = false
+          this.isTimes = null
+          this.vendorRemark = ''
         } else {
           console.log(res)
         }
