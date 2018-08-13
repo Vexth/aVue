@@ -24,13 +24,6 @@
       :visible.sync="dialogVisible"
       width="50%"
       :before-close="handleClose">
-      <!-- <el-upload
-        :before-upload="beforeUpload"
-        class="upload-demo"
-        :action="action">
-        <el-button size="small" type="primary">点击上传</el-button>
-        <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过2M</div>
-      </el-upload> -->
       <v-img ref="img" />
       <span slot="footer" class="dialog-footer">
         <el-button @click="handleClose">取 消</el-button>
@@ -121,6 +114,7 @@ export default {
       this.item['imageUrl'] = list[0]['url']
       this.selectedOptionsImg['imageUrl'] = list[0]
       this.dialogVisible = false
+      that.$refs.img.kong()
     },
     handleChange(val) {
       event.stopPropagation()
@@ -144,6 +138,7 @@ export default {
       this.$confirm('确认关闭？').then(_ => {
         this.dialogVisible = false
         this.xxdialogVisible = false
+        this.$refs.img.kong()
         done()
       }).catch(_ => {})
     },

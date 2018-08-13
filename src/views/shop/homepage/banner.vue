@@ -8,15 +8,14 @@
 </template>
 
 <script>
-import vImgList from '../showcase/imgList.vue'
 
 import vBImg from './bimg.vue'
 import vPlus from './plus.vue'
 
-import { shopConfigList, shopConfigNavigateTree, shopImageList, shopConfigVisable, shopConfigSave } from '../server'
+import { shopConfigList, shopConfigNavigateTree, shopConfigVisable, shopConfigSave } from '../server'
 export default {
   components: {
-    vImgList, vBImg, vPlus
+    vBImg, vPlus
   },
   data() {
     return {
@@ -29,17 +28,10 @@ export default {
       selected: [],
       KindsImageList: [],
       cellType: 1,
-      cellId: null,
-      pagination: {
-        total: 100,
-        size: 21,
-        page: 1,
-        sizes: [21, 63, 126]
-      }
+      cellId: null
     }
   },
   mounted() {
-    this.getImg()
     this.navigateTree()
     this.configList()
   },
@@ -59,20 +51,6 @@ export default {
     navigateTree() {
       // GET /api/v1/shop/page/main/config/navigate/tree 微信主页配置 跳转路径树
       shopConfigNavigateTree().then(res => res.code === 200 ? this.options = res.data : this.$message.error(res.msg)).catch(err => console.log(err))
-    },
-    getImg() {
-      let list = {
-        pageNum: this.pagination.page,
-        pageSize: this.pagination.size
-      }
-      shopImageList(list).then(res => {
-        if (res.code === 200) {
-          this.KindsImageList = res.data
-          this.pagination.total = res.total
-        } else {
-          this.$message.error(res.msg)
-        }
-      }).catch(err => console.log(err))
     },
     plus(val) {
       this.selected.push({})
