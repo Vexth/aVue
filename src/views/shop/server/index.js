@@ -54,7 +54,7 @@ export const advisoryRemark = data => post(`api/v1/vendor/advisory/remark?adviso
 // GET /api/v1/shop/page/main/config/list 微信主页配置 列表
 export const shopConfigList = data => get(`api/v1/shop/page/main/config/list?cellType=${data}`)
 // api/v1/shop/page/main/config/visable?cellId=xxx
-export const shopConfigVisable = data => get(`api/v1/shop/page/main/config/visable?cellType=${data}`)
+export const shopConfigVisable = data => get(`api/v1/shop/page/main/config/visable?cellId=${data}`)
 // POST api/v1/shop/page/main/config/group/name
 export const shopConfigGroupName = data => post(`api/v1/shop/page/main/config/group/name`, data)
 // POST /api/v1/shop/page/main/config/save 微信主页配置 保存单元格
