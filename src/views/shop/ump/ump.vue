@@ -34,12 +34,12 @@
       </ul>
     </div>
 
-    <p class="application-third" style="display: block;">
+    <!-- <p class="application-third" style="display: block;">
       <img class="dash" src="../../../../static/img/af303cbfbc7fcac6bea50d75d0a55205.png">
       <span class="title">门店硬件、电商ERP、营销插件等更多应用，你还可以</span>
-      <!-- <a href="//www.youzan.com/market" alt="有赞应用市场" target="_blank">查看“有赞应用市场”</a> -->
+      <a href="//www.youzan.com/market" alt="有赞应用市场" target="_blank">查看“有赞应用市场”</a>
       <img class="dash" src="../../../../static/img/af303cbfbc7fcac6bea50d75d0a55205.png">
-    </p>
+    </p> -->
   </div>
 </template>
 
@@ -135,7 +135,7 @@ export default {
           desc: '吸粉、老客带新客，提高下单转化率',
           list: [
             {
-              url: '/ump/activity',
+              url: '/ump/coupon',
               img: '../../../../static/img/3b35553de21da5277e5fb90fd787199d.png',
               name: '优惠券',
               desc: '向客户发放店铺优惠券'

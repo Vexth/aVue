@@ -29,7 +29,13 @@ export default {
       selected: [],
       KindsImageList: [],
       cellType: 1,
-      cellId: null
+      cellId: null,
+      pagination: {
+        total: 100,
+        size: 21,
+        page: 1,
+        sizes: [21, 63, 126]
+      }
     }
   },
   mounted() {
@@ -55,7 +61,18 @@ export default {
       shopConfigNavigateTree().then(res => res.code === 200 ? this.options = res.data : this.$message.error(res.msg)).catch(err => console.log(err))
     },
     getImg() {
-      shopImageList().then(res => res.code === 200 ? this.KindsImageList = res.data : this.$message.error(res.msg)).catch(err => console.log(err))
+      let list = {
+        pageNum: this.pagination.page,
+        pageSize: this.pagination.size
+      }
+      shopImageList(list).then(res => {
+        if (res.code === 200) {
+          this.KindsImageList = res.data
+          this.pagination.total = res.total
+        } else {
+          this.$message.error(res.msg)
+        }
+      }).catch(err => console.log(err))
     },
     plus(val) {
       this.selected.push({})

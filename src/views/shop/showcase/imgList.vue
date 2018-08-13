@@ -37,6 +37,14 @@ export default {
         this.dome = 'dome'
       }
       this.$emit('uploadList', this.list)
+    },
+    handleSizeChange(val) {
+      this.pagination.size = val
+      this.ImgList()
+    },
+    handleCurrentChange(val) {
+      this.pagination.page = val
+      this.ImgList()
     }
   }
 }

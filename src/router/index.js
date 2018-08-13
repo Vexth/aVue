@@ -343,7 +343,8 @@ export const asyncRouterMap = [
     },
     children: [
       { path: 'ump1', component: () => import('@/views/shop/ump/ump'), name: 'ump', meta: { icon: 'international', title: 'ump', noCache: true }},
-      { path: 'activity', component: () => import('@/views/shop/ump/activity'), name: 'activity', meta: { title: 'activity', noCache: true }, hidden: true }
+      { path: 'activity', component: () => import('@/views/shop/ump/activity'), name: 'activity', meta: { title: 'activity', noCache: true }, hidden: true },
+      { path: 'coupon', component: () => import('@/views/shop/ump/coupon'), name: 'coupon', meta: { title: 'coupon', noCache: true }, hidden: true }
     ]
   },
 
