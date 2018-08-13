@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div class="banner-list">
-      <v-b-img v-for="(v, i) in selected" :key="i" :i="i" :item="v" :KindsImageList="KindsImageList" :options="options" @isClick="click" @selectedOptionsImg="selectedOptionsImg" />
+      <v-b-img v-for="(v, i) in selected" :key="i" :i="i" :item="v" :options="options" @isClick="click" @selectedOptionsImg="selectedOptionsImg" />
       <v-plus v-if="isXs" :form="form" @plus="plus" />
     </div>
   </div>

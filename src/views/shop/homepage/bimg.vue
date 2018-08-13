@@ -1,20 +1,22 @@
 <template>
-  <div class="classImg">
-    <div :class="isClick ? 'selected p5' : 'p5'">
-      <img @click="Click" :src="item.imageUrl" />
-      <p style="font-size: 14px;">轮播图{{i+1}}</p>
-      <el-button class="primary" type="primary" @click="uploadList">点击更换图片</el-button>
-      <p class="url">图片点击跳转路径</p>
-      <el-cascader class="cascader"
-        expand-trigger="hover"
-        :options="options"
-        v-model="selectedOptions"
-        @change="handleChange">
-      </el-cascader>
+  <div>
+    <div class="classImg">
+      <div :class="isClick ? 'selected p5' : 'p5'">
+        <img @click="Click" :src="item.imageUrl" />
+        <p style="font-size: 14px;">轮播图{{i+1}}</p>
+        <el-button class="primary" type="primary" @click="uploadList">点击更换图片</el-button>
+        <p class="url">图片点击跳转路径</p>
+        <el-cascader class="cascader"
+          expand-trigger="hover"
+          :options="options"
+          v-model="selectedOptions"
+          @change="handleChange">
+        </el-cascader>
 
-      <i :class="isClick ? 'index el-icon-check' : 'dn'"></i>
+        <i :class="isClick ? 'index el-icon-check' : 'dn'"></i>
 
-      <el-button style="margin-top: 20px;margin-left: 10px;" type="primary" @click="onSubmit">保存</el-button>
+        <el-button style="margin-top: 20px;margin-left: 10px;" type="primary" @click="onSubmit">保存</el-button>
+      </div>
     </div>
 
     <el-dialog
@@ -22,14 +24,14 @@
       :visible.sync="dialogVisible"
       width="50%"
       :before-close="handleClose">
-      <el-upload
+      <!-- <el-upload
         :before-upload="beforeUpload"
         class="upload-demo"
         :action="action">
         <el-button size="small" type="primary">点击上传</el-button>
         <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过2M</div>
-      </el-upload>
-      <v-img ref="imglist" :KindsImageList="KindsImageList" :image="image" />
+      </el-upload> -->
+      <v-img ref="img" />
       <span slot="footer" class="dialog-footer">
         <el-button @click="handleClose">取 消</el-button>
         <el-button type="primary" @click="sub">确 定</el-button>
@@ -47,7 +49,7 @@
 </template>
 
 <script>
-import vImg from '../grouping/img.vue'
+import vImg from '../showcase/zujian/img.vue'
 import vCard from './card.vue'
 
 import { shopImageUpload } from '../server'
@@ -111,7 +113,7 @@ export default {
     },
     sub() {
       const that = this
-      const list = that.$refs.imglist.tpSub()
+      const list = that.$refs.img.sub()
       if (list.length > 1) {
         this.$message.error('请选择一张图片作为轮播图片！')
         return
