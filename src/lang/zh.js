@@ -68,6 +68,7 @@ export default {
     customerlist: '管理',
     ump: '营销',
     activity: '活动',
+    video: '视频管理',
     coupon: '优惠券',
     system: '系统管理',
     navsys: '菜单配置',

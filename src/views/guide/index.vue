@@ -7,7 +7,7 @@
     </p>
     <el-button icon='el-icon-question' type="primary" @click.prevent.stop="guide">{{$t('guide.button')}}</el-button>
 
-  <!-- <form class="zent-form zent-form--horizontal">
+  <form class="zent-form zent-form--horizontal">
    <div class="goods-edit__region">
     <div class="goods-edit__region--inner">
      <div class="goods-edit__region-title">
@@ -548,7 +548,7 @@
      </div>
     </div>
    </div>
-  </form> -->
+  </form>
 
   </div>
 </template>
