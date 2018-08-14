@@ -111,3 +111,11 @@ export const shopUserPackageDetail = data => post(`api/v1/shop/user/package/deta
 // POST /api/v1/shop/user/package/modify 商户修改项目服务
 export const shopUserPackageModify = data => post(`api/v1/shop/user/package/modify`, data)
 
+// GET api/v1/shop/video/list 获取商户视频列表
+export const getVideoList = data => get(`api/v1/shop/video/list`, data)
+
+// GET api/v1/shop/video/list 获取商户视频列表
+export const getVideoUrl = data => get(`api/v1/wechat/video/geturl?videoVid=${data}`)
+export const addVideo = data => post(`api/v1/shop/video/add`, data)
+export const modifyVideo = data => post(`api/v1/shop/video/update`, data)
+export const deleteVideo = data => dele(`api/v1/shop/video/delete?videoId=${data}`)

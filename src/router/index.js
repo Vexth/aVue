@@ -403,5 +403,19 @@ export const asyncRouterMap = [
     children: [{ path: 'cooperation', component: () => import('@/views/shop/cooperation/cooperation'), name: 'cooperation', meta: { title: 'cooperation', icon: 'user', noCache: true }}]
   },
 
+  {
+    path: '/video',
+    component: Layout,
+    redirect: 'noredirect',
+    name: 'video',
+    meta: {
+      title: 'video',
+      icon: 'user'
+    },
+    children: [
+      { path: 'video', component: () => import('@/views/shop/video/video'), name: 'video', meta: { icon: 'user', title: 'video', noCache: true }}
+    ]
+  },
+
   { path: '*', redirect: '/404', hidden: true }
 ]
