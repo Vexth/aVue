@@ -261,14 +261,21 @@ export const asyncRouterMap = [
     children: [{ path: 'index', component: () => import('@/views/clipboard/index'), name: 'clipboardDemo', meta: { title: 'clipboardDemo', icon: 'clipboard' }}]
   },
 
-  {
-    path: '/i18n',
-    component: Layout,
-    children: [{ path: 'index', component: () => import('@/views/i18n-demo/index'), name: 'i18n', meta: { title: 'i18n', icon: 'international' }}]
-  },
 */
   {
-    path: '/homepage1',
+    path: '/permissionConfig',
+    meta: {
+      title: 'permissionConfig'
+    },
+    component: Layout,
+    children: [
+      { path: 'menuConfig', component: () => import('@/views/admin/menuConfig'), name: 'menu', meta: { title: 'menuConfig', icon: 'component', noCache: true }},
+      { path: 'roleConfig', component: () => import('@/views/admin/roleConfig'), name: 'menu', meta: { title: 'roleConfig', icon: 'component', noCache: true }},
+      { path: 'userConfig', component: () => import('@/views/admin/userConfig'), name: 'menu', meta: { title: 'userConfig', icon: 'component', noCache: true }}
+    ]
+  },
+  {
+    path: '/homepage',
     component: Layout,
     redirect: 'noredirect',
     meta: {
@@ -384,7 +391,7 @@ export const asyncRouterMap = [
     },
     children: [{ path: 'cropper', component: () => import('@/views/shop/img-cropper/cropper'), name: 'cropper', meta: { title: 'cropper', icon: 'excel', noCache: true }}]
   },
-  
+
   {
     path: '/cooperation',
     component: Layout,
