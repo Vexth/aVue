@@ -134,10 +134,6 @@ export default {
   margin: 0;
   width: 100%;
 }
-.name {
-  /* display: flex;
-  width: 320px; */
-}
 .name span {
   line-height: 36px;
   display: inline-block;
