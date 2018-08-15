@@ -1,17 +1,20 @@
 <template>
   <div class="app-container">
     <el-button v-if="componentId !== 'list'" size="small" icon="el-icon-back" @click="go" style="margin-bottom: 1em;">返回上一页</el-button>
-    <component :is="componentId" @coupon="coupon"></component>
+    <component :is="componentId" :couponSendType="couponSendType" @coupon="coupon"></component>
   </div>
 </template>
 
 <script>
+import { couponEditResponse } from '../server'
+
 import vCouponList from './coupon-list.vue'
 import vCouponEdit from './coupon-edit.vue'
 export default {
   data() {
     return {
-      componentId: 'list'
+      componentId: 'list',
+      couponSendType: {}
     }
   },
   components: {
@@ -20,9 +23,11 @@ export default {
   },
   methods: {
     coupon(v) {
+      this.couponSendType = v
       this.componentId = 'edit'
-      console.log('偶是父组件哇')
-      console.log(v)
+      // if (v !== '1' || v !== '2') {
+      //   couponEditResponse(v.couponId).then(res => res.code === 200 ? console.log(res) : console.log(res)).catch(err => console.log(err))
+      // }
     },
     go() {
       this.componentId = 'list'

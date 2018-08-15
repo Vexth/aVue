@@ -77,6 +77,7 @@ export default {
     banner: '轮播图配置',
     activity1: '活动栏1设置',
     activity2: '活动栏2设置',
+    homeimg: '大小图配置',
     cropper: '图片剪裁',
     cooperation: '合作申请'
   },
