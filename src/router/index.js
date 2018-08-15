@@ -270,9 +270,9 @@ export const asyncRouterMap = [
     },
     component: Layout,
     children: [
-      { path: 'menuConfig', component: () => import('@/views/admin/menuConfig'), name: 'menuConfig', meta: { title: 'menuConfig', icon: 'component', noCache: true }},
-      { path: 'roleConfig', component: () => import('@/views/admin/roleConfig'), name: 'roleConfig', meta: { title: 'roleConfig', icon: 'component', noCache: true }},
-      { path: 'userConfig', component: () => import('@/views/admin/userConfig'), name: 'userConfig', meta: { title: 'userConfig', icon: 'component', noCache: true }}
+      { path: 'menuConfig', component: () => import('@/views/admin/menuConfig'), name: 'menuConfig', meta: { title: 'menuConfig', noCache: true }},
+      { path: 'roleConfig', component: () => import('@/views/admin/roleConfig'), name: 'roleConfig', meta: { title: 'roleConfig', noCache: true }},
+      { path: 'userConfig', component: () => import('@/views/admin/userConfig'), name: 'userConfig', meta: { title: 'userConfig', noCache: true }}
     ]
   },
   {

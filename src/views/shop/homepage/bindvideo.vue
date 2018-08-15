@@ -279,6 +279,4 @@ export default {
 .select-view {
     margin-bottom: 10px
 }
-.dialog-footer { 
-}
 </style>
