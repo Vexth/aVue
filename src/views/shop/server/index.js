@@ -59,6 +59,8 @@ export const shopConfigVisable = data => get(`api/v1/shop/page/main/config/visab
 export const shopConfigGroupName = data => post(`api/v1/shop/page/main/config/group/name`, data)
 // POST /api/v1/shop/page/main/config/save 微信主页配置 保存单元格
 export const shopConfigSave = data => post(`api/v1/shop/page/main/config/save`, data)
+// GET /api/v1/shop/page/main/config/delete 删除配置
+export const shopConfigDelete = data => get(`api/v1/shop/page/main/config/delete?cellId=${data}`)
 // GET /api/v1/shop/page/main/config/navigate/tree 微信主页配置 跳转路径树
 export const shopConfigNavigateTree = data => get(`api/v1/shop/page/main/config/navigate/tree`, data)
 // api/v1/shop/image/list

@@ -285,7 +285,9 @@ export const asyncRouterMap = [
     children: [
       { path: 'banner', component: () => import('@/views/shop/homepage/banner'), name: 'banner', meta: { title: 'banner', noCache: true }},
       { path: 'activity1', component: () => import('@/views/shop/homepage/activity'), name: 'activity1', meta: { title: 'activity1', noCache: true }},
-      { path: 'activity2', component: () => import('@/views/shop/homepage/activity'), name: 'activity2', meta: { title: 'activity2', noCache: true }}
+      { path: 'activity2', component: () => import('@/views/shop/homepage/activity'), name: 'activity2', meta: { title: 'activity2', noCache: true }},
+      { path: 'notify', component: () => import('@/views/shop/homepage/notify'), name: 'notify', meta: { title: 'notify', noCache: true }},
+      { path: 'bindvideo', component: () => import('@/views/shop/homepage/bindvideo'), name: 'bindvideo', meta: { title: 'bindvideo', noCache: true }}
     ]
   },
   {
