@@ -68,7 +68,9 @@ export default {
     customerlist: '管理',
     ump: '营销',
     activity: '活动',
+    notify: '通知',
     video: '视频管理',
+    bindvideo: '绑定视频',
     coupon: '优惠券',
     system: '系统管理',
     permissionConfig: '权限管理',
@@ -81,6 +83,7 @@ export default {
     banner: '轮播图配置',
     activity1: '活动栏1设置',
     activity2: '活动栏2设置',
+    homeimg: '大小图配置',
     cropper: '图片剪裁',
     cooperation: '合作申请'
   },

@@ -59,6 +59,8 @@ export const shopConfigVisable = data => get(`api/v1/shop/page/main/config/visab
 export const shopConfigGroupName = data => post(`api/v1/shop/page/main/config/group/name`, data)
 // POST /api/v1/shop/page/main/config/save 微信主页配置 保存单元格
 export const shopConfigSave = data => post(`api/v1/shop/page/main/config/save`, data)
+// GET /api/v1/shop/page/main/config/delete 删除配置
+export const shopConfigDelete = data => get(`api/v1/shop/page/main/config/delete?cellId=${data}`)
 // GET /api/v1/shop/page/main/config/navigate/tree 微信主页配置 跳转路径树
 export const shopConfigNavigateTree = data => get(`api/v1/shop/page/main/config/navigate/tree`, data)
 // api/v1/shop/image/list
@@ -119,3 +121,13 @@ export const getVideoUrl = data => get(`api/v1/wechat/video/geturl?videoVid=${da
 export const addVideo = data => post(`api/v1/shop/video/add`, data)
 export const modifyVideo = data => post(`api/v1/shop/video/update`, data)
 export const deleteVideo = data => dele(`api/v1/shop/video/delete?videoId=${data}`)
+
+// 优惠券
+// POST /api/v1/vendor/coupon/select/parmas 商户查询优惠券
+export const couponSelectParmas = data => get(`api/v1/vendor/coupon/select/parmas?pageSize=${data.pageSize}&pageNum=${data.pageNum}`)
+// POST /api/v1/vendor/coupon/edit/response 编辑
+export const couponEditResponse = data => get(`api/v1/vendor/coupon/edit/response?couponId=${data}`)
+// POST /api/v1/vendor/coupon/edit/request 修改存入数据库
+export const couponEditRequest = data => post(`api/v1/vendor/coupon/edit/request`, data)
+// POST /api/v1/vendor/coupon/create 创建优惠券
+export const couponCreate = data => post(`api/v1/vendor/coupon/create`, data)
