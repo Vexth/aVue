@@ -61,7 +61,7 @@
 </template>
 
 <script>
-  import { permissionList, permissionAdd, permissionModify, permissionDelete } from '@/api/permission'
+  import { roleList } from '@/api/permission'
   export default {
     data() {
       return {

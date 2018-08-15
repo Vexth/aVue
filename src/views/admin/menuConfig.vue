@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <div style="width:50%">
+    <div style="width:60%">
     <el-tree :data="data"
              :props="defaultProps"
              :expand-on-click-node="false"
@@ -19,13 +19,13 @@
                   +增加
                 </el-button>
 
-                <el-button
+                <el-button  v-if="data.id !== 0"
                   type="text"
                   size="mini"
                   @click="() => modify(data)">
                   修改
                 </el-button>
-                <el-button
+                <el-button  v-if="data.id !== 0"
                   type="text"
                   size="mini"
                   @click="() => remove(data)">
@@ -44,11 +44,11 @@
     </div>
 
     <el-dialog :title="title" :visible.sync="dialogFormVisible" width="30%" center>
-      <el-form :model="form">
-        <el-form-item label="名称" :label-width="formLabelWidth">
+      <el-form status-icon ref="formRules" :model="form" :rules="formRules">
+        <el-form-item  prop="label" label="名称" :label-width="formLabelWidth">
           <el-input v-model="form.label" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="链接" :label-width="formLabelWidth">
+        <el-form-item prop="path" label="链接" :label-width="formLabelWidth">
           <el-input v-model="form.path" auto-complete="off"></el-input>
         </el-form-item>
       </el-form>
@@ -61,9 +61,26 @@
 </template>
 
 <script>
-  import { permissionList, permissionAdd, permissionModify, permissionDelete } from '@/api/permission'
+  import { menuList, menuAdd, menuModify, menuDelete } from '@/api/permission'
   export default {
+    'name': 'menuConfig',
     data() {
+      const validateLabel = (rule, value, callback) => {
+        // if (!isvalidUsername(value)) {
+        if (!value) {
+          callback(new Error('不能为空！'))
+        } else {
+          callback()
+        }
+      }
+      const validatePath = (rule, value, callback) => {
+        // if (!isvalidUsername(value)) {
+        if (!value) {
+          callback(new Error('不能为空！'))
+        } else {
+          callback()
+        }
+      }
       return {
         data: [{
           id: 0,
@@ -83,12 +100,16 @@
           label: '',
           path: ''
         },
+        formRules: {
+          label: [{ required: true, trigger: 'blur', validator: validateLabel }],
+          path: [{ required: true, trigger: 'blur', validator: validatePath }]
+        },
         title: '',
         dialogFormVisible: false
       }
     },
     created() {
-      permissionList().then(response => {
+      menuList().then(response => {
         console.log(response)
         if (response.code === 200) {
           console.log(response.data)
@@ -98,7 +119,7 @@
     },
     methods: {
       list() {
-        permissionList().then(response => {
+        menuList().then(response => {
           console.log(response)
           if (response && response.code === 200) {
             console.log(response.data)
@@ -139,36 +160,43 @@
 
       // 提交
       submit(title) {
-        if (title === '增加') {
-          permissionAdd(this.form).then(response => {
-            // console.log(response)
-            if (response && response.code === 200) {
-              this.dialogFormVisible = false
-              this.list()
-              this.$notify({
-                title: '增加成功',
-                message: response.msg,
-                type: 'success'
-              })
+        this.$refs.formRules.validate(vaild => {
+          if (vaild) {
+            if (title === '增加') {
+              menuAdd(this.form).then(response => {
+                // console.log(response)
+                if (response && response.code === 200) {
+                  this.dialogFormVisible = false
+                  this.list()
+                  this.$notify({
+                    title: '增加成功',
+                    message: response.msg,
+                    type: 'success'
+                  })
+                }
+              }).catch(err => console.log(err))
+            } else if (title === '修改') {
+              menuModify(this.form).then(response => {
+                if (response && response.code === 200) {
+                  this.dialogFormVisible = false
+                  this.list()
+                  this.$notify({
+                    title: '修改成功',
+                    message: response.msg,
+                    type: 'success'
+                  })
+                }
+              }).catch(err => console.log(err))
             }
-          }).catch(err => console.log(err))
-        } else if (title === '修改') {
-          permissionModify(this.form).then(response => {
-            if (response && response.code === 200) {
-              this.dialogFormVisible = false
-              this.list()
-              this.$notify({
-                title: '修改成功',
-                message: response.msg,
-                type: 'success'
-              })
-            }
-          }).catch(err => console.log(err))
-        }
+            return true
+          } else {
+            return false
+          }
+        })
       },
       remove(data) {
         // console.log(data)
-        permissionDelete(data).then(response => {
+        menuDelete(data).then(response => {
           if (response && response.code === 200) {
             this.dialogFormVisible = false
             this.list()

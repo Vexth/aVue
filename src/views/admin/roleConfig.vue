@@ -1,75 +1,120 @@
 <template>
   <div class="app-container">
-    <div style="width:50%">
-    <el-tree :data="data"
-             :props="defaultProps"
-             :expand-on-click-node="false"
-             default-expand-all
-             node-key="id"
-    >
-            <span class="custom-tree-node" slot-scope="{ node, data }">
-              <span style="width: 8em;">{{ node.label }} </span>
-              <!--<span  style="width: 30em;" v-if="data.id !== 0"> id={{data.id}} pid={{data.parentId}}  path={{data.path}}</span>-->
-              <span  style="width: 30em;" v-if="data.id !== 0">  path = {{data.path}}</span>
-              <span>
-                <el-button
-                  type="text"
-                  size="mini"
-                  @click="() => append(data)">
-                  +增加
-                </el-button>
-
-                <el-button
-                  type="text"
-                  size="mini"
-                  @click="() => modify(data)">
-                  修改
-                </el-button>
-                <el-button
-                  type="text"
-                  size="mini"
-                  @click="() => remove(data)">
-                  -删除
-                </el-button>
-              </span>
-          </span>
-    </el-tree>
-      <!--<el-tree-->
-        <!--:data="data"-->
-        <!--node-key="id"-->
-        <!--:expand-on-click-node="true"-->
-        <!--:defaultExpandAll="true"-->
-        <!--:render-content="renderContent">-->
-      <!--</el-tree>-->
+    <div class="buttons">
+      <!--<el-button @click="getCheckedNodes">通过 node 获取</el-button>-->
+      <!--<el-button @click="getCheckedKeys">通过 key 获取</el-button>-->
+      <!--<el-button @click="setCheckedNodes">通过 node 设置</el-button>-->
+      <!--<el-button @click="setCheckedKeys">通过 key 设置</el-button>-->
+      <el-button @click="handleAdd">创建角色</el-button>
+    </div>
+    <div>
+      <el-table
+        :data="tableData"
+        style="width: 100%">
+        <el-table-column
+          label="ID"
+          width="180">
+          <template slot-scope="scope">
+            <!--<i class="el-icon-time"></i>-->
+            <span style="margin-left: 10px">{{ scope.row.roleId }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="姓名"
+          width="180">
+          <template slot-scope="scope">
+            <el-popover trigger="hover" placement="top">
+              <p>姓名: {{ scope.row.roleName }}</p>
+              <p>详情: {{ scope.row.description }}</p>
+              <div slot="reference" class="name-wrapper">
+                <el-tag size="medium">{{ scope.row.roleName }}</el-tag>
+              </div>
+            </el-popover>
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="创建时间"
+          width="180">
+          <template slot-scope="scope">
+            <el-popover trigger="hover" placement="top">
+              <p>创建时间: {{ scope.row.createTime }}</p>
+              <p>更新时间: {{ scope.row.updateTime }}</p>
+              <div slot="reference" class="name-wrapper">
+                <el-tag size="medium">{{ scope.row.createTime }}</el-tag>
+              </div>
+            </el-popover>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作">
+          <template slot-scope="scope">
+            <el-button
+              size="mini"
+              @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+            <el-button
+              size="mini"
+              type="danger"
+              @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
     </div>
 
-    <el-dialog :title="title" :visible.sync="dialogFormVisible" width="30%" center>
-      <el-form :model="form">
-        <el-form-item label="名称" :label-width="formLabelWidth">
-          <el-input v-model="form.label" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="链接" :label-width="formLabelWidth">
-          <el-input v-model="form.path" auto-complete="off"></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="submit(title)">确 定</el-button>
-      </div>
-    </el-dialog>
+  <el-dialog
+    :title="title"
+    :visible.sync="dialogVisible"
+    @open="dialogOpen()"
+    @close="dialogClose()"
+    width="50%" >
+    <!--:before-close="handleClose"-->
+  <!--&gt;-->
+    <span>Role Id =  {{form.roleId}}</span>
+    <el-form status-icon  :model="form">
+      <el-form-item  prop="label" label="角色名" :label-width="'80px'">
+        <el-input v-model="form.roleName" auto-complete="off"></el-input>
+      </el-form-item>
+      <!--<el-form-item  prop="label" label="角色描述" :label-width="'80px'">-->
+        <!--<el-input v-model="form.description" auto-complete="off"></el-input>-->
+      <!--</el-form-item>-->
+    </el-form>
+    <el-tree
+      :data="treeData"
+      show-checkbox
+      default-expand-all
+      node-key="id"
+      ref="tree"
+      highlight-current
+      :props="defaultProps">
+    </el-tree>
+    <div class="buttons">
+      <!--<el-button @click="getCheckedNodes">通过 node 获取</el-button>-->
+      <!--<el-button @click="getCheckedKeys">通过 key 获取</el-button>-->
+      <!--<el-button @click="setCheckedNodes">通过 node 设置</el-button>-->
+      <!--<el-button @click="setCheckedKeys">通过 key 设置</el-button>-->
+      <el-button @click="resetChecked">清空</el-button>
+    </div>
+
+    <span slot="footer" class="dialog-footer">
+    <el-button @click="dialogVisible = false">取 消</el-button>
+    <el-button type="primary" @click="submit(title)">确 定</el-button>
+  </span>
+  </el-dialog>
   </div>
 </template>
 
 <script>
-  import { permissionList, permissionAdd, permissionModify, permissionDelete } from '@/api/permission'
+  import { menuList, roleList, roleAdd, roleDelete, roleModify } from '@/api/permission'
   export default {
     data() {
       return {
-        data: [{
-          id: 0,
-          label: '菜单管理',
-          children: []
+        tableData: [{
+          roleId: '',
+          roleName: '',
+          createTime: '上海市普陀区金沙江路 1518 弄',
+          updateTime: '上海市普陀区金沙江路 1518 弄',
+          description: '上海市普陀区金沙江路 1518 弄'
         }],
+        dialogVisible: false,
+        treeData: [],
         defaultProps: {
           id: 0,
           parentId: 0,
@@ -77,116 +122,134 @@
           path: 'path',
           children: 'children'
         },
-        formLabelWidth: '60px',
-        form: {
-          parentId: null,
-          label: '',
-          path: ''
-        },
         title: '',
-        dialogFormVisible: false
+        form: {
+          roleId: null,
+          roleName: null,
+          rolePermissionIdList: null
+        }
       }
     },
     created() {
-      permissionList().then(response => {
+      roleList().then(response => {
         console.log(response)
         if (response.code === 200) {
           console.log(response.data)
-          this.data[0].children = response.data
+          this.tableData = response.data
+        }
+      }).catch(err => console.log(err))
+
+      menuList().then(response => {
+        console.log(response)
+        if (response.code === 200) {
+          console.log(response.data)
+          this.treeData = response.data
         }
       }).catch(err => console.log(err))
     },
     methods: {
+      dialogOpen() {
+        console.log('dialogOpen')
+        setTimeout(() => {
+          console.log(this.form.rolePermissionIdList)
+          if (this.form.rolePermissionIdList) {
+            this.setCheckedKeys(this.form.rolePermissionIdList)
+          }
+        }, 200)
+      },
+      dialogClose() {
+        this.resetChecked()
+        this.form.rolePermissionIdList = null
+      },
+      getCheckedNodes() {
+        console.log(this.$refs.tree.getCheckedNodes());
+      },
+      getCheckedKeys() {
+        console.log(this.$refs.tree.getCheckedKeys());
+      },
+      setCheckedKeys(list) {
+        this.$refs.tree.setCheckedKeys(list)
+      },
+      resetChecked() {
+        this.$refs.tree.setCheckedKeys([])
+      },
+      handleAdd() {
+        // this.resetChecked()
+        this.dialogVisible = true
+        this.title = '创建角色'
+        this.form.roleId = ''
+        this.form.roleName = ''
+      },
+      handleEdit(index, row) {
+        this.dialogVisible = true
+        this.title = '修改角色'
+        this.form.roleId = row.roleId
+        this.form.roleName = row.roleName
+        console.log(row.rolePermissionIdList)
+        if (row.rolePermissionIdList) {
+          this.form.rolePermissionIdList = row.rolePermissionIdList
+          // this.form.rolePermissIdList = row.rolePermissIdList.filter(id => Number.isInteger(id))
+          // console.log(row.rolePermissIdList.filter(id => Number.isInteger(id)))
+        }
+        // console.log(this.form.rolePermissIdList)
+        // this.resetChecked()
+        // if (row.rolePermissIdList) {
+        //   console.log(row.rolePermissIdList.filter(id => Number.isInteger(id)))
+        //   this.setCheckedKeys(row.rolePermissIdList.filter(id => Number.isInteger(id)))
+        // }
+        // this.$refs.tree.setCheckedKeys(row.rolePermissIdList)
+        // console.log(index, row)
+      },
+      handleDelete(index, row) {
+        console.log(index, row)
+      },
       list() {
-        permissionList().then(response => {
+        roleList().then(response => {
           console.log(response)
-          if (response && response.code === 200) {
+          if (response.code === 200) {
             console.log(response.data)
-            this.data[0].children = response.data
+            this.tableData = response.data
           }
         }).catch(err => console.log(err))
       },
-      // 增加
-      append(data) {
-        console.log('self.id=' + data.id)
-        this.dialogFormVisible = true
-
-        this.form.id = null
-        this.form.parentId = data.id
-        this.form.label = ''
-        this.form.path = ''
-        this.title = '增加'
-        // console.log('self.id=' + data.id)
-        // const newChild = { id: id++, parentId: data.id, label: 'testtest', children: [] };
-        // if (!data.children) {
-        //   this.$set(data, 'children', []);
-        // }
-        // data.children.push(newChild);
-      },
-      fillDataToFrom(data) {
-        this.form.id = data.id
-        this.form.parentId = data.parentId
-        this.form.label = data.label
-        this.form.path = data.path
-      },
-      // 修改
-      modify(data) {
-        console.log(data)
-        this.dialogFormVisible = true
-        this.fillDataToFrom(data)
-        this.title = '修改'
-      },
-
-      // 提交
       submit(title) {
-        if (title === '增加') {
-          permissionAdd(this.form).then(response => {
-            // console.log(response)
+        if (title === '创建角色') {
+          // 创建
+          // console.log('roleId=' + this.form.roleId)
+          console.log('Name=' + this.form.roleName)
+          // console.log('rolePermissIdList=' + this.form.rolePermissIdList)
+          console.log('permissIdList=' + this.$refs.tree.getCheckedKeys(true))
+          // console.log(this.$refs.tree.getCheckedNodes())
+          // this.$refs.tree.getCheckedNodes()
+          const data = {
+            roleName: this.form.roleName,
+            rolePermissionIdList: this.$refs.tree.getCheckedKeys(true)
+          }
+          roleAdd(data).then(response => {
             if (response && response.code === 200) {
-              this.dialogFormVisible = false
+              console.log(response)
+              this.dialogVisible = false
               this.list()
-              this.$notify({
-                title: '增加成功',
-                message: response.msg,
-                type: 'success'
-              })
             }
           }).catch(err => console.log(err))
-        } else if (title === '修改') {
-          permissionModify(this.form).then(response => {
+
+        } else if (title === '修改角色') {
+          // 修改
+          console.log('roleId=' + this.form.roleId)
+          console.log('permissIdList=' + this.$refs.tree.getCheckedKeys(true))
+          const data = {
+            roleId: this.form.roleId,
+            roleName: this.form.roleName,
+            rolePermissionIdList: this.$refs.tree.getCheckedKeys(true)
+          }
+          roleModify(data).then(response => {
             if (response && response.code === 200) {
-              this.dialogFormVisible = false
+              console.log(response)
+              this.dialogVisible = false
               this.list()
-              this.$notify({
-                title: '修改成功',
-                message: response.msg,
-                type: 'success'
-              })
             }
           }).catch(err => console.log(err))
         }
-      },
-      remove(data) {
-        // console.log(data)
-        permissionDelete(data).then(response => {
-          if (response && response.code === 200) {
-            this.dialogFormVisible = false
-            this.list()
-            this.$notify({
-              title: '删除成功',
-              message: response.msg,
-              type: 'success'
-            })
-          }
-        }).catch(err => console.log(err))
-
-        // const parent = node.parent;
-        // const children = parent.data.children || parent.data;
-        // const index = children.findIndex(d => d.id === data.id);
-        // children.splice(index, 1);
-      },
-      handleNodeClick(data) {
-        console.log(data)
       }
     }
   }

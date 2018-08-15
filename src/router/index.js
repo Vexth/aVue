@@ -265,13 +265,14 @@ export const asyncRouterMap = [
   {
     path: '/permissionConfig',
     meta: {
-      title: 'permissionConfig'
+      title: 'permissionConfig',
+      icon: 'table'
     },
     component: Layout,
     children: [
-      { path: 'menuConfig', component: () => import('@/views/admin/menuConfig'), name: 'menu', meta: { title: 'menuConfig', icon: 'component', noCache: true }},
-      { path: 'roleConfig', component: () => import('@/views/admin/roleConfig'), name: 'menu', meta: { title: 'roleConfig', icon: 'component', noCache: true }},
-      { path: 'userConfig', component: () => import('@/views/admin/userConfig'), name: 'menu', meta: { title: 'userConfig', icon: 'component', noCache: true }}
+      { path: 'menuConfig', component: () => import('@/views/admin/menuConfig'), name: 'menuConfig', meta: { title: 'menuConfig', icon: 'component', noCache: true }},
+      { path: 'roleConfig', component: () => import('@/views/admin/roleConfig'), name: 'roleConfig', meta: { title: 'roleConfig', icon: 'component', noCache: true }},
+      { path: 'userConfig', component: () => import('@/views/admin/userConfig'), name: 'userConfig', meta: { title: 'userConfig', icon: 'component', noCache: true }}
     ]
   },
   {
@@ -349,7 +350,7 @@ export const asyncRouterMap = [
       icon: 'international'
     },
     children: [
-      { path: 'ump1', component: () => import('@/views/shop/ump/ump'), name: 'ump', meta: { icon: 'international', title: 'ump', noCache: true }},
+      { path: 'ump1', component: () => import('@/views/shop/ump/ump'), name: 'ump1', meta: { icon: 'international', title: 'ump', noCache: true }},
       { path: 'activity', component: () => import('@/views/shop/ump/activity'), name: 'activity', meta: { title: 'activity', noCache: true }, hidden: true },
       { path: 'coupon', component: () => import('@/views/shop/ump/coupon'), name: 'coupon', meta: { title: 'coupon', noCache: true }, hidden: true }
     ]
@@ -413,7 +414,7 @@ export const asyncRouterMap = [
       icon: 'user'
     },
     children: [
-      { path: 'video', component: () => import('@/views/shop/video/video'), name: 'video', meta: { icon: 'user', title: 'video', noCache: true }}
+      { path: 'index', component: () => import('@/views/shop/video/video'), name: 'videoIndex', meta: { icon: 'user', title: 'video', noCache: true }}
     ]
   },
 
