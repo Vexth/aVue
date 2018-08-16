@@ -135,7 +135,7 @@
       roleList().then(response => {
         console.log(response)
         if (response.code === 200) {
-          console.log(response.data)
+          // console.log(response.data)
           this.tableData = response.data
         }
       }).catch(err => console.log(err))
@@ -143,7 +143,7 @@
       menuList().then(response => {
         console.log(response)
         if (response.code === 200) {
-          console.log(response.data)
+          // console.log(response.data)
           this.treeData = response.data
         }
       }).catch(err => console.log(err))
@@ -152,7 +152,7 @@
       dialogOpen() {
         console.log('dialogOpen')
         setTimeout(() => {
-          console.log(this.form.rolePermissionIdList)
+          // console.log(this.form.rolePermissionIdList)
           if (this.form.rolePermissionIdList) {
             this.setCheckedKeys(this.form.rolePermissionIdList)
           }
@@ -186,7 +186,7 @@
         this.title = '修改角色'
         this.form.roleId = row.roleId
         this.form.roleName = row.roleName
-        console.log(row.rolePermissionIdList)
+        // console.log(row.rolePermissionIdList)
         if (row.rolePermissionIdList) {
           this.form.rolePermissionIdList = row.rolePermissionIdList
           // this.form.rolePermissIdList = row.rolePermissIdList.filter(id => Number.isInteger(id))
@@ -207,7 +207,7 @@
         const roleId = row.roleId
         roleDelete({ roleId }).then(response => {
           if (response.code === 200) {
-            console.log(response)
+            // console.log(response)
             this.dialogVisible = false
             this.list()
           }
@@ -217,7 +217,7 @@
         roleList().then(response => {
           console.log(response)
           if (response.code === 200) {
-            console.log(response.data)
+            // console.log(response.data)
             this.tableData = response.data
           }
         }).catch(err => console.log(err))
@@ -226,9 +226,9 @@
         if (title === '创建角色') {
           // 创建
           // console.log('roleId=' + this.form.roleId)
-          console.log('Name=' + this.form.roleName)
+          // console.log('Name=' + this.form.roleName)
           // console.log('rolePermissIdList=' + this.form.rolePermissIdList)
-          console.log('permissIdList=' + this.$refs.tree.getCheckedKeys(true))
+          // console.log('permissIdList=' + this.$refs.tree.getCheckedKeys(true))
           // console.log(this.$refs.tree.getCheckedNodes())
           // this.$refs.tree.getCheckedNodes()
           const data = {
@@ -237,7 +237,7 @@
           }
           roleAdd(data).then(response => {
             if (response && response.code === 200) {
-              console.log(response)
+              // console.log(response)
               this.dialogVisible = false
               this.list()
             }
@@ -245,8 +245,8 @@
 
         } else if (title === '修改角色') {
           // 修改
-          console.log('roleId=' + this.form.roleId)
-          console.log('permissIdList=' + this.$refs.tree.getCheckedKeys(true))
+          // console.log('roleId=' + this.form.roleId)
+          // console.log('permissIdList=' + this.$refs.tree.getCheckedKeys(true))
           const data = {
             roleId: this.form.roleId,
             roleName: this.form.roleName,
