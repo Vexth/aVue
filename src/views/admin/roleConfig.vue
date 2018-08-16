@@ -80,6 +80,7 @@
       :data="treeData"
       show-checkbox
       default-expand-all
+      :expand-on-click-node="false"
       node-key="id"
       ref="tree"
       highlight-current
@@ -202,6 +203,15 @@
       },
       handleDelete(index, row) {
         console.log(index, row)
+        console.log(row.roleId)
+        const roleId = row.roleId
+        roleDelete({ roleId }).then(response => {
+          if (response.code === 200) {
+            console.log(response)
+            this.dialogVisible = false
+            this.list()
+          }
+        }).catch(err => console.log(err))
       },
       list() {
         roleList().then(response => {

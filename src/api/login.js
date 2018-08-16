@@ -9,7 +9,7 @@ export function loginByUsername(username, password) {
 
     // url: 'https://shop.jxxykj.cn/auth/login',
     // url: 'http://localhost:8080/auth/login',
-    url: 'http://192.168.10.153:8080/auth/login',
+    url: '/api/v1/auth/login',
     method: 'post',
     data
   })
