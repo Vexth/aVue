@@ -117,7 +117,7 @@ export default {
         res.data.forEach(e => {
           e.refundType = `${e.refundType}`
         })
-        this.list =res.data
+        this.list = res.data
       }).catch(err => console.log(err))
     },
     // 查询
@@ -174,14 +174,14 @@ export default {
       }
       // POST /api/v1/shop/order/modify/star 设置订单加星状态
       shopOrderModifyStar(list).then(res => {
-          if (res.code === 200) {
-            this.$message({
-              message: res.msg,
-              type: 'success'
-            })
-          } else {
-            this.$message.error(res.msg)
-          }
+        if (res.code === 200) {
+          this.$message({
+            message: res.msg,
+            type: 'success'
+          })
+        } else {
+          this.$message.error(res.msg)
+        }
       }).catch(err => console.log(err))
     },
     // 取消发货

@@ -118,165 +118,162 @@ export default {
       }
     },
     created() {
-        this.getBindList()
-        this.getVideoList()
+			this.getBindList()
+			this.getVideoList()
     },
     methods: {
-        changeSelect(val) {
-        if (val != null && this.videoList[val] != null) {
-             this.currentVideoUrl = this.videoList[val].url
-        }
+			changeSelect(val) {
+			if (val != null && this.videoList[val] != null) {
+				this.currentVideoUrl = this.videoList[val].url
+			}
     },
     //获取videoList
     getVideoList() {
-        getVideoList().then(res => {
-            if (res.code === 200) {
-                this.videoList = res.data
-                 console.log(JSON.stringify(this.videoList))
-            }
-        })
+			getVideoList().then(res => {
+				if (res.code === 200) {
+					this.videoList = res.data
+					console.log(JSON.stringify(this.videoList))
+				}
+			})
     },
-      getBindList() {
-        // GET /api/v1/shop/page/main/config/list 微信主页配置 列表
-        shopConfigList(this.cellType).then(res => {
-            if (res.code === 200) {
-            const data = res.data
-            console.log("res.data:["+JSON.stringify(res.data)+"]")
-            this.cellId = data.cellId
-            this.tableData = data['children'] === undefined ? [] : data['children']
-            } else {
-            this.$message.error(res.msg)
-            }
-        }).catch(err => console.log(err))
-      },
-      addVideo() {
-          this.modifyType=1
-          this.dialogBindVisible=true
-          this.dialogBindTitle='添加视频'
-          this.value= null
-          this.currentVideoUrl=''
-          this.isplay = false
-      },
-      handleBindDelete() {
-          this.dialogBindVisible=false
-          this.dialogBindTitle=''
-          this.value=null
-          this.currentVideoUrl=''
-          this.isplay = false
-          this.$refs.button.style.display = 'block';
-          this.cellCurrntId = null
-        //   this.cellId = null
-      },
-      handleBindSubmit() {
-        if (this.modifyType==1) {
-            shopConfigSave({cellType: this.cellType,
-            parentId: this.cellId,
-            imageId: this.videoList[this.value].id,
-            navigateType: -1}).then(res => {
-            if (res.code === 200) {
-                this.dialogBindVisible=false
-                this.dialogBindTitle=''
-                this.value=null
-                this.currentVideoUrl=''
-                this.isplay = false
-                this.cellId = null
-                this.cellCurrntId = null
-                this.getBindList()
-            }else {
-            this.$message.error(res.msg)
-            }
-            }).catch(err => console.log(err))
-        } else if (this.modifyType==2) {   
-            shopConfigSave({imageId: this.videoList[this.value].id,
-                cellType: this.cellType,
-                cellId: this.cellCurrntId,
-                navigateType: -1}).then(res => {
-                if (res.code === 200) {
-                    this.dialogBindVisible=false
-                    this.dialogBindTitle=''
-                    this.value=null
-                    this.currentVideoUrl=''
-                    this.isplay = false
-                    this.cellId = null
-                    this.cellCurrntId = null
-                    this.getBindList() 
-                }else {
-                this.$message.error(res.msg)
-                }
-                }).catch(err => console.log(err))
-        } else if (this.modifyType==3) {   
-            shopConfigDelete(this.cellCurrntId).then(res => {
-                if (res.code === 200) {
-                    this.dialogBindVisible=false
-                    this.dialogBindTitle=''
-                    this.value=null
-                    this.currentVideoUrl=''
-                    this.isplay = false
-                    this.cellId = null
-                    this.cellCurrntId = null
-                    this.getBindList() 
-                }else {
-                this.$message.error(res.msg)
-                }
-                }).catch(err => console.log(err))
-        }
-      },
-      playHandle(val) {
-          
-          this.isplay = true
-          this.dialogBindVisible=true
-          this.dialogBindTitle='播放视频'
-          var videoId = this.tableData[val].data.id
-          var index = 0
-          for(;index<this.videoList.length;index++) {
-            if (videoId == this.videoList[index].id) {
-                break
-            }
-          }
-          this.value= index
-        //   this.currentVideoUrl=this.videoList[val].url
-        //   console.log("playHandle:val["+val+']value['+this.value+"]")
-          this.$refs.button.style.display = 'none';
-      },
-
-      
-      modifyHandle(val) {
-          this.modifyType=2
-          this.dialogBindVisible=true
-          this.dialogBindTitle='修改视频'
-          this.isplay = false
-          var videoId = this.tableData[val].data.id
-          var index = 0
-          for(;index<this.videoList.length;index++) {
-            if (videoId == this.videoList[index].id) {
-                break
-            }
-          }
-          this.value= index
-         this.cellCurrntId = this.tableData[val].cellId
-          
-      },
-      deleteHandle(val) {
-          this.modifyType=3
-          this.isplay = true
-          this.dialogBindVisible=true
-          this.dialogBindTitle='删除视频'
-          var videoId = this.tableData[val].data.id
-          var index = 0
-          for(;index<this.videoList.length;index++) {
-            if (videoId == this.videoList[index].id) {
-                break
-            }
-          }
-          this.value= index
-          this.cellCurrntId = this.tableData[val].cellId
-      }
-    }
+		getBindList() {
+			// GET /api/v1/shop/page/main/config/list 微信主页配置 列表
+			shopConfigList(this.cellType).then(res => {
+				if (res.code === 200) {
+					const data = res.data
+					console.log("res.data:["+JSON.stringify(res.data)+"]")
+					this.cellId = data.cellId
+					this.tableData = data['children'] === undefined ? [] : data['children']
+				} else {
+					this.$message.error(res.msg)
+				}
+			}).catch(err => console.log(err))
+		},
+		addVideo() {
+			this.modifyType = 1
+			this.dialogBindVisible = true
+			this.dialogBindTitle = '添加视频'
+			this.value = null
+			this.currentVideoUrl = ''
+			this.isplay = false
+		},
+		handleBindDelete() {
+			this.dialogBindVisible = false
+			this.dialogBindTitle = ''
+			this.value = null
+			this.currentVideoUrl = ''
+			this.isplay = false
+			this.$refs.button.style.display = 'block'
+			this.cellCurrntId = null
+		},
+		handleBindSubmit() {
+			if (this.modifyType==1) {
+				shopConfigSave({
+					cellType: this.cellType,
+					parentId: this.cellId,
+					imageId: this.videoList[this.value].id,
+					navigateType: -1
+				}).then(res => {
+					if (res.code === 200) {
+						this.dialogBindVisible = false
+						this.dialogBindTitle = ''
+						this.value = null
+						this.currentVideoUrl = ''
+						this.isplay = false
+						this.cellId = null
+						this.cellCurrntId = null
+						this.getBindList()
+					}else {
+						this.$message.error(res.msg)
+					}
+				}).catch(err => console.log(err))
+			} else if (this.modifyType==2) {
+				shopConfigSave({
+					imageId: this.videoList[this.value].id,
+					cellType: this.cellType,
+					cellId: this.cellCurrntId,
+					navigateType: -1
+				}).then(res => {
+					if (res.code === 200) {
+						this.dialogBindVisible = false
+						this.dialogBindTitle = ''
+						this.value = null
+						this.currentVideoUrl = ''
+						this.isplay = false
+						this.cellId = null
+						this.cellCurrntId = null
+						this.getBindList() 
+					}else {
+						this.$message.error(res.msg)
+					}
+				}).catch(err => console.log(err))
+			} else if (this.modifyType==3) {   
+				shopConfigDelete(this.cellCurrntId).then(res => {
+					if (res.code === 200) {
+						this.dialogBindVisible = false
+						this.dialogBindTitle = ''
+						this.value = null
+						this.currentVideoUrl = ''
+						this.isplay = false
+						this.cellId = null
+						this.cellCurrntId = null
+						this.getBindList() 
+					}else {
+						this.$message.error(res.msg)
+					}
+				}).catch(err => console.log(err))
+			}
+		},
+		playHandle(val) {
+			this.isplay = true
+			this.dialogBindVisible=true
+			this.dialogBindTitle='播放视频'
+			var videoId = this.tableData[val].data.id
+			var index = 0
+			for(; index < this.videoList.length; index++) {
+				if (videoId === this.videoList[index].id) {
+					break
+				}
+			}
+			this.value= index
+			this.$refs.button.style.display = 'none'
+		},
+		modifyHandle(val) {
+			this.modifyType = 2
+			this.dialogBindVisible = true
+			this.dialogBindTitle='修改视频'
+			this.isplay = false
+			var videoId = this.tableData[val].data.id
+			var index = 0
+			for(;index<this.videoList.length;index++) {
+				if (videoId == this.videoList[index].id) {
+					break
+				}
+			}
+			this.value= index
+			this.cellCurrntId = this.tableData[val].cellId
+		},
+		deleteHandle(val) {
+			this.modifyType = 3
+			this.isplay = true
+			this.dialogBindVisible = true
+			this.dialogBindTitle = '删除视频'
+			var videoId = this.tableData[val].data.id
+			var index = 0
+			for(;index < this.videoList.length; index++) {
+				if (videoId == this.videoList[index].id) {
+					break
+				}
+			}
+			this.value= index
+			this.cellCurrntId = this.tableData[val].cellId
+		}
+  }
 }
 </script>
 
 <style scoped>
 .select-view {
-    margin-bottom: 10px
+  margin-bottom: 10px
 }
 </style>

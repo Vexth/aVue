@@ -2,7 +2,7 @@ function tran(n) {
   return n < 10 ? '0' + n : n
 }
 
-export default function formatDate(timestamp, type='yyyy-mm-dd HH:MM:SS') {
+export default function formatDate(timestamp, type = 'yyyy-mm-dd HH:MM:SS') {
   const time = new Date(timestamp)
   const year = time.getFullYear()
   const month = time.getMonth() + 1

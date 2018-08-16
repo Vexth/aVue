@@ -129,28 +129,28 @@ export default {
           {
             text: '最近一周',
             onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-              picker.$emit('pick', [start, end]);
+              const end = new Date()
+              const start = new Date()
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+              picker.$emit('pick', [start, end])
             }
           },
           {
             text: '最近一个月',
             onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-              picker.$emit('pick', [start, end]);
+              const end = new Date()
+              const start = new Date()
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
+              picker.$emit('pick', [start, end])
             }
           },
           {
             text: '最近三个月',
             onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-              picker.$emit('pick', [start, end]);
+              const end = new Date()
+              const start = new Date()
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
+              picker.$emit('pick', [start, end])
             }
           }
         ]
@@ -278,7 +278,7 @@ export default {
     },
     productTypeClick(e) {
       this.productType = '1'
-      sessionStorage.removeItem("list")
+      sessionStorage.removeItem('list')
     },
     sub(val, i) {
       this.hander[i] = val.hander
@@ -286,9 +286,9 @@ export default {
       this.stat[i] = val.stat
     },
     onSubmit() {
-      let a = this.$refs.vtab.bc()
-      let b = a.map(res => {
-        let a = res[0]
+      var a = this.$refs.vtab.bc()
+      var b = a.map(res => {
+        var a = res[0]
         delete a.a0
         delete a.a0Id
         return a
@@ -312,7 +312,7 @@ export default {
         this.$message.error('请填写市场价格！')
         return
       }
-      let list = {
+      const list = {
         product: {
           productType: this.productType,
           saleStatus: this.saleStatus ? 0 : 1,

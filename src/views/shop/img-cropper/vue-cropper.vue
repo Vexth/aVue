@@ -291,7 +291,7 @@ export default {
 							canvas.width = width
 							canvas.height = height
 							ctx.drawImage(img, 0, 0, width, height)
-						break
+							break
 						case 1:
 						case -3:
 							// 旋转90度 或者-270度 宽度和高度对调
@@ -306,7 +306,7 @@ export default {
 							canvas.height = height
 							ctx.rotate(rotate * 90  * Math.PI / 180)
 							ctx.drawImage(img, -width, -height, width, height)
-						break
+							break
 						case 3:
 						case -1:
 							canvas.width = height
@@ -342,19 +342,19 @@ export default {
 				}
 				// 开始移动
 				this.moveX = (e.clientX ? e.clientX : e.touches[0].clientX) - this.x
-	      this.moveY = (e.clientY ? e.clientY : e.touches[0].clientY) - this.y
+				this.moveY = (e.clientY ? e.clientY : e.touches[0].clientY) - this.y
 				if (e.touches) {
 					window.addEventListener('touchmove', this.moveImg)
-	      	window.addEventListener('touchend', this.leaveImg)
+					window.addEventListener('touchend', this.leaveImg)
 					if (e.touches.length == 2) {
-					  // 记录手指刚刚放上去
+						// 记录手指刚刚放上去
 						this.touches = e.touches
 						window.addEventListener('touchmove', this.touchScale)
-		      	window.addEventListener('touchend', this.cancleTouchScale)
+						window.addEventListener('touchend', this.cancleTouchScale)
 					}
 				} else {
 					window.addEventListener('mousemove', this.moveImg)
-	      	window.addEventListener('mouseup', this.leaveImg)
+					window.addEventListener('mouseup', this.leaveImg)
 				}
 			} else {
 				// 截图ing
@@ -421,7 +421,7 @@ export default {
 		},
 
 		cancleTouchScale (e) {
-		  window.removeEventListener('touchmove', this.touchScale)
+			window.removeEventListener('touchmove', this.touchScale)
 		},
 
 		// 移动图片
@@ -435,18 +435,18 @@ export default {
 				return false
 			}
 			var nowX = e.clientX ? e.clientX : e.touches[0].clientX
-      var nowY = e.clientY ? e.clientY : e.touches[0].clientY
+			var nowY = e.clientY ? e.clientY : e.touches[0].clientY
 			this.$nextTick(() => {
 				this.x = ~~(nowX - this.moveX)
 				this.y = ~~(nowY - this.moveY)
 			})
 		},
 		// 移动图片结束
-		leaveImg (e) {
+		leaveImg(e) {
 			window.removeEventListener('mousemove', this.moveImg)
-      window.removeEventListener('touchmove', this.moveImg)
-      window.removeEventListener('mouseup', this.leaveImg)
-      window.removeEventListener('touchend', this.leaveImg)
+			window.removeEventListener('touchmove', this.moveImg)
+			window.removeEventListener('mouseup', this.leaveImg)
+			window.removeEventListener('touchend', this.leaveImg)
 		},
 		// 缩放图片
 		scaleImg () {
@@ -564,7 +564,7 @@ export default {
 		},
 
 		// 正在改变
-		changeCropNow (e) {
+		changeCropNow(e) {
 			e.preventDefault()
 			var nowX = e.clientX ? e.clientX : e.touches ? e.touches[0].clientX : 0
       var nowY = e.clientY ? e.clientY : e.touches ? e.touches[0].clientY : 0
@@ -633,110 +633,109 @@ export default {
 			})
 		},
 
-		// 结束改变
-		changeCropEnd (e) {
-			window.removeEventListener('mousemove', this.changeCropNow)
-			window.removeEventListener('mouseup', this.changeCropEnd)
-			window.removeEventListener('touchmove', this.changeCropNow)
-			window.removeEventListener('touchend', this.changeCropEnd)
-		},
+    // 结束改变
+    changeCropEnd(e) {
+      window.removeEventListener('mousemove', this.changeCropNow)
+      window.removeEventListener('mouseup', this.changeCropEnd)
+      window.removeEventListener('touchmove', this.changeCropNow)
+      window.removeEventListener('touchend', this.changeCropEnd)
+    },
 
-		// 创建完成
-		endCrop () {
-			if (this.cropW === 0 && this.cropH === 0) {
-				this.cropping = false
-			}
-			window.removeEventListener('mousemove', this.createCrop)
-			window.removeEventListener('mouseup', this.endCrop)
-			window.removeEventListener('touchmove', this.createCrop)
-			window.removeEventListener('touchend', this.endCrop)
-		},
-		// 开始截图
-		startCrop () {
-			this.crop = true
-			// console.log('开始截图')
-		},
-		// 停止截图
-		stopCrop () {
-			this.crop = false
-			// console.log('停止截图')
-		},
-		// 清除截图
-		clearCrop () {
-			this.cropping = false
-			this.cropW = 0
-			this.cropH = 0
-			// console.log('清除截图')
-		},
-		// 截图移动
-		cropMove (e) {
-			e.preventDefault()
-			if (!this.canMoveBox) {
+    // 创建完成
+    endCrop() {
+      if (this.cropW === 0 && this.cropH === 0) {
+        this.cropping = false
+      }
+      window.removeEventListener('mousemove', this.createCrop)
+      window.removeEventListener('mouseup', this.endCrop)
+      window.removeEventListener('touchmove', this.createCrop)
+      window.removeEventListener('touchend', this.endCrop)
+    },
+    // 开始截图
+    startCrop() {
+      this.crop = true
+      // console.log('开始截图')
+    },
+    // 停止截图
+    stopCrop() {
+      this.crop = false
+      // console.log('停止截图')
+    },
+    // 清除截图
+    clearCrop() {
+      this.cropping = false
+      this.cropW = 0
+      this.cropH = 0
+      // console.log('清除截图')
+    },
+    // 截图移动
+    cropMove(e) {
+      e.preventDefault()
+      if (!this.canMoveBox) {
         this.crop = false
         this.startMove(e)
-				return false
-			}
-			window.addEventListener('mousemove', this.moveCrop)
-			window.addEventListener('mouseup', this.leaveCrop)
-			window.addEventListener('touchmove', this.moveCrop)
-			window.addEventListener('touchend', this.leaveCrop)
-			this.cropX = (e.clientX ? e.clientX : e.touches[0].clientX) - this.cropOffsertX
-			this.cropY = (e.clientY ? e.clientY : e.touches[0].clientY) - this.cropOffsertY
-		},
+        return false
+      }
+      window.addEventListener('mousemove', this.moveCrop)
+      window.addEventListener('mouseup', this.leaveCrop)
+      window.addEventListener('touchmove', this.moveCrop)
+      window.addEventListener('touchend', this.leaveCrop)
+      this.cropX = (e.clientX ? e.clientX : e.touches[0].clientX) - this.cropOffsertX
+      this.cropY = (e.clientY ? e.clientY : e.touches[0].clientY) - this.cropOffsertY
+    },
 
-		moveCrop (e) {
-			e.preventDefault()
-			var nowX = e.clientX ? e.clientX : e.touches[0].clientX
+    moveCrop(e) {
+      e.preventDefault()
+      var nowX = e.clientX ? e.clientX : e.touches[0].clientX
       var nowY = e.clientY ? e.clientY : e.touches[0].clientY
-			this.$nextTick(() => {
-				var fw = ~~(nowX - this.cropX)
-				var fh = ~~(nowY - this.cropY)
-				if (fw <= 1) {
-					this.cropOffsertX = 1
-				} else if (~~(fw + this.cropW) > this.w) {
-					this.cropOffsertX = this.w - this.cropW - 1
-				} else {
-					this.cropOffsertX = fw
-				}
+      this.$nextTick(() => {
+        var fw = ~~(nowX - this.cropX)
+        var fh = ~~(nowY - this.cropY)
+        if (fw <= 1) {
+          this.cropOffsertX = 1
+        } else if (~~(fw + this.cropW) > this.w) {
+          this.cropOffsertX = this.w - this.cropW - 1
+        } else {
+          this.cropOffsertX = fw
+        }
 
-				if (fh <= 1) {
-					this.cropOffsertY = 1
-				} else if (~~(fh + this.cropH) > this.h) {
-					this.cropOffsertY = this.h - this.cropH - 1
-				} else {
-					this.cropOffsertY = fh
-				}
-			})
-		},
-
-		leaveCrop (e) {
-			window.removeEventListener('mousemove', this.moveCrop)
-			window.removeEventListener('mouseup', this.leaveCrop)
-			window.removeEventListener('touchmove', this.moveCrop)
-			window.removeEventListener('touchend', this.leaveCrop)
-		},
+        if (fh <= 1) {
+          this.cropOffsertY = 1
+        } else if (~~(fh + this.cropH) > this.h) {
+          this.cropOffsertY = this.h - this.cropH - 1
+        } else {
+          this.cropOffsertY = fh
+        }
+      })
+    },
+    leaveCrop(e) {
+      window.removeEventListener('mousemove', this.moveCrop)
+      window.removeEventListener('mouseup', this.leaveCrop)
+      window.removeEventListener('touchmove', this.moveCrop)
+      window.removeEventListener('touchend', this.leaveCrop)
+    },
     // 获取转换成base64 的图片信息
-    getCropData (cb) {
-      let canvas = document.createElement('canvas')
-      let img = new Image
-      let rotate = this.rotate
-      let trueWidth = this.trueWidth
-      let trueHeight = this.trueHeight
-      let cropOffsertX = this.cropOffsertX
-      let cropOffsertY = this.cropOffsertY
+    getCropData(cb) {
+      var canvas = document.createElement('canvas')
+      var img = new Image()
+      var rotate = this.rotate
+      var trueWidth = this.trueWidth
+      var trueHeight = this.trueHeight
+      var cropOffsertX = this.cropOffsertX
+      var cropOffsertY = this.cropOffsertY
       img.onload = () => {
         if (~~(this.cropW) !== 0) {
-          let ctx = canvas.getContext('2d')
-          let width = this.cropW
-          let height = this.cropH
-          let imgW = trueWidth * this.scale
-          let imgH = trueHeight * this.scale
+          const ctx = canvas.getContext('2d')
+          const width = this.cropW
+          const height = this.cropH
+          const imgW = trueWidth * this.scale
+          const imgH = trueHeight * this.scale
           // 图片x轴偏移
           let dx = (this.x - cropOffsertX) + this.trueWidth * (1 - this.scale) / 2
           // 图片y轴偏移
           let dy = (this.y - cropOffsertY) + this.trueHeight * (1 - this.scale) / 2
           // console.log(dx, dy)
-          //保存状态
+          // 保存状态
           canvas.width = width
           canvas.height = height
           ctx.save()
@@ -757,7 +756,7 @@ export default {
                 // 换算图片旋转后的坐标弥补
                 dx = dx + (imgW - imgH) / 2
                 dy = dy + (imgH - imgW) / 2
-                ctx.rotate(rotate * 90  * Math.PI / 180)
+                ctx.rotate(rotate * 90 * Math.PI / 180)
                 ctx.drawImage(img, dy, -dx - imgH, imgW, imgH)
               } else {
                 canvas.width = width / this.scale
@@ -765,19 +764,19 @@ export default {
                 // 换算图片旋转后的坐标弥补
                 dx = dx / this.scale + (imgW / this.scale - imgH / this.scale) / 2
                 dy = dy / this.scale + (imgH / this.scale - imgW / this.scale) / 2
-                ctx.rotate(rotate * 90  * Math.PI / 180)
+                ctx.rotate(rotate * 90 * Math.PI / 180)
                 ctx.drawImage(img, dy, (-dx - imgH / this.scale), imgW / this.scale, imgH / this.scale)
               }
               break
             case 2:
             case -2:
               if (!this.full) {
-                ctx.rotate(rotate * 90  * Math.PI / 180)
+                ctx.rotate(rotate * 90 * Math.PI / 180)
                 ctx.drawImage(img, -dx - imgW, -dy - imgH, imgW, imgH)
               } else {
                 canvas.width = width / this.scale
                 canvas.height = height / this.scale
-                ctx.rotate(rotate * 90  * Math.PI / 180)
+                ctx.rotate(rotate * 90 * Math.PI / 180)
                 dx = dx / this.scale
                 dy = dy / this.scale
                 ctx.drawImage(img, -dx - imgW / this.scale, -dy - imgH / this.scale, imgW / this.scale, imgH / this.scale)
@@ -789,7 +788,7 @@ export default {
                 // 换算图片旋转后的坐标弥补
                 dx = dx + (imgW - imgH) / 2
                 dy = dy + (imgH - imgW) / 2
-                ctx.rotate(rotate * 90  * Math.PI / 180)
+                ctx.rotate(rotate * 90 * Math.PI / 180)
                 ctx.drawImage(img, -dy - imgW, dx, imgW, imgH)
               } else {
                 canvas.width = width / this.scale
@@ -797,7 +796,7 @@ export default {
                 // 换算图片旋转后的坐标弥补
                 dx = dx / this.scale + (imgW / this.scale - imgH / this.scale) / 2
                 dy = dy / this.scale + (imgH / this.scale - imgW / this.scale) / 2
-                ctx.rotate(rotate * 90  * Math.PI / 180)
+                ctx.rotate(rotate * 90 * Math.PI / 180)
                 ctx.drawImage(img, -dy - imgW / this.scale, dx, imgW / this.scale, imgH / this.scale)
               }
               break
@@ -813,9 +812,9 @@ export default {
           }
           ctx.restore()
         } else {
-          let width = trueWidth * this.scale
-          let height = trueHeight * this.scale
-          let ctx = canvas.getContext('2d')
+          const width = trueWidth * this.scale
+          const height = trueHeight * this.scale
+          const ctx = canvas.getContext('2d')
           ctx.save()
           switch (rotate) {
             case 0:

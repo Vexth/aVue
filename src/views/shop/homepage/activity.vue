@@ -42,12 +42,12 @@ export default {
     switch (this.$route.path) {
       case '/homepage1/activity1':
         this.cellType = 3
-        break;
+        break
       case '/homepage1/activity2':
         this.cellType = 4
-        break;
+        break
       default:
-        break;
+        break
     }
     this.configList()
   },

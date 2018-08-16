@@ -91,7 +91,7 @@ export default {
 
   methods: {
     getImg() {
-      let list = {
+      const list = {
         pageNum: this.pagination.page,
         pageSize: this.pagination.size
       }
@@ -190,11 +190,11 @@ export default {
           this.getTreeList()
           this.success('删除成功')
         }).catch(err => console.log(err))
-        done()
+        // done()
       }).catch(_ => {})
     },
 
-    // 修改 
+    // 修改
     modify() {
       const list = {
         groupId: this.form.groupId,

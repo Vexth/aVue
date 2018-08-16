@@ -114,12 +114,12 @@ export default {
     },
     itemsListFn() {
       this.list = this.ggNmaeList.filter(res => res.id === +this.value1)[0]
-      let list = []
+      var list = []
       list[this.i] = this.list
       if (sessionStorage.getItem('list') === null) {
         sessionStorage.setItem('list', JSON.stringify(list))
       } else {
-        let a = JSON.parse(sessionStorage.getItem('list'))
+        var a = JSON.parse(sessionStorage.getItem('list'))
         if (this.title !== '添加规格值' && this.title !== '添加规格名') {
           for (let i = 0; i < a.length; i++) {
             const res = a[i]
@@ -139,7 +139,6 @@ export default {
             }
           }
         }
-        
         a[this.i] = this.list
         sessionStorage.setItem('list', JSON.stringify(a))
       }
@@ -208,7 +207,7 @@ export default {
         })
       }
       const list = {
-        hander: {label: `${this.list['attrName']}`},
+        hander: { label: `${this.list['attrName']}` },
         stat
       }
       this.$emit('sub', list, this.i)

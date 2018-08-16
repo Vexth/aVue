@@ -50,7 +50,7 @@ export default {
   methods: {
     ImgList() {
       // api/v1/shop/image/list
-      let list = {
+      const list = {
         pageNum: this.pagination.page,
         pageSize: this.pagination.size
       }

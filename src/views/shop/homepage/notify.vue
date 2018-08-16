@@ -65,126 +65,135 @@
 <script>
 import { shopConfigList, shopConfigSave, shopConfigDelete } from '../server'
 export default {
-    components: {},
-     data() {
-      return {
-        currentIndex: -1,
-        modifyType: -1,
-        cellType: 5,
-        cellId: null,
-        editInput: false,
-        dialogTitle: '',
-        currentNotify: {cellId: -1, cellLabel: ''},
-        dialogDeleteVisible: false,
-        tableData: []
-      }
-    },
-    created() {
-        this.getNotifyList()
-    },
-    methods: {
-      getNotifyList() {
-        // GET /api/v1/shop/page/main/config/list 微信主页配置 列表
-        shopConfigList(this.cellType).then(res => {
-            if (res.code === 200) {
-            const data = res.data
-            console.log("res.data:["+JSON.stringify(res.data)+"]")
-            this.cellId = data.cellId
-            this.tableData = data['children'] === undefined ? [] : data['children']
-            } else {
-            this.$message.error(res.msg)
-            }
-        }).catch(err => console.log(err))
-      },
-      addNotify() {
-          this.modifyType=1
-          this.dialogDeleteVisible=true
-          this.editInput=false
-          this.dialogTitle='添加通知'
-      },
-
-      modifyHandle(val) {
-          this.modifyType=2
-          this.editInput=false
-          this.dialogTitle='修改通知'
-          this.dialogDeleteVisible=true
-          this.currentIndex = parseInt(val)
-          var str = JSON.stringify(this.tableData[val])
-          this.currentNotify = JSON.parse(str)
-      },
-
-      deleteHandle(val) {
-          this.modifyType=3
-          this.editInput=true
-          this.dialogTitle='确定删除'
-          this.dialogDeleteVisible=true
-          this.currentIndex = parseInt(val)
-          var str = JSON.stringify(this.tableData[val])
-          this.currentNotify = JSON.parse(str)
-      },
-      handleDeleteClose() {
-          this.dialogDeleteVisible=false
-          this.editInput=false
-          this.dialogTitle=''
-          this.currentNotify = {cellId: -1, cellLabel: ''}  
-          this.currentIndex = -1
-      },
-      handleDeleteSubmit() {
-        //   this.currentNotify = {cellId: -1, cellLabel: ''}
-          if (this.modifyType == 1) {
-            shopConfigSave({cellLabel: this.currentNotify.cellLabel,
-                cellType: this.cellType,
-                parentId: this.cellId,
-                navigateType: -1}).then(res => {
-                if (res.code === 200) {
-                    this.dialogDeleteVisible=false
-                    this.editInput=false
-                    this.dialogTitle=''
-                    this.currentIndex = -1
-                    this.cellId = null
-                    this.getNotifyList() 
-                    this.currentNotify = {cellId: -1, cellLabel: ''}
-                }else {
-                this.$message.error(res.msg)
-                }
-                }).catch(err => console.log(err))
-          }
-          else if (this.modifyType == 2) {
-              shopConfigSave({cellLabel: this.currentNotify.cellLabel,
-                cellType: this.cellType,
-                cellId: this.currentNotify.cellId,
-                navigateType: -1}).then(res => {
-                if (res.code === 200) {
-                    this.dialogDeleteVisible=false
-                    this.editInput=false
-                    this.dialogTitle=''
-                    this.currentIndex = -1
-                    this.cellId = null
-                    this.getNotifyList() 
-                    this.currentNotify = {cellId: -1, cellLabel: ''}
-                }else {
-                this.$message.error(res.msg)
-                }
-                }).catch(err => console.log(err))
-          }
-          else if (this.modifyType == 3){
-              shopConfigDelete(this.currentNotify.cellId).then(res => {
-                if (res.code === 200) {
-                    this.dialogDeleteVisible=false
-                    this.editInput=false
-                    this.dialogTitle=''
-                    this.currentIndex = -1
-                    this.cellId = null
-                    this.getNotifyList() 
-                    this.currentNotify = {cellId: -1, cellLabel: ''}
-                }else {
-                this.$message.error(res.msg)
-                }
-                }).catch(err => console.log(err))
-          }
-          
-      }
-    }
+	data() {
+		return {
+			currentIndex: -1,
+			modifyType: -1,
+			cellType: 5,
+			cellId: null,
+			editInput: false,
+			dialogTitle: '',
+			currentNotify: {cellId: -1, cellLabel: ''},
+			dialogDeleteVisible: false,
+			tableData: []
+		}
+	},
+	created() {
+		this.getNotifyList()
+	},
+	methods: {
+		getNotifyList() {
+			// GET /api/v1/shop/page/main/config/list 微信主页配置 列表
+			shopConfigList(this.cellType).then(res => {
+				if (res.code === 200) {
+					const data = res.data
+					console.log("res.data:["+JSON.stringify(res.data)+"]")
+					this.cellId = data.cellId
+					this.tableData = data['children'] === undefined ? [] : data['children']
+				} else {
+					this.$message.error(res.msg)
+				}
+			}).catch(err => console.log(err))
+		},
+		addNotify() {
+			this.modifyType = 1
+			this.dialogDeleteVisible = true
+			this.editInput = false
+			this.dialogTitle = '添加通知'
+		},
+		modifyHandle(val) {
+			this.modifyType = 2
+			this.editInput = false
+			this.dialogTitle = '修改通知'
+			this.dialogDeleteVisible = true
+			this.currentIndex = parseInt(val)
+			var str = JSON.stringify(this.tableData[val])
+			this.currentNotify = JSON.parse(str)
+		},
+		deleteHandle(val) {
+			this.modifyType = 3
+			this.editInput = true
+			this.dialogTitle = '确定删除'
+			this.dialogDeleteVisible = true
+			this.currentIndex = parseInt(val)
+			var str = JSON.stringify(this.tableData[val])
+			this.currentNotify = JSON.parse(str)
+		},
+		handleDeleteClose() {
+			this.dialogDeleteVisible = false
+			this.editInput = false
+			this.dialogTitle = ''
+			this.currentNotify = {
+				cellId: -1,
+				cellLabel: ''
+			}  
+			this.currentIndex = -1
+		},
+		handleDeleteSubmit() {
+			if (this.modifyType == 1) {
+				shopConfigSave({
+					cellLabel: this.currentNotify.cellLabel,
+					cellType: this.cellType,
+					parentId: this.cellId,
+					navigateType: -1
+				}).then(res => {
+					if (res.code === 200) {
+						this.dialogDeleteVisible = false
+						this.editInput = false
+						this.dialogTitle = ''
+						this.currentIndex = -1
+						this.cellId = null
+						this.getNotifyList() 
+						this.currentNotify = {
+							cellId: -1,
+							cellLabel: ''
+						}
+					}else {
+						this.$message.error(res.msg)
+					}
+				}).catch(err => console.log(err))
+			} else if (this.modifyType == 2) {
+				shopConfigSave({
+					cellLabel: this.currentNotify.cellLabel,
+					cellType: this.cellType,
+					cellId: this.currentNotify.cellId,
+					navigateType: -1
+				}).then(res => {
+					if (res.code === 200) {
+						this.dialogDeleteVisible = false
+						this.editInput = false
+						this.dialogTitle = ''
+						this.currentIndex = -1
+						this.cellId = null
+						this.getNotifyList() 
+						this.currentNotify = {
+							cellId: -1,
+							cellLabel: ''
+						}
+					}else {
+						this.$message.error(res.msg)
+					}
+				}).catch(err => console.log(err))
+			} else if (this.modifyType == 3){
+				shopConfigDelete(this.currentNotify.cellId).then(res => {
+					if (res.code === 200) {
+						this.dialogDeleteVisible = false
+						this.editInput = false
+						this.dialogTitle = ''
+						this.currentIndex = -1
+						this.cellId = null
+						this.getNotifyList() 
+						this.currentNotify = {
+							cellId: -1,
+							cellLabel: ''
+						}
+					}else {
+					this.$message.error(res.msg)
+					}
+				}).catch(err => console.log(err))
+			}
+		}
+	}
 }
 </script>
 

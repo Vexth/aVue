@@ -28,11 +28,11 @@ export default {
       ruleForm: {},
       fileList: [],
       mixinUploadUrl: 'https://jsonplaceholder.typicode.com/posts/'
-    };
+    }
   },
   methods: {
-    submitForm (formName) {
-      //包含上传的文件信息和服务端返回的所有信息都在这个对象里
+    submitForm(formName) {
+      // 包含上传的文件信息和服务端返回的所有信息都在这个对象里
       console.log(formName)
       console.log(this.$refs.uploada.uploadFiles)
     }

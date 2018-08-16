@@ -305,7 +305,7 @@ export const asyncRouterMap = [
       { path: 'goodslist', component: () => import('@/views/shop/showcase/goodslist'), name: 'goodslist', meta: { title: 'goodslist', noCache: true }},
       { path: 'member', component: () => import('@/views/shop/showcase/member'), name: 'member', meta: { title: 'member', noCache: true }},
       { path: 'hyk_manage', component: () => import('@/views/shop/showcase/hyk_manage'), name: 'hyk_manage', meta: { title: 'hyk_manage', noCache: true }},
-      { path: 'addlist', component: () => import('@/views/shop/showcase/addlist'), name: 'addlist', meta: { title: 'addlist', noCache: true }, hidden: true},
+      { path: 'addlist', component: () => import('@/views/shop/showcase/addlist'), name: 'addlist', meta: { title: 'addlist', noCache: true }, hidden: true },
       { path: 'addgoods', component: () => import('@/views/shop/showcase/addgoods'), name: 'addgoods', meta: { title: 'addgoods', noCache: true }, hidden: true },
       { path: 'modifygoods', component: () => import('@/views/shop/showcase/modifygoods'), name: 'modifygoods', meta: { title: 'modifygoods', noCache: true }, hidden: true }
     ]
@@ -385,16 +385,16 @@ export const asyncRouterMap = [
     children: [{ path: 'grouping', component: () => import('@/views/shop/grouping/grouping'), name: 'grouping', meta: { title: 'grouping', icon: 'excel', noCache: true }}]
   },
 
-  {
-    path: '/cropper',
-    component: Layout,
-    redirect: 'noredirect',
-    meta: {
-      title: 'system',
-      icon: 'excel'
-    },
-    children: [{ path: 'cropper', component: () => import('@/views/shop/img-cropper/cropper'), name: 'cropper', meta: { title: 'cropper', icon: 'excel', noCache: true }}]
-  },
+  // {
+  //   path: '/cropper',
+  //   component: Layout,
+  //   redirect: 'noredirect',
+  //   meta: {
+  //     title: 'system',
+  //     icon: 'excel'
+  //   },
+  //   children: [{ path: 'cropper', component: () => import('@/views/shop/img-cropper/cropper'), name: 'cropper', meta: { title: 'cropper', icon: 'excel', noCache: true }}]
+  // },
 
   {
     path: '/cooperation',
