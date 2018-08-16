@@ -176,7 +176,7 @@ export default {
       return v.split(';')
     },
     PackageList() {
-      let list = {
+      const list = {
         pageNum: this.pagination.page,
         pageSize: this.pagination.size,
         formInline: this.formInline

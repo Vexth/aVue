@@ -76,10 +76,10 @@ export default {
     },
     sel() {
       this.isSelected = !this.isSelected
-      this.$emit('sel', {isSelected: this.isSelected, list: this.list})
+      this.$emit('sel', { isSelected: this.isSelected, list: this.list })
     },
     onSubmit() {
-      this.$emit('sel', {isSelected: this.isSelected, list: this.list})
+      this.$emit('sel', { isSelected: this.isSelected, list: this.list })
     }
   }
 }

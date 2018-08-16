@@ -45,7 +45,7 @@ export default {
         this.selected = this.selected.filter(k => k !== img.id)
         this.selectedImgList = this.selectedImgList.filter(k => k.id !== img.id)
       } else {
-        this.selectedImgList.push({...img, img: this.img})
+        this.selectedImgList.push({ ...img, img: this.img })
         this.selected.push(img.id)
         this.img++
       }

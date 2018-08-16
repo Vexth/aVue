@@ -33,14 +33,14 @@ export default {
       this.componentId = item.v
     },
     onSubmit(val) {
-      this.list.product = {...this.list.product, ...val.product}
+      this.list.product = { ...this.list.product, ...val.product }
       this.list.skuList = val.skuList
       if (val['suite'] !== undefined) {
         this.list['suite'] = val['suite']
         this.list['itemList'] = val['itemList']
       }
       productCreate(this.list).then(res => {
-        sessionStorage.removeItem("list")
+        sessionStorage.removeItem('list')
         res.code === 200 ? this.$router.push('/showcase/goodslist') : console.log(res)
       }).catch(err => console.log(err))
     }
