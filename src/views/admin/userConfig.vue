@@ -10,7 +10,7 @@
           width="180">
           <template slot-scope="scope">
             <!--<i class="el-icon-time"></i>-->
-            <span style="margin-left: 10px">{{ scope.row.vendorId }}</span>
+            <span style="margin-left: 10px">{{ scope.row.accountId }}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -167,7 +167,7 @@
         options: [],
         formLabelWidth: '140px',
         form: {
-          vendorId: null,
+          accountId: null,
           username: null,
           password: '',
           repassword: '',
@@ -181,7 +181,7 @@
           payKey: ''
         },
         formRules: {
-          vendorId: [{ required: true, trigger: 'blur', validator: validateNotNull }],
+          accountId: [{ required: true, trigger: 'blur', validator: validateNotNull }],
           username: [{ required: true, trigger: 'blur', validator: validateNotNull }],
           password: [{ required: true, trigger: 'blur', validator: validatePass }],
           // repassword: [{ required: true, trigger: 'blur', validator: validatePass2 }],
@@ -235,14 +235,26 @@
       handleAdd() {
         this.dialogFormVisible = true
         this.title = '创建商户'
+        this.form.accountId = ''
+        this.form.username = ''
+        this.form.password = ''
+        this.form.repassword = ''
+        this.form.vendorName = ''
+        this.form.vendorRemark = ''
+        this.form.roleId = ''
+        this.form.mobilePhone = ''
+        this.form.appId = ''
+        this.form.appSecret = ''
+        this.form.payMchId = ''
+        this.form.payKey = ''
       },
       handleEdit(index, row) {
         console.log(row)
         this.dialogFormVisible = true
         this.title = '修改商户'
-        this.form.vendorId = row.vendorId
+        this.form.accountId = row.accountId
         this.form.username = row.username
-        this.form.password = row.password
+        this.form.password = ''
         this.form.repassword = row.repassword
         this.form.vendorName = row.vendorName
         this.form.vendorRemark = row.vendorRemark

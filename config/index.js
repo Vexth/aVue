@@ -11,29 +11,29 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/shop1': {  
+      '/shop1': {
         target: 'http://192.168.10.100:8080/api/v1/',
         changeOrigin: true,
         pathRewrite: {
           '^/shop1': '/'
         }
       },
-      '/restserver': {  
+      '/restserver': {
         target: 'http://tingapi.ting.baidu.com/v1/restserver/',
         changeOrigin: true,
         pathRewrite: {
           '^/restserver': '/'
         }
       },
-      '/api': {  
-        // target: 'https://shop.jxxykj.cn/api/',
+      '/api': {
+        target: 'https://shop.jxxykj.cn/api/',
         // target: 'http://localhost:8080/api/',
         // target: 'http://shop.bbwork.cn/api/',
-        target: 'http://192.168.10.153:8080/api/',
+        // target: 'http://192.168.10.153:8080/api/',
         // target: 'http://192.168.10.133:8080/api/',
         changeOrigin: true,
         pathRewrite: {
-          '^/api': '/'
+          '^/api': ''
         }
       }
     },
@@ -89,7 +89,7 @@ module.exports = {
      * then assetsPublicPath should be set to "/bar/".
      * In most cases please use '/' !!!
      */
-    assetsPublicPath: '/vue-element-admin/', // If you are deployed on the root path, please use '/'
+    assetsPublicPath: '/', // If you are deployed on the root path, please use '/'
 
     /**
      * Source Maps
