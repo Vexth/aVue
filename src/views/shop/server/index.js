@@ -87,7 +87,7 @@ export const shopDeleteKinds = data => post(`${urlList.shopDeleteKinds}?kindinfo
 // // POST /api/v1/shop/product/group/add 商家添加商品分组
 export const shopProductGropAdd = data => post(urlList.shopProductGropAdd, data)
 // DELETE /api/v1/shop/product/group/delete 商家删除商品分组
-export const shopProductGropDelete = data => dele(`${shopProductGropDelete}?groupId=${data}`)
+export const shopProductGropDelete = data => dele(`${urlList.shopProductGropDelete}?groupId=${data}`)
 // POST /api/v1/shop/product/group/modify 商家修改商品分组
 export const shopProductGropModify = data => post(urlList.shopProductGropModify, data)
 
