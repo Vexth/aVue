@@ -5,7 +5,7 @@ import { getToken } from '@/utils/auth'
 
 // create an axios instance
 const service = axios.create({
-  // baseURL: process.env.BASE_API, // api的base_url
+  baseURL: process.env.BASE_API, // api的base_url
   // baseURL: 'http://tingapi.ting.baidu.com/v1/restserver/',
   withCredentials: true, // 跨域
   timeout: 5000 // request timeout
