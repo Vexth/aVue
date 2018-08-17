@@ -269,7 +269,7 @@ export const asyncRouterMap = [
     name: 'permissionConfig',
     meta: {
       title: 'permissionConfig',
-      icon: 'table'
+      icon: 'zip'
     },
     children: [
       { path: 'menuConfig', component: () => import('@/views/admin/menuConfig'), name: 'menuConfig', meta: { title: 'menuConfig', noCache: true }},
@@ -332,21 +332,22 @@ export const asyncRouterMap = [
     ]
   },
 
-  {
-    path: '/customer',
-    component: Layout,
-    redirect: 'noredirect',
-    name: 'customer',
-    meta: {
-      title: 'customer',
-      icon: 'user'
-    },
-    children: [
-      { path: 'customerlist', component: () => import('@/views/shop/customer/customerlist'), name: 'customerlist', meta: { icon: 'user', title: 'customerlist', noCache: true }}
-      // { path: 'goodslist', component: () => import('@/views/trade/goodslist'), name: '商品列表', meta: { title: '商品列表', noCache: true }},
-      // { path: 'modifygoods', component: () => import('@/views/trade/modifygoods'), name: 'mixChart', meta: { title: 'mixChart', noCache: true }, hidden: true}
-    ]
-  },
+  // 管理
+  // {
+  //   path: '/customer',
+  //   component: Layout,
+  //   redirect: 'noredirect',
+  //   name: 'customer',
+  //   meta: {
+  //     title: 'customer',
+  //     icon: 'user'
+  //   },
+  //   children: [
+  //     { path: 'customerlist', component: () => import('@/views/shop/customer/customerlist'), name: 'customerlist', meta: { icon: 'user', title: 'customerlist', noCache: true }}
+  //     // { path: 'goodslist', component: () => import('@/views/trade/goodslist'), name: '商品列表', meta: { title: '商品列表', noCache: true }},
+  //     // { path: 'modifygoods', component: () => import('@/views/trade/modifygoods'), name: 'mixChart', meta: { title: 'mixChart', noCache: true }, hidden: true}
+  //   ]
+  // },
 
   {
     path: '/ump',
@@ -421,10 +422,10 @@ export const asyncRouterMap = [
     name: 'video',
     meta: {
       title: 'video',
-      icon: 'user'
+      icon: 'clipboard'
     },
     children: [
-      { path: 'index', component: () => import('@/views/shop/video/video'), name: 'videoIndex', meta: { icon: 'user', title: 'video', noCache: true }}
+      { path: 'index', component: () => import('@/views/shop/video/video'), name: 'videoIndex', meta: { icon: 'clipboard', title: 'video', noCache: true }}
     ]
   },
 
