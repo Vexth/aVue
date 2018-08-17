@@ -264,11 +264,13 @@ export const asyncRouterMap = [
 */
   {
     path: '/permissionConfig',
+    component: Layout,
+    redirect: 'noredirect',
+    name: 'permissionConfig',
     meta: {
       title: 'permissionConfig',
       icon: 'table'
     },
-    component: Layout,
     children: [
       { path: 'menuConfig', component: () => import('@/views/admin/menuConfig'), name: 'menuConfig', meta: { title: 'menuConfig', noCache: true }},
       { path: 'roleConfig', component: () => import('@/views/admin/roleConfig'), name: 'roleConfig', meta: { title: 'roleConfig', noCache: true }},
@@ -279,6 +281,7 @@ export const asyncRouterMap = [
     path: '/homepage',
     component: Layout,
     redirect: 'noredirect',
+    name: 'homepage1',
     meta: {
       title: 'homepage1',
       icon: 'table'
@@ -380,6 +383,7 @@ export const asyncRouterMap = [
     path: '/grouping',
     component: Layout,
     redirect: 'noredirect',
+    name: 'grouping',
     meta: {
       title: 'system',
       icon: 'excel'
@@ -402,6 +406,7 @@ export const asyncRouterMap = [
     path: '/cooperation',
     component: Layout,
     redirect: 'noredirect',
+    name: 'cooperation',
     meta: {
       title: 'system',
       icon: 'user'

@@ -25,7 +25,7 @@ import { shopConfigList, shopConfigVisable, shopConfigSave } from '../server'
 export default {
   data() {
     return {
-      cellId: null,
+      cellId: 8,
       ruleForm: {
         name: '',
         textarea: '',
@@ -35,6 +35,9 @@ export default {
   },
   components: {
     vZuIndex
+  },
+  mounted() {
+    this.ConfigList()
   },
   methods: {
     ConfigList() {

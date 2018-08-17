@@ -26,7 +26,7 @@ export default {
       this.couponSendType = v
       this.componentId = 'edit'
       // if (v !== '1' || v !== '2') {
-      //   couponEditResponse(v.couponId).then(res => res.code === 200 ? console.log(res) : console.log(res)).catch(err => console.log(err))
+      //   couponEditResponse({couponId: v.couponId}).then(res => res.code === 200 ? console.log(res) : console.log(res)).catch(err => console.log(err))
       // }
     },
     go() {

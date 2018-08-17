@@ -94,7 +94,7 @@
       </el-table-column>
     </el-table>
 
-    <v-pagination :pagination="pagination" @handleSizeChange="handleSizeChange" @handleCurrentChange="handleCurrentChange" />
+    <v-pagination v-if="pagination.total !== 0" :pagination="pagination" @handleSizeChange="handleSizeChange" @handleCurrentChange="handleCurrentChange" />
 
     <el-dialog title="更多详情" :visible.sync="dialogFormVisible" :before-close="beforeClose">
       <el-form :model="form">
@@ -133,9 +133,9 @@ export default {
   data() {
     return {
       pagination: {
-        total: null,
+        total: 100,
         size: 10,
-        page: null,
+        page: 1,
         sizes: [10, 20, 50, 100]
       },
       visible2: false,
@@ -181,11 +181,7 @@ export default {
       },
       value: [],
       list: null,
-      listLoading: true,
-      listQuery: {
-        page: 1,
-        limit: 10
-      }
+      listLoading: true
     }
   },
   components: {
@@ -223,7 +219,11 @@ export default {
       }
     },
     dataList() {
-      reservationList().then(res => {
+      let list = {
+        pageNum: this.pagination.page,
+        pageSize: this.pagination.size
+      }
+      reservationList(list).then(res => {
         if (res.code === 200) {
           this.list = res.data
           const total = res.data.length
@@ -299,10 +299,12 @@ export default {
       }).catch(err => console.log(err))
     },
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`)
+      this.pagination.size = val
+      this.dataList()
     },
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`)
+      this.pagination.page = val
+      this.dataList()
     }
   }
 }
