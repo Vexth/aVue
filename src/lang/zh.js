@@ -84,6 +84,8 @@ export default {
     activity1: '活动栏1设置',
     activity2: '活动栏2设置',
     homeimg: '大小图配置',
+    specialSubject: '专题配置',
+    endorsement: '我要代言配置',
     cropper: '图片剪裁',
     cooperation: '合作申请'
   },

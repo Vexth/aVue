@@ -58,6 +58,10 @@ export default {
     cha(val) {
       this.$emit('cha', val)
     },
+    isList() {
+      this.tpList = []
+      this.isBool()
+    },
     isBool() {
       this.bool = !this.bool
     }
