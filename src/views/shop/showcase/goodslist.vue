@@ -146,11 +146,14 @@
       </el-table-column>
 
     </el-table>
+    <v-pagination v-if="pagination.total !== 0" :pagination="pagination" @handleSizeChange="handleSizeChange" @handleCurrentChange="handleCurrentChange" />
   </div>
 </template>
 
 <script>
 import { category, tree, shopProductList } from '../server'
+
+import vPagination from '../pagination/pagination.vue'
 export default {
   data() {
     return {
@@ -181,8 +184,17 @@ export default {
         priceMin: null,
         // 销售状态 0:出售中， 1：售完， 2：仓库中
         saleStatus: '0'
+      },
+      pagination: {
+        total: 100,
+        size: 10,
+        page: 1,
+        sizes: [10, 20, 50, 100]
       }
     }
+  },
+  components: {
+    vPagination
   },
   created() {
     this.getList()
@@ -201,9 +213,13 @@ export default {
     getList() {
       this.listLoading = false
       const params = this.formInline
+      params['pageNum'] = this.pagination.page
+      params['pageSize'] = this.pagination.size
       shopProductList(params).then(res => {
+        this.pagination.total = res.total
         const items = res.data
         this.list = items
+        console.log(items)
         this.listLoading = false
       }).catch(err => console.log(err))
     },
@@ -233,6 +249,14 @@ export default {
       this.$router.push({ path: '/showcase/addlist' })
     },
     onSubmit() {
+      this.getList()
+    },
+    handleSizeChange(val) {
+      this.pagination.size = val
+      this.getList()
+    },
+    handleCurrentChange(val) {
+      this.pagination.page = val
       this.getList()
     }
   }

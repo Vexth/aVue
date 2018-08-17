@@ -12,6 +12,7 @@
       </el-form-item>
       <el-form-item>
         <el-button type="primary"  @click="submitForm(ruleForm)">上架</el-button>
+        <el-button type="primary" :disabled="cellId === null"  @click="ConfigVisable(ruleForm)">下架</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -24,6 +25,7 @@ import { shopConfigList, shopConfigVisable, shopConfigSave } from '../server'
 export default {
   data() {
     return {
+      cellId: null,
       ruleForm: {
         name: '',
         textarea: '',
@@ -49,6 +51,9 @@ export default {
     },
     ShareImage(val) {
       this.ruleForm.img = val
+    },
+    ConfigVisable() {
+      shopConfigVisable(this.cellId).then(res => this.list()).catch(err => console.log(err))
     },
     submitForm(v) {
       console.log(this.ruleForm)

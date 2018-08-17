@@ -277,7 +277,7 @@ export default {
       this.suite.colorType = e.target.style.background
     },
     productTypeClick(e) {
-      this.productType = '1'
+      this.productType = e
       sessionStorage.removeItem('list')
     },
     sub(val, i) {
