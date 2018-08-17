@@ -31,7 +31,7 @@ export default {
         navigateType: -1,
         parentId: null,
         cellType: null,
-        isShow: 1
+        isShow: 0
       }
     }
   },
