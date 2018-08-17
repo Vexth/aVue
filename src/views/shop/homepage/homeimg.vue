@@ -50,7 +50,7 @@ export default {
         this.ruleForm.parentId = list.cellId
         this.ruleForm.cellType = list.cellType
         if (list.children.length > 0) {
-          list.children.map(res => res.isShow === 0 ? this.ObtainedList.push(res) : this.ShelfList.push(res))
+          list.children.map(res => res.isShow === 1 ? this.ObtainedList.push(res) : this.ShelfList.push(res))
         }
       })
     },
