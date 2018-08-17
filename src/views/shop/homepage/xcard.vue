@@ -68,7 +68,7 @@ export default {
     clickInput() {
       this.list['navigateParam'] = this.input
       // GET /api/v1/shop/page/main/config/product/brief 微信主页配置 获取商品简要信息
-      shopProductBrief(this.input).then(res => {
+      shopProductBrief({productId: this.input}).then(res => {
         if (res.code === 200) {
           this.list['product'] = res.data
           this.isXzsd = true

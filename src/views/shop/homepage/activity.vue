@@ -40,10 +40,10 @@ export default {
   mounted() {
     // console.log(this.$route.path)
     switch (this.$route.path) {
-      case '/homepage1/activity1':
+      case '/homepage/activity1':
         this.cellType = 3
         break
-      case '/homepage1/activity2':
+      case '/homepage/activity2':
         this.cellType = 4
         break
       default:
@@ -65,7 +65,7 @@ export default {
     },
     configList() {
       // GET /api/v1/shop/page/main/config/list 微信主页配置 列表
-      shopConfigList(this.cellType).then(res => {
+      shopConfigList({cellType: this.cellType}).then(res => {
         if (res.code === 200) {
           const data = res.data
           this.input = data.cellLabel
@@ -84,7 +84,7 @@ export default {
     },
     sel(val) {
       // api/v1/shop/page/main/config/visable?cellId=xxx
-      shopConfigVisable(val).then(res => this.pulibfn(res)).catch(err => console.log(err))
+      shopConfigVisable({cellId: val}).then(res => this.pulibfn(res)).catch(err => console.log(err))
     },
     sub() {
       const list = {

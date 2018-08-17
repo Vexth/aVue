@@ -42,8 +42,8 @@ export default {
     listData: {
       immediate:true,
       handler(v) {
-        if (v['cellId']) {
-          console.log(v)
+        if (v['cellLabel']) {
+          this.ruleForm.cellLabel = v['cellLabel']
         }
       }
     }

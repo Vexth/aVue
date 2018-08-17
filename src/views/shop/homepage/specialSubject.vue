@@ -48,6 +48,7 @@ import { shopConfigList, shopConfigVisable, shopConfigSave } from '../server'
 export default {
   data() {
     return {
+      cellType: null,
       ruleForm: {
         name: '',
         time: '',
@@ -67,7 +68,7 @@ export default {
       console.log(targetName.index)
     },
     list() {
-      shopConfigList(6).then(res => console.log(res))
+      shopConfigList({cellType: this.cellType}).then(res => console.log(res))
     },
     ShareImage(val) {
       this.ruleForm.img = val[0]

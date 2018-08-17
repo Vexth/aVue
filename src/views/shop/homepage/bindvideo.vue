@@ -129,16 +129,16 @@ export default {
     },
     //获取videoList
     getVideoList() {
-			getVideoList().then(res => {
-				if (res.code === 200) {
-					this.videoList = res.data
-					console.log(JSON.stringify(this.videoList))
-				}
-			})
+		getVideoList().then(res => {
+			if (res.code === 200) {
+				this.videoList = res.data
+				console.log(JSON.stringify(this.videoList))
+			}
+		})
     },
 		getBindList() {
 			// GET /api/v1/shop/page/main/config/list 微信主页配置 列表
-			shopConfigList(this.cellType).then(res => {
+			shopConfigList({cellType: this.cellType}).then(res => {
 				if (res.code === 200) {
 					const data = res.data
 					console.log("res.data:["+JSON.stringify(res.data)+"]")
@@ -208,7 +208,7 @@ export default {
 					}
 				}).catch(err => console.log(err))
 			} else if (this.modifyType==3) {   
-				shopConfigDelete(this.cellCurrntId).then(res => {
+				shopConfigDelete({cellId: this.cellCurrntId}).then(res => {
 					if (res.code === 200) {
 						this.dialogBindVisible = false
 						this.dialogBindTitle = ''

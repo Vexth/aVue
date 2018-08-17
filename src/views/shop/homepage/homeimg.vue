@@ -45,7 +45,7 @@ export default {
     list() {
       this.ShelfList = []
       this.ObtainedList = []
-      shopConfigList(6).then(res => {
+      shopConfigList({cellType: 6}).then(res => {
         const list = res.data
         this.ruleForm.parentId = list.cellId
         this.ruleForm.cellType = list.cellType
@@ -58,10 +58,10 @@ export default {
       this.listData = {}
     },
     click(v) {
-      shopConfigVisable(v).then(res => this.list()).catch(err => console.log(err))
+      shopConfigVisable({cellId: v}).then(res => this.list()).catch(err => console.log(err))
     },
     danger(v) {
-      shopConfigDelete(v).then(res => {
+      shopConfigDelete({cellId: v}).then(res => {
         this.$message({
           type: 'success',
           message: '删除成功!'

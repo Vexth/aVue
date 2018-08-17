@@ -219,7 +219,6 @@ export default {
         this.pagination.total = res.total
         const items = res.data
         this.list = items
-        console.log(items)
         this.listLoading = false
       }).catch(err => console.log(err))
     },

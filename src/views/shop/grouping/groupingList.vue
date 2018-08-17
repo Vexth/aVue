@@ -116,7 +116,7 @@ export default {
     },
     kindsimageList(gradeId) {
       // GET /api/v1/shop/kindsimage/list 查看分类图库列表
-      shopKindsImageList(gradeId).then(res => res.code === 200 ? this.KindsImageList = res.data : this.$message.error(res.msg)).catch(err => console.log(err))
+      shopKindsImageList({gradeId: gradeId}).then(res => res.code === 200 ? this.KindsImageList = res.data : this.$message.error(res.msg)).catch(err => console.log(err))
     },
     // 新增分类
     addKinds() {

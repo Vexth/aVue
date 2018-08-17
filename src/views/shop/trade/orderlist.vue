@@ -210,7 +210,7 @@ export default {
     duo(val) {
       this.dialogFormVisible = true
       // GET /api/v1/shop/order/detail 获取订单详情
-      shopOrderDetail(val.orderId).then(res => {
+      shopOrderDetail({orderId: val.orderId}).then(res => {
         const list = res.data
         this.form = {
           orderId: list.orderId,

@@ -38,7 +38,7 @@ export default {
   },
   methods: {
     ConfigList() {
-      shopConfigList().then(res => {
+      shopConfigList({cellType: this.cellType}).then(res => {
         if (res.code === 200) {
           const data = res.data
           console.log(data)
@@ -53,7 +53,7 @@ export default {
       this.ruleForm.img = val
     },
     ConfigVisable() {
-      shopConfigVisable(this.cellId).then(res => this.list()).catch(err => console.log(err))
+      shopConfigVisable({cellId: this.cellId}).then(res => this.list()).catch(err => console.log(err))
     },
     submitForm(v) {
       console.log(this.ruleForm)
