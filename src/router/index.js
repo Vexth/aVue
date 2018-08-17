@@ -364,20 +364,20 @@ export const asyncRouterMap = [
     ]
   },
 
-  {
-    path: '/system',
-    component: Layout,
-    redirect: 'noredirect',
-    name: 'system',
-    meta: {
-      title: 'system',
-      icon: 'component'
-    },
-    children: [
-      { path: 'navsys', component: () => import('@/views/shop/system/navsys'), name: 'navsys', meta: { icon: 'component', title: 'navsys', noCache: true }}
-      // { path: 'activity', component: () => import('@/views/shop/ump/activity'), name: 'activity', meta: { title: 'activity', noCache: true }, hidden: true }
-    ]
-  },
+  // {
+  //   path: '/system',
+  //   component: Layout,
+  //   redirect: 'noredirect',
+  //   name: 'system',
+  //   meta: {
+  //     title: 'system',
+  //     icon: 'component'
+  //   },
+  //   children: [
+  //     { path: 'navsys', component: () => import('@/views/shop/system/navsys'), name: 'navsys', meta: { icon: 'component', title: 'navsys', noCache: true }}
+  //     // { path: 'activity', component: () => import('@/views/shop/ump/activity'), name: 'activity', meta: { title: 'activity', noCache: true }, hidden: true }
+  //   ]
+  // },
 
   {
     path: '/grouping',
