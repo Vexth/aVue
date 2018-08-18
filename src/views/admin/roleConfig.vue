@@ -110,9 +110,9 @@
         tableData: [{
           roleId: '',
           roleName: '',
-          createTime: '上海市普陀区金沙江路 1518 弄',
-          updateTime: '上海市普陀区金沙江路 1518 弄',
-          description: '上海市普陀区金沙江路 1518 弄'
+          createTime: '',
+          updateTime: '',
+          description: ''
         }],
         dialogVisible: false,
         treeData: [],
