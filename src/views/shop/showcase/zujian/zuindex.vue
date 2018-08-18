@@ -62,6 +62,9 @@ export default {
       this.tpList = []
       this.isBool()
     },
+    boolList() {
+      this.tpList = []
+    },
     isBool() {
       this.bool = !this.bool
     }

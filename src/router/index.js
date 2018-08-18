@@ -425,7 +425,7 @@ export const asyncRouterMap = [
       icon: 'clipboard'
     },
     children: [
-      { path: 'index', component: () => import('@/views/shop/video/video'), name: 'videoIndex', meta: { icon: 'clipboard', title: 'video', noCache: true }}
+      { path: 'videoIndex', component: () => import('@/views/shop/video/video'), name: 'videoIndex', meta: { icon: 'clipboard', title: 'video', noCache: true }}
     ]
   },
 
