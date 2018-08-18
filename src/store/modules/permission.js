@@ -48,7 +48,7 @@ function filterChildren(children, pathList) {
     const r = pathList.filter(path => {
       return path === child.path
     })
-    console.log(r)
+    // console.log(r)
     if (r.length !== 0) {
       return true
     } else {
@@ -97,19 +97,19 @@ const permission = {
         //   accessedRouters = asyncRouterMap
         // } else {
         // const accessedRouters = filterAsyncRouter(asyncRouterMap, roles)
-        console.log(data)
-        console.log(data.accountInfo)
+        // console.log(data)
+        // console.log(data.accountInfo)
         if (data.accountInfo.accountId === 0) {
           accessedRouters = asyncRouterMap
         } else {
           const pathList = data.roleMenuList.map(e => {
             return e.path
           })
-          console.log(pathList)
-          console.log(asyncRouterMap)
+          // console.log(pathList)
+          // console.log(asyncRouterMap)
           accessedRouters = filterAsyncRouterWithPathTree(asyncRouterMap, pathList)
         }
-        console.log(accessedRouters)
+        // console.log(accessedRouters)
         commit('SET_ROUTERS', accessedRouters)
         resolve()
       })

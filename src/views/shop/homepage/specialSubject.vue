@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-tabs type="border-card" @tab-click="tabClick">
+    <el-tabs type="border-card">
       <el-tab-pane label="新建专题">
         <el-row :gutter="12">
           <el-col :span="8">
@@ -17,10 +17,10 @@
                   </el-date-picker>
                 </el-form-item>
                 <el-form-item label="缩略图：">
-                  <v-zu-index ref="ShareImage" @sub="ShareImage" @cha="ShareImage" />
+                  <v-zu-index :s="'share'" ref="MinShareImage" @sub="MinShareImage" @cha="MinShareImage" />
                 </el-form-item>
                 <el-form-item label="正文：">
-                  <el-input type="textarea" v-model="ruleForm.str_var2"></el-input>
+                  <v-zu-index ref="MaxShareImage" @sub="MaxShareImage" @cha="MaxShareImage" />
                 </el-form-item>
                 <el-form-item>
                   <el-button type="primary" @click="submitForm(ruleForm)">上架</el-button>
@@ -59,8 +59,8 @@ export default {
         cellLabel: '',
         time_var1: '',
         str_var2: '',
-        img: [],
-        int_arr1: []
+        int_arr1: [],
+        imageId: null
       }
     }
   },
@@ -71,9 +71,6 @@ export default {
     this.list()
   },
   methods: {
-    tabClick(targetName) {
-      console.log(targetName.index)
-    },
     list() {
       this.ShelfList = []
       this.ObtainedList = []
@@ -86,8 +83,12 @@ export default {
         }
       })
     },
-    ShareImage(val) {
-      this.ruleForm.img = val
+    MinShareImage(val) {
+      this.ruleForm.imageId = val.length === 0 ? null : val[0]['id']
+      this.$refs.MinShareImage.isBool()
+    },
+    MaxShareImage(val) {
+      val.map(res => this.ruleForm.int_arr1.push(res.id))
     },
     isClick(v) {
       shopConfigVisable({cellId: v}).then(res => this.list()).catch(err => console.log(err))
@@ -106,16 +107,14 @@ export default {
         this.$message.error('请填写标题！')
         return
       }
-      if (v['img'] === undefined) {
+      if (v['imageId'] === undefined) {
         this.$message.error('请选择分享图！')
         return
       }
-      if (v.str_var2 === '') {
+      if (v.int_arr1.length === 0) {
         this.$message.error('请填写正文！')
         return
       }
-      v['img'].map(res => v.int_arr1.push(res.id))
-      delete v['img']
 
       v.time_var1 = formatDate(v.time_var1)
 
@@ -124,7 +123,8 @@ export default {
           message: res.msg,
           type: 'success'
         })
-        this.$refs.ShareImage.boolList()
+        this.$refs.MinShareImage.isList()
+        this.$refs.MaxShareImage.boolList()
         this.ruleForm = {
           navigateType: -1,
           parentId: null,
@@ -133,8 +133,8 @@ export default {
           cellLabel: '',
           time_var1: '',
           str_var2: '',
-          img: [],
-          int_arr1: []
+          int_arr1: [],
+          imageId: null
         }
         this.list()
       }).catch(err => console.log(err))

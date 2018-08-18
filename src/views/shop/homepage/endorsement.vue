@@ -6,11 +6,11 @@
       </el-form-item>
       <el-form-item label="分享图：">
         <!-- <v-zu-index ref="ShareImage"  @sub="ShareImage" @cha="ShareImage" /> -->
-
-        <v-img-list :list="'imgSpecList'" :tpList="ruleForm.img" :bool="true" @uploadList="uploadList" />
+        <v-img-list :list="'shareImage'" :tpList="shareImage" :bool="true" @uploadList="uploadList" />
+        <!-- <v-img-list :list="'imgSpecList'" :tpList="ruleForm.img" :bool="true" @uploadList="uploadList" /> -->
       </el-form-item>
       <el-form-item label="正文：">
-        <el-input type="textarea" style="width: 400px;" :autosize="{ minRows: 2 }" v-model="ruleForm.str_var2"></el-input>
+        <v-img-list :list="'imgSpecList'" :tpList="imgSpecList" :bool="true" @uploadList="uploadList" />
       </el-form-item>
       <el-form-item>
         <el-button type="primary"  @click="submitForm(ruleForm)">上架</el-button>
@@ -42,15 +42,17 @@ import { shopConfigList, shopConfigVisable, shopConfigSave } from '../server'
 export default {
   data() {
     return {
+      str: '',
+      shareImage: [],
+      imgSpecList: [],
       tpDialogVisible: false,
       selectedImgList: [],
       selected: [],
       ruleForm: {
         cellId: null,
         cellLabel: '',
-        str_var2: '',
         int_arr1: [],
-        img: [],
+        imageId: null,
         navigateType: -1,
         parentId: null,
         cellType: 8,
@@ -73,15 +75,20 @@ export default {
           this.ruleForm.parentId = data.cellId
           if (data['children'] !== undefined) {
             let children = data['children'][0]
+            console.log(children)
             this.ruleForm.cellId = children.cellId
             this.ruleForm.cellLabel = children.cellLabel
             this.ruleForm.cellType = children.cellType
             this.ruleForm.isShow = children.isShow
             this.ruleForm.navigateType = children.navigateType
-            this.ruleForm['img'] = children.data.imgs.map(res => {
+            this.imgSpecList = children.data.imgs.map(res => {
               res['url'] = res.imageUrl
               return res
             })
+            this.shareImage = [{
+              id: children.imageId,
+              url: children.imageUrl
+            }]
             this.ruleForm.str_var2 = children.data.text
           }
         } else {
@@ -90,15 +97,29 @@ export default {
       }).catch(err => console.log(err))
     },
     uploadList(val) {
+      this.selected = []
+      this.selectedImgList = []
+      this.str = val
       this.tpDialogVisible = true
     },
     handleClose() {
       this.tpDialogVisible = false
     },
     tpSub() {
-      this.selectedImgList = this.$refs.DialogImg.tpSub()
+      let list = this.$refs.DialogImg.tpSub()
+      if (this.str === 'shareImage') {
+        if (list.length > 1) {
+          this.$message.error('请选择一张图片！')
+          return
+        }
+        this.tpDialogVisible = false
+        this.shareImage = list
+        this.ruleForm.imageId = list[0]['id']
+        return
+      }
       this.tpDialogVisible = false
-      this.ruleForm.img = this.selectedImgList
+      this[this.str] = [...this[this.str], ...this.selectedImgList]
+      this[this.str].map(res => this.ruleForm.int_arr1.push(res.id))
     },
     ConfigVisable() {
       shopConfigVisable({cellId: this.cellId}).then(res => this.list()).catch(err => console.log(err))
@@ -108,17 +129,15 @@ export default {
         this.$message.error('请填写标题！')
         return
       }
-      if (this.ruleForm['img'] === undefined) {
+      if (this.ruleForm['imageId'] === null) {
         this.$message.error('请选择分享图！')
         return
       }
-      if (this.ruleForm.str_var2 === '') {
+      if (this.ruleForm.int_arr1.length === 0) {
         this.$message.error('请填写正文！')
         return
       }
-      this.ruleForm['img'].map(res => this.ruleForm.int_arr1.push(res.id))
 
-      delete this.ruleForm['img']
       if (this.ruleForm.cellId !== null) {
         delete this.ruleForm['parentId']
       }
