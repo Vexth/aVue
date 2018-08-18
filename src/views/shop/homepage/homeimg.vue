@@ -49,7 +49,7 @@ export default {
         const list = res.data
         this.ruleForm.parentId = list.cellId
         this.ruleForm.cellType = list.cellType
-        if (list.children.length > 0) {
+        if (list['children'] !== undefined) {
           list.children.map(res => res.isShow === 1 ? this.ObtainedList.push(res) : this.ShelfList.push(res))
         }
       })

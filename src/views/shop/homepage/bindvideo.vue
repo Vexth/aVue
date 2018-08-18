@@ -100,8 +100,7 @@
 <script>
 import { shopConfigList, shopConfigSave, getVideoList, shopConfigDelete } from '../server'
 export default {
-    components: {},
-     data() {
+    data() {
       return {
         isplay: false,
         videoList: [],
@@ -122,20 +121,20 @@ export default {
 			this.getVideoList()
     },
     methods: {
-			changeSelect(val) {
+		changeSelect(val) {
 			if (val != null && this.videoList[val] != null) {
 				this.currentVideoUrl = this.videoList[val].url
 			}
-    },
-    //获取videoList
-    getVideoList() {
-		getVideoList().then(res => {
-			if (res.code === 200) {
-				this.videoList = res.data
-				console.log(JSON.stringify(this.videoList))
-			}
-		})
-    },
+		},
+		//获取videoList
+		getVideoList() {
+			getVideoList().then(res => {
+				if (res.code === 200) {
+					this.videoList = res.data
+					console.log(JSON.stringify(this.videoList))
+				}
+			})
+		},
 		getBindList() {
 			// GET /api/v1/shop/page/main/config/list 微信主页配置 列表
 			shopConfigList({cellType: this.cellType}).then(res => {
