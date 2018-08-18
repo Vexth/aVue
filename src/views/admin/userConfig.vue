@@ -168,6 +168,7 @@
         formLabelWidth: '140px',
         form: {
           accountId: null,
+          vendorId: null,
           username: null,
           password: '',
           repassword: '',
@@ -236,6 +237,7 @@
         this.dialogFormVisible = true
         this.title = '创建商户'
         this.form.accountId = ''
+        this.form.vendorId = ''
         this.form.username = ''
         this.form.password = ''
         this.form.repassword = ''
@@ -253,6 +255,7 @@
         this.dialogFormVisible = true
         this.title = '修改商户'
         this.form.accountId = row.accountId
+        this.form.vendorId = row.vendorId
         this.form.username = row.username
         this.form.password = ''
         this.form.repassword = row.repassword
