@@ -31,7 +31,7 @@ export default {
         navigateType: -1,
         parentId: null,
         cellType: null,
-        isShow: 1
+        isShow: 0
       }
     }
   },
@@ -50,7 +50,7 @@ export default {
         this.ruleForm.parentId = list.cellId
         this.ruleForm.cellType = list.cellType
         if (list.children.length > 0) {
-          list.children.map(res => res.isShow === 0 ? this.ObtainedList.push(res) : this.ShelfList.push(res))
+          list.children.map(res => res.isShow === 1 ? this.ObtainedList.push(res) : this.ShelfList.push(res))
         }
       })
     },

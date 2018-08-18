@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
       <div class="video-list">
-            <div class="video-one" v-for="(video, index) in videoList">
+            <div class="video-one" v-for="(video, index) in videoList" :key="index">
                 <div class="video-one-title"> {{ video.title }}</div>
                 <video class="video-video" :src="video.url" controls="controls" width="250"/>
                 <div class="botton-view">
@@ -137,7 +137,7 @@ export default {
             let that = this
             if (this.currentVideo.vid) {
                 console.log("this.currentVideo.vid:"+this.currentVideo.vid)
-                getVideoUrl(this.currentVideo.vid).then(res => {
+                getVideoUrl({videoVid: this.currentVideo.vid}).then(res => {
                     if (res.code === 200 && res.data && res.data != "") {
                         that.currentVideo["url"] = res.data
                         that.testVideoLoad=false

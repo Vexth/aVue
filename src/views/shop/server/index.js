@@ -24,7 +24,7 @@ export const productSkuAttrCreate = data => post(urlList.productSkuAttrCreate, d
 // POST /api/v1/shop/product/productCreate
 export const productCreate = data => post(urlList.productCreate, data)
 // GET /api/v1/shop/reservation/list 动态查询订单
-export const reservationList = data => get(urlList.reservationList, data)
+export const reservationList = data => get(urlList.reservationList, { params: data })
 // POST api/v1/shop/product/productList
 export const shopProductList = data => post(`${urlList.shopProductList}?pageNum=${data.pageNum}&pageSize=${data.pageSize}`, data)
 // GET /api/v1/shop/product/productLoad
@@ -87,7 +87,7 @@ export const shopDeleteKinds = data => post(`${urlList.shopDeleteKinds}?kindinfo
 // // POST /api/v1/shop/product/group/add 商家添加商品分组
 export const shopProductGropAdd = data => post(urlList.shopProductGropAdd, data)
 // DELETE /api/v1/shop/product/group/delete 商家删除商品分组
-export const shopProductGropDelete = data => dele(`${shopProductGropDelete}?groupId=${data}`)
+export const shopProductGropDelete = data => dele(`${urlList.shopProductGropDelete}?groupId=${data}`)
 // POST /api/v1/shop/product/group/modify 商家修改商品分组
 export const shopProductGropModify = data => post(urlList.shopProductGropModify, data)
 
@@ -119,7 +119,7 @@ export const shopUserPackageModify = data => post(urlList.shopUserPackageModify,
 export const getVideoList = data => get(urlList.getVideoList, data)
 
 // GET api/v1/shop/video/list 获取商户视频列表
-export const getVideoUrl = data => get(`${urlList.getVideoUrl}?videoVid=${data}`)
+export const getVideoUrl = data => get(urlList.getVideoUrl, { params: data })
 export const addVideo = data => post(urlList.addVideo, data)
 export const modifyVideo = data => post(urlList.modifyVideo, data)
 export const deleteVideo = data => dele(`${urlList.deleteVideo}?videoId=${data}`)
@@ -128,7 +128,7 @@ export const deleteVideo = data => dele(`${urlList.deleteVideo}?videoId=${data}`
 // GET /api/v1/vendor/coupon/select/parmas 商户查询优惠券
 export const couponSelectParmas = data => get(urlList.couponSelectParmas, { params: data })
 // GET /api/v1/vendor/coupon/edit/response 编辑
-export const couponEditResponse = data => get(`${urlList.couponEditResponse}?couponId=${data}`)
+export const couponEditResponse = data => get(urlList.couponEditResponse, { params: data })
 // POST /api/v1/vendor/coupon/edit/request 修改存入数据库
 export const couponEditRequest = data => post(urlList.couponEditRequest, data)
 // POST /api/v1/vendor/coupon/create 创建优惠券

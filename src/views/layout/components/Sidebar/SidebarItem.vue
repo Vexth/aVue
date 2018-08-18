@@ -39,7 +39,8 @@ export default {
   name: 'SidebarItem',
   props: {
     routes: {
-      type: Array
+      type: Array,
+      default: []
     },
     isNest: {
       type: Boolean,

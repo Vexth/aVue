@@ -77,7 +77,7 @@ export default {
     menuConfig: '菜单管理',
     roleConfig: '角色管理',
     userConfig: '商户管理',
-    navsys: '菜单配置',
+    // navsys: '菜单配置',
     grouping: '分组管理',
     homepage1: '首页配置',
     banner: '轮播图配置',
