@@ -78,7 +78,7 @@ export default {
     roleConfig: '角色管理',
     userConfig: '商户管理',
     // navsys: '菜单配置',
-    grouping: '分组管理',
+    grouping: '商品分组',
     homepage1: '首页配置',
     banner: '轮播图配置',
     activity1: '活动栏1设置',

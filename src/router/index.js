@@ -308,6 +308,7 @@ export const asyncRouterMap = [
     },
     children: [
       { path: 'goodslist', component: () => import('@/views/shop/showcase/goodslist'), name: 'goodslist', meta: { title: 'goodslist', noCache: true }},
+      { path: 'grouping', component: () => import('@/views/shop/grouping/grouping'), name: 'grouping', meta: { title: 'grouping', noCache: true }},
       { path: 'member', component: () => import('@/views/shop/showcase/member'), name: 'member', meta: { title: 'member', noCache: true }},
       { path: 'hyk_manage', component: () => import('@/views/shop/showcase/hyk_manage'), name: 'hyk_manage', meta: { title: 'hyk_manage', noCache: true }},
       { path: 'addlist', component: () => import('@/views/shop/showcase/addlist'), name: 'addlist', meta: { title: 'addlist', noCache: true }, hidden: true },
@@ -380,17 +381,17 @@ export const asyncRouterMap = [
   //   ]
   // },
 
-  {
-    path: '/grouping',
-    component: Layout,
-    redirect: 'noredirect',
-    name: 'grouping',
-    meta: {
-      title: 'system',
-      icon: 'excel'
-    },
-    children: [{ path: 'grouping', component: () => import('@/views/shop/grouping/grouping'), name: 'grouping', meta: { title: 'grouping', icon: 'excel', noCache: true }}]
-  },
+  // {
+  //   path: '/grouping',
+  //   component: Layout,
+  //   redirect: 'noredirect',
+  //   name: 'grouping',
+  //   meta: {
+  //     title: 'system',
+  //     icon: 'excel'
+  //   },
+  //   children: [{ path: 'grouping', component: () => import('@/views/shop/grouping/grouping'), name: 'grouping', meta: { title: 'grouping', icon: 'excel', noCache: true }}]
+  // },
 
   // {
   //   path: '/cropper',

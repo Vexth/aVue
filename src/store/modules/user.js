@@ -14,7 +14,8 @@ const user = {
     setting: {
       articlePlatform: []
     },
-    userinfo: GetUserInfo()
+    userinfo: GetUserInfo(),
+    pathTree: {}
   },
 
   mutations: {
@@ -44,6 +45,9 @@ const user = {
     },
     SET_USERINFO: (state, userinfo) => {
       state.userinfo = userinfo
+    },
+    SET_PATH_TREE: (state, pathTree) => {
+      state.pathTree = pathTree
     }
   },
 
@@ -82,6 +86,9 @@ const user = {
           //   reject('error')
           // }
           const data = response.data
+          // console.log(data)
+
+          commit('SET_PATH_TREE', data.data)
 
           commit('SET_ROLES', state.userinfo)
           // if (data.roles && data.roles.length > 0) { // 验证返回的roles是否是一个非空数组

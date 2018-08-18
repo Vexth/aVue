@@ -11,31 +11,31 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/shop1': {
-        target: 'http://192.168.10.100:8080/api/v1/',
-        changeOrigin: true,
-        pathRewrite: {
-          '^/shop1': '/'
-        }
-      },
-      '/restserver': {
-        target: 'http://tingapi.ting.baidu.com/v1/restserver/',
-        changeOrigin: true,
-        pathRewrite: {
-          '^/restserver': '/'
-        }
-      },
-      '/api': {
-        target: 'https://shop.jxxykj.cn/api/',
-        // target: 'http://localhost:8080/api/',
-        // target: 'http://shop.bbwork.cn/api/',
-        // target: 'http://192.168.10.153:8080/api/',
-        // target: 'http://192.168.10.133:8080/api/',
-        changeOrigin: true,
-        pathRewrite: {
-          '^/api': ''
-        }
-      }
+      // '/shop1': {
+      //   target: 'http://192.168.10.100:8080/api/v1/',
+      //   changeOrigin: true,
+      //   pathRewrite: {
+      //     '^/shop1': '/'
+      //   }
+      // },
+      // '/restserver': {
+      //   target: 'http://tingapi.ting.baidu.com/v1/restserver/',
+      //   changeOrigin: true,
+      //   pathRewrite: {
+      //     '^/restserver': '/'
+      //   }
+      // },
+      // '/api': {
+      //   target: 'https://shop.jxxykj.cn/api/',
+      //   // target: 'http://localhost:8080/api/',
+      //   // target: 'http://shop.bbwork.cn/api/',
+      //   // target: 'http://192.168.10.153:8080/api/',
+      //   // target: 'http://192.168.10.133:8080/api/',
+      //   changeOrigin: true,
+      //   pathRewrite: {
+      //     '^/api': ''
+      //   }
+      // }
     },
 
     // Various Dev Server settings

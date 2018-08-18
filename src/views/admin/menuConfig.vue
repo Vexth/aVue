@@ -8,7 +8,7 @@
              node-key="id"
     >
             <span class="custom-tree-node" slot-scope="{ node, data }">
-              <span style="width: 8em;">{{ node.label }} </span>
+              <span style="max-width: 8em;">{{ node.label }} </span>
               <!--<span  style="width: 30em;" v-if="data.id !== 0"> id={{data.id}} pid={{data.parentId}}  path={{data.path}}</span>-->
               <span  style="width: 25em;" v-if="data.id !== 0">  path = {{data.path}}</span>
               <span>
@@ -222,6 +222,7 @@
 
 <style>
   .custom-tree-node {
+    max-width: 500px;
     flex: 1;
     display: flex;
     align-items: center;
