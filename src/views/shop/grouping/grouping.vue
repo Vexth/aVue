@@ -153,7 +153,6 @@ export default {
     },
     sub(data) {
       const list = this.$refs.DialogImg.tpSub()
-      console.log(list)
       if (list.length !== 1) {
         this.$message.error('请选择一张图片作为展示图标！')
         return
@@ -177,6 +176,7 @@ export default {
       // POST /api/v1/shop/product/group/add 商家添加商品分组
       shopProductGropAdd(list).then(res => {
         this.getTreeList()
+        this.$refs.DialogImg.close()
         this.dialogFormVisible = false
         this.success('新增成功')
       }).catch(err => console.log(err))
@@ -206,6 +206,7 @@ export default {
       shopProductGropModify(list).then(res => {
         this.getTreeList()
         this.dialogFormVisible = false
+        this.$refs.DialogImg.close()
         this.success('修改成功')
       }).catch(err => console.log(err))
     },

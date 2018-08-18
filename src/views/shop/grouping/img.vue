@@ -17,7 +17,11 @@ export default {
     }
   },
   props: {
-    KindsImageList: Array,
+    KindsImageList: {
+      type: Array,
+      required: true,
+      default: []
+    },
     image: {
       type: Object,
       required: true,
@@ -33,6 +37,7 @@ export default {
         if (newVal['id'] === undefined) {
           return
         }
+        console.log('11111', newVal)
         this.selectedImgList.push(newVal)
         this.selected.push(newVal['id'])
       },
