@@ -200,7 +200,7 @@
     },
     created() {
       vendorList().then(response => {
-        console.log(response)
+        // console.log(response)
         if (response.code === 200) {
           console.log(response.data)
           this.tableData = response.data
@@ -208,9 +208,9 @@
       }).catch(err => console.log(err))
 
       roleList().then(response => {
-        console.log(response)
+        // console.log(response)
         if (response.code === 200) {
-          console.log(response.data)
+          // console.log(response.data)
           if (response.data) {
             this.options = response.data.map(e => {
               return { value: e.roleId, label: e.roleName }
@@ -225,7 +225,7 @@
     methods: {
       list() {
         vendorList().then(response => {
-          console.log(response)
+          // console.log(response)
           if (response.code === 200) {
             console.log(response.data)
             this.tableData = response.data
