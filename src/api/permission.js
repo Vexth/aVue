@@ -13,7 +13,7 @@ export const menuAdd = data => post('api/v1/admin/manager/vendor/role/menu/add',
 
 export const menuModify = data => post('api/v1/admin/manager/vendor/role/menu/modify', data)
 
-export const menuDelete = data => post(`api/v1/admin/manager/vendor/role/menu/delete?id=${data.id}`, data)
+export const menuDelete = data => post(`api/v1/admin/manager/vendor/role/menu/delete?menuId=${data.id}`, data)
 
 // 角色管理
 export const roleList = data => get('api/v1/admin/manager/vendor/role/list', data)

@@ -6,19 +6,10 @@ export function loginByUsername(username, password) {
     password
   }
   return request({
-
-    // url: 'https://shop.jxxykj.cn/auth/login',
-    // url: 'http://localhost:8080/auth/login',
     url: '/api/v1/auth/login',
-    // url: 'http://192.168.10.133:8080/auth/login',
     method: 'post',
     data
   })
-  // return request({
-  //   url: '/login/login',
-  //   method: 'post',
-  //   data
-  // })
 }
 
 export function logout() {
@@ -30,9 +21,9 @@ export function logout() {
 
 export function getUserInfo(token) {
   return request({
-    url: '/user/info',
+    url: '/api/v1/auth/vendor/info',
     method: 'get',
-    params: { token: token.username }
+    // params: { token: token.username }
   })
 }
 
