@@ -86,8 +86,6 @@ export default {
 			// GET /api/v1/shop/page/main/config/list 微信主页配置 列表
 			shopConfigList({cellType: this.cellType}).then(res => {
 				if (res.code === 200) {
-					const data = res.data
-					console.log("res.data:["+JSON.stringify(res.data)+"]")
 					this.cellId = data.cellId
 					this.tableData = data['children'] === undefined ? [] : data['children']
 				} else {
