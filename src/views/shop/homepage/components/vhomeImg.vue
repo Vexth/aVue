@@ -50,11 +50,11 @@ export default {
   },
   methods: {
     MinShareImage(val) {
-      this.ruleForm.navigateParam = val[0]['id']
+      this.ruleForm.navigateParam = val.length === 0 ? null : val[0]['id']
       this.$refs.MinShareImage.isBool()
     },
     MaxShareImage(val) {
-      this.ruleForm.imageId = val[0]['id']
+      this.ruleForm.imageId = val.length === 0 ? null : val[0]['id']
       this.$refs.MaxShareImage.isBool()
     },
     isList() {
