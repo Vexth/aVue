@@ -168,6 +168,7 @@
         formLabelWidth: '140px',
         form: {
           accountId: null,
+          vendorId: null,
           username: null,
           password: '',
           repassword: '',
@@ -200,7 +201,7 @@
     },
     created() {
       vendorList().then(response => {
-        console.log(response)
+        // console.log(response)
         if (response.code === 200) {
           console.log(response.data)
           this.tableData = response.data
@@ -208,9 +209,9 @@
       }).catch(err => console.log(err))
 
       roleList().then(response => {
-        console.log(response)
+        // console.log(response)
         if (response.code === 200) {
-          console.log(response.data)
+          // console.log(response.data)
           if (response.data) {
             this.options = response.data.map(e => {
               return { value: e.roleId, label: e.roleName }
@@ -225,7 +226,7 @@
     methods: {
       list() {
         vendorList().then(response => {
-          console.log(response)
+          // console.log(response)
           if (response.code === 200) {
             console.log(response.data)
             this.tableData = response.data
@@ -236,6 +237,7 @@
         this.dialogFormVisible = true
         this.title = '创建商户'
         this.form.accountId = ''
+        this.form.vendorId = ''
         this.form.username = ''
         this.form.password = ''
         this.form.repassword = ''
@@ -253,6 +255,7 @@
         this.dialogFormVisible = true
         this.title = '修改商户'
         this.form.accountId = row.accountId
+        this.form.vendorId = row.vendorId
         this.form.username = row.username
         this.form.password = ''
         this.form.repassword = row.repassword

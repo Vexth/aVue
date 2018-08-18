@@ -4,7 +4,7 @@
       <el-tree
         :data="data"
         node-key="id"
-        :default-expand-all="true"
+        default-expand-all="true"
         :expand-on-click-node="false"
         >
         <div class='custom-tree-node' slot-scope="{ node, data }">
