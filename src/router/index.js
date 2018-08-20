@@ -413,7 +413,7 @@ export const asyncRouterMap = [
       title: 'system',
       icon: 'user'
     },
-    children: [{ path: 'cooperation', component: () => import('@/views/shop/cooperation/cooperation'), name: 'cooperation', meta: { title: 'cooperation', icon: 'user', noCache: true }}]
+    children: [{ path: 'cooperationIndex', component: () => import('@/views/shop/cooperation/cooperation'), name: 'cooperationIndex', meta: { title: 'cooperation', icon: 'user', noCache: true }}]
   },
 
   {
