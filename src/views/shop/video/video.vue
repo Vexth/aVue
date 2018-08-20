@@ -175,7 +175,8 @@ export default {
                 })
             } else {
                 modifyVideo(this.currentVideo).then(res => {
-                    if (res.code === 200) {
+                    // console.log("res["+JSON.stringify(res)+"]")
+                    if (res !== undefined && res.code !== undefined && res.code === 200) {
                         that.dialogTitle=''
                         that.dialogVisible=false
                         that.currentObject = -1
@@ -184,10 +185,13 @@ export default {
                         that.getVideoList();
                     }
                     else {
-                        that.$message('修改视频失败');
+                        that.dialogTitle=''
+                        that.dialogVisible=false
+                        that.currentObject = -1
+                        that.currentVideo = {title:"", vid:"", url:""}
                         return
                     }
-                })
+                }).catch(err => console.log(err))
 
             }
         },
@@ -214,19 +218,21 @@ export default {
                 return
             }
             deleteVideo(video.id).then(res => {
-                if (res.code === 200) {
+                if (res !== undefined && res.code !== undefined && res.code === 200) {
                     that.$message('删除视频成功')
-                    console.log("that.currentObject:"+that.currentObject)
+                    // console.log("that.currentObject:"+that.currentObject)
                     that.videoList.splice(that.currentObject,1)
                     that.dialogDeleteVisible=false
                     that.currentObject = -1
                     that.currentVideo = {title:"", vid:"", url:""}
                 }
                 else {
-                    that.$message('删除视频失败')
+                    that.dialogDeleteVisible=false
+                    that.currentObject = -1
+                    that.currentVideo = {title:"", vid:"", url:""}
                     return
                 }
-            })
+            }).catch(err => console.log(err))
             // that.dialogDeleteVisible=false
             // that.currentObject = -1
             // that.currentVideo = {title:"", vid:"", url:""}
