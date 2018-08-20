@@ -85,7 +85,7 @@ export default {
 		getNotifyList() {
 			// GET /api/v1/shop/page/main/config/list 微信主页配置 列表
 			shopConfigList({cellType: this.cellType}).then(res => {
-				console.log("res["+JSON.stringify(res)+"]")
+				// console.log("res["+JSON.stringify(res)+"]")
 				if (res.code === 200) {
 					this.cellId = res.data.cellId
 					this.tableData = res.data['children'] === undefined ? [] : res.data['children']
