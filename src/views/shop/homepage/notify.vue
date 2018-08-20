@@ -11,7 +11,7 @@
         <el-table-column
             prop="cellId"
             label="ID"
-            width="40">
+            width="60">
         </el-table-column>
         <el-table-column
         property="cellLabel"
@@ -85,9 +85,10 @@ export default {
 		getNotifyList() {
 			// GET /api/v1/shop/page/main/config/list 微信主页配置 列表
 			shopConfigList({cellType: this.cellType}).then(res => {
+				console.log("res["+JSON.stringify(res)+"]")
 				if (res.code === 200) {
-					this.cellId = data.cellId
-					this.tableData = data['children'] === undefined ? [] : data['children']
+					this.cellId = res.data.cellId
+					this.tableData = res.data['children'] === undefined ? [] : res.data['children']
 				} else {
 					this.$message.error(res.msg)
 				}
