@@ -75,7 +75,6 @@ export default {
           this.ruleForm.parentId = data.cellId
           if (data['children'] !== undefined) {
             let children = data['children'][0]
-            console.log(children)
             this.ruleForm.cellId = children.cellId
             this.ruleForm.cellLabel = children.cellLabel
             this.ruleForm.cellType = children.cellType
