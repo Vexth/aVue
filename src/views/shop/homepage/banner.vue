@@ -27,11 +27,27 @@ export default {
       options: [],
       selected: [],
       KindsImageList: [],
-      cellType: 1,
+      cellType: null,
       cellId: null
     }
   },
   mounted() {
+    // console.log(this.$route.path)
+    switch (this.$route.path) {
+      case '/homepage/banner1':
+        this.cellType = 1
+        break
+      case '/homepage/banner2':
+        // :多轮播图1
+        this.cellType = 10
+        break
+      case '/homepage/banner3':
+        // :多轮播图2
+        this.cellType = 11
+        break
+      default:
+        break
+    }
     this.navigateTree()
     this.configList()
   },
