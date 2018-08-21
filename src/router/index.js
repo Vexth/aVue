@@ -287,9 +287,16 @@ export const asyncRouterMap = [
       icon: 'table'
     },
     children: [
-      { path: 'banner', component: () => import('@/views/shop/homepage/banner'), name: 'banner', meta: { title: 'banner', noCache: true }},
+      { path: 'banner1', component: () => import('@/views/shop/homepage/banner'), name: 'banner1', meta: { title: 'banner1', noCache: true }},
+      { path: 'banner2', component: () => import('@/views/shop/homepage/banner'), name: 'banner2', meta: { title: 'banner2', noCache: true }},
+      { path: 'banner3', component: () => import('@/views/shop/homepage/banner'), name: 'banner3', meta: { title: 'banner3', noCache: true }},
       { path: 'activity1', component: () => import('@/views/shop/homepage/activity'), name: 'activity1', meta: { title: 'activity1', noCache: true }},
       { path: 'activity2', component: () => import('@/views/shop/homepage/activity'), name: 'activity2', meta: { title: 'activity2', noCache: true }},
+      { path: 'activity3', component: () => import('@/views/shop/homepage/activity'), name: 'activity3', meta: { title: 'activity3', noCache: true }},
+      { path: 'activity4', component: () => import('@/views/shop/homepage/activity'), name: 'activity4', meta: { title: 'activity4', noCache: true }},
+      { path: 'activity5', component: () => import('@/views/shop/homepage/activity'), name: 'activity5', meta: { title: 'activity5', noCache: true }},
+      { path: 'activity6', component: () => import('@/views/shop/homepage/activity'), name: 'activity6', meta: { title: 'activity6', noCache: true }},
+      { path: 'activity7', component: () => import('@/views/shop/homepage/activity'), name: 'activity7', meta: { title: 'activity7', noCache: true }},
       { path: 'homeimg', component: () => import('@/views/shop/homepage/homeimg'), name: 'homeimg', meta: { title: 'homeimg', noCache: true }},
       { path: 'specialSubject', component: () => import('@/views/shop/homepage/specialSubject'), name: 'specialSubject', meta: { title: 'specialSubject', noCache: true }},
       { path: 'endorsement', component: () => import('@/views/shop/homepage/endorsement'), name: 'endorsement', meta: { title: 'endorsement', noCache: true }},
