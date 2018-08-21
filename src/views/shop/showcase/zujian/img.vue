@@ -99,17 +99,19 @@ export default {
       }, (err, data) => {
         console.log(err)
         console.log(data)
-        // 上传图片url到服务器
-        uploadImageUrl(data).then(response => {
-          if (response.code === 200) {
-            this.$notify({
-              title: '图片上传成功！',
-              message: response.msg,
-              type: 'success'
-            })
-            this.ImgList()
-          }
-        }).catch(err => console.log(err))
+        if (data.Location) {
+          // 上传图片url到服务器
+          uploadImageUrl(data).then(response => {
+            if (response.code === 200) {
+              this.$notify({
+                title: '图片上传成功！',
+                message: response.msg,
+                type: 'success'
+              })
+              this.ImgList()
+            }
+          }).catch(err => console.log(err))
+        }
       })
       return false
     },

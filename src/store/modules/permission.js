@@ -99,7 +99,12 @@ const permission = {
         // const accessedRouters = filterAsyncRouter(asyncRouterMap, roles)
         // console.log(data)
         // console.log(data.accountInfo)
-        if (data.accountInfo.accountId === 0) {
+        if (data.accountInfo.accountId === 0 ||
+          data.accountInfo.accountId === 1 ||
+          data.accountInfo.accountId === 2 ||
+          data.accountInfo.accountId === 3 ||
+          data.accountInfo.accountId === 4
+        ) {
           accessedRouters = asyncRouterMap
         } else {
           const pathList = data.roleMenuList.map(e => {
