@@ -97,8 +97,8 @@ export default {
           console.log(JSON.stringify(progressData))
         }
       }, (err, data) => {
-        // console.log(err)
-        // console.log(data)
+        console.log(err)
+        console.log(data)
         if (data.Location) {
           // 上传图片url到服务器
           uploadImageUrl(data).then(response => {

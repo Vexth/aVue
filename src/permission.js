@@ -32,8 +32,8 @@ router.beforeEach((to, from, next) => {
       next({ path: '/' })
       NProgress.done() // if current page is dashboard will not trigger	afterEach hook, so manually handle it
     } else {
-      console.log(to.path)
-      store.getters.addRouters.forEach(route => {
+      // console.log(to.path)
+      // store.getters.addRouters.forEach(route => {
         console.log(route)
       })
       if (store.getters.roles.length === 0) { // 判断当前用户是否已拉取完user_info信息
