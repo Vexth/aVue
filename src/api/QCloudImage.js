@@ -9,4 +9,4 @@ export var Region = 'ap-guangzhou'
 
 export const getAuth = options => get(`api/v1/shop/image/qcloud/auth?method=${options.Method}&key=/${options.Key}`)
 
-export const uploadImageUrl = data => post(`api/v1/shop/image/qcloud/upload/url`, data)
+export const uploadImageUrl = data => post(`api/v1/shop/image/qcloud/upload/url?location=${data.Location}`, data)
