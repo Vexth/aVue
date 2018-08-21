@@ -1,7 +1,5 @@
 <template>
   <div class="app-container">
-    <input id="fileSelector" type="file">
-    <el-button @click="testImage">图片提交测试</el-button>
     <div style="width:30%">
       <el-tree
         :data="data"
@@ -98,54 +96,6 @@ export default {
   },
 
   methods: {
-    testImage() {
-      var cos = new COS({
-        // 必选参数
-        getAuthorization: function(options, callback) {
-          // console.log(options)
-          getAuth(options).then(response => {
-            if (response.code === 200) {
-              callback({
-                Authorization: response.data
-              })
-            }
-          }).catch(err => console.log(err))
-        },
-        // 可选参数
-        FileParallelLimit: 3, // 控制文件上传并发数
-        ChunkParallelLimit: 3, // 控制单个文件下分片上传并发数
-        ProgressInterval: 1000 // 控制上传的 onProgress 回调的间隔
-      })
-
-      const file = document.getElementById('fileSelector').files[0]
-      const fileName = 'IMAGE_' + createImageNameString()
-      console.log(file)
-      // return
-
-      cos.putObject({
-        Bucket: Bucket,
-        Region: Region,
-        Key: fileName,
-        StorageClass: 'STANDARD',
-        Body: file, // 上传文件对象
-        onProgress: function(progressData) {
-          console.log(JSON.stringify(progressData))
-        }
-      }, (err, data) => {
-        console.log(err)
-        console.log(data)
-        // 上传图片url到服务器
-        uploadImageUrl(data).then(response => {
-          if (response.code === 200) {
-            this.$notify({
-              title: '图片上传成功！',
-              message: response.msg,
-              type: 'success'
-            })
-          }
-        }).catch(err => console.log(err))
-      })
-    },
     getImg() {
       const list = {
         pageNum: this.pagination.page,

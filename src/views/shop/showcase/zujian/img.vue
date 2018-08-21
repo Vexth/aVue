@@ -25,7 +25,11 @@
 
 <script>
 import vPagination from '../../pagination/pagination.vue'
-import { shopImageList, shopImageUpload } from '../../server'
+import { shopImageList } from '../../server'
+
+import COS from 'cos-js-sdk-v5'
+import { Region, Bucket, getAuth, uploadImageUrl } from '@/api/QCloudImage'
+import { createImageNameString } from '@/utils/createUniqueString'
 export default {
   data() {
     return {
@@ -64,17 +68,47 @@ export default {
       }).catch(err => console.log(err))
     },
     beforeUpload(file) {
-      // console.log(file)
-      const fd = new FormData()
-      fd.append('multipartFile', file)
-      // /api/v1/shop/image/upload
-      shopImageUpload(fd).then(res => {
-        if (res.code === 200) {
-          this.ImgList()
-        } else {
-          this.$message.error(res.msg)
+      var cos = new COS({
+        // 必选参数
+        getAuthorization: function(options, callback) {
+          // console.log(options)
+          getAuth(options).then(response => {
+            if (response.code === 200) {
+              callback({
+                Authorization: response.data
+              })
+            }
+          }).catch(err => console.log(err))
+        },
+        // 可选参数
+        FileParallelLimit: 3, // 控制文件上传并发数
+        ChunkParallelLimit: 3, // 控制单个文件下分片上传并发数
+        ProgressInterval: 1000 // 控制上传的 onProgress 回调的间隔
+      })
+      const fileName = 'IMAGE_' + createImageNameString()
+
+      cos.putObject({
+        Bucket: Bucket,
+        Region: Region,
+        Key: fileName,
+        StorageClass: 'STANDARD',
+        Body: file, // 上传文件对象
+        onProgress: function(progressData) {
+          console.log(JSON.stringify(progressData))
         }
-      }).catch(err => console.log(err))
+      }, (err, data) => {
+        // 上传图片url到服务器
+        uploadImageUrl(data).then(response => {
+          if (response.code === 200) {
+            this.$notify({
+              title: '图片上传成功！',
+              message: response.msg,
+              type: 'success'
+            })
+            this.ImgList()
+          }
+        }).catch(err => console.log(err))
+      })
       return false
     },
     liClick(img) {

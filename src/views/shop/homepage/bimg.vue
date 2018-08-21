@@ -45,7 +45,6 @@
 import vImg from '../showcase/zujian/img.vue'
 import vCard from './card.vue'
 
-import { shopImageUpload } from '../server'
 export default {
   data() {
     return {
@@ -126,13 +125,6 @@ export default {
     uploadList() {
       event.stopPropagation()
       this.dialogVisible = true
-    },
-    beforeUpload(file) {
-      const fd = new FormData()
-      fd.append('multipartFile', file)
-      // /api/v1/shop/image/upload
-      shopImageUpload(fd).then(res => res.code === 200 ? this.getImg() : this.$message.error(res.msg)).catch(err => console.log(err))
-      return false
     },
     handleClose() {
       this.$confirm('确认关闭？').then(_ => {

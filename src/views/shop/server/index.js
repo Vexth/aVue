@@ -68,8 +68,6 @@ export const shopConfigNavigateTree = data => get(urlList.shopConfigNavigateTree
 // api/v1/shop/image/list
 export const shopImageList = data => get(urlList.shopImageList, { params: data })
 
-// POST /api/v1/shop/image/upload
-export const shopImageUpload = data => post(urlList.shopImageUpload, data)
 // GET /api/v1/shop/page/main/config/product/brief 微信主页配置 获取商品简要信息
 export const shopProductBrief = data => get(urlList.shopProductBrief, { params: data })
 
