@@ -33,9 +33,9 @@ router.beforeEach((to, from, next) => {
       NProgress.done() // if current page is dashboard will not trigger	afterEach hook, so manually handle it
     } else {
       // console.log(to.path)
-      store.getters.addRouters.forEach(route => {
-        console.log(route)
-      })
+      // store.getters.addRouters.forEach(route => {
+      //   console.log(route)
+      // })
       if (store.getters.roles.length === 0) { // 判断当前用户是否已拉取完user_info信息
         store.dispatch('GetUserInfo').then(res => { // 拉取user_info
           // const roles = res.data.roles // note: roles must be a array! such as: ['editor','develop']
