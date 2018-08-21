@@ -56,8 +56,6 @@ export const urlList = {
   // api/v1/shop/image/list
   shopImageList: `api/v1/shop/image/list`,
 
-  // POST /api/v1/shop/image/upload
-  shopImageUpload: `api/v1/shop/image/upload`,
   // GET /api/v1/shop/page/main/config/product/brief 微信主页配置 获取商品简要信息
   shopProductBrief: `api/v1/shop/page/main/config/product/brief`,
 
