@@ -10,6 +10,18 @@
       <el-tab-pane v-for="item in navlist" :key="item.name" :label="item.label" :name="item.name"></el-tab-pane>
     </el-tabs>
 
+    <div class="block">
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :pagination="pagination"
+        :page-sizes="pagination.sizes"
+        :page-size="pagination.size"
+        :total="pagination.total"
+        layout="total, sizes, prev, pager, next, jumper"
+        >
+      </el-pagination>
+    </div>
     <v-order-list-table :rows="rows" :list="list" @star="star" @cancel="cancel" @cancel1="cancel1" @duo="duo" @edit="edit" />
     <el-dialog title="更多详情" :visible.sync="dialogFormVisible">
       <v-order-list-more :form="form" />
@@ -30,6 +42,12 @@ import { shopOrderList, shopOrderModifyStar, shopOrderClose, shopOrderDetail, sh
 export default {
   data() {
     return {
+      pagination: {
+        total: 100,
+        size: 10,
+        page: 1,
+        sizes: [10, 20, 50, 100]
+      },
       form: {
         orderId: '',
         receiveAddress: '',
@@ -101,6 +119,16 @@ export default {
     vOrderListTable, vOrderListHander, vOrderListMore
   },
   methods: {
+    handleSizeChange(val) {
+      console.log(`每页 ${val} 条`)
+      this.pagination.size = val
+      this.queryList({})
+    },
+    handleCurrentChange(val) {
+      console.log(`当前页: ${val}`)
+      this.pagination.page = val
+      this.queryList({})
+    },
     handleClickTitle(tab, event) {
       // console.log(tab.name, event)
     },
@@ -113,7 +141,11 @@ export default {
     },
     queryList(list) {
       // post /api/v1/shop/order/list 查询订单列表
+      list.pageNum = this.pagination.page
+      list.pageSize = this.pagination.size
       shopOrderList(list).then(res => {
+        this.pagination.total = res.total
+        // console.log( this.pagination.total)
         res.data.forEach(e => {
           e.refundType = `${e.refundType}`
         })

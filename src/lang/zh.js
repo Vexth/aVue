@@ -54,6 +54,15 @@ export default {
     clipboardDemo: 'Clipboard',
     i18n: '国际化',
 
+    promotion_center: '促销中心',
+    promotion_full_reduction: '满减促销',
+    promotion_single_product: '单品促销',
+    promotion_package: '套餐促销',
+    promotion_gift: '赠品促销',
+    promotion_full_gift: '满赠促销',
+    promotion_buy_more: '多买优惠',
+    promotion_deposit: '定金优惠',
+
     showcase: '商品',
     // addgoods: '新增商品',
     member: '套餐会员卡服务',
