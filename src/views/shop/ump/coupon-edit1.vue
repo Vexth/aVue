@@ -34,47 +34,47 @@
       <p>基本设置：</p>
       <el-form :model="form1" label-width="130px">
         <el-form-item label="优惠券标题：">
-          <el-input v-model="form1.couponName"></el-input>
+          <el-input v-model="form1.couponName" :disabled="true"></el-input>
         </el-form-item>
         <el-form-item label="发放总量：">
-          <el-input v-model="form1.couponNum"></el-input>
+          <el-input v-model="form1.couponNum" :disabled="true"></el-input>
         </el-form-item>
         <el-form-item label="券种选择：">
-          <el-radio-group v-model="form1.couponConditionType">
-            <el-radio @change="typeClick" label="1">现金券</el-radio>
-            <el-radio @change="typeClick" label="2">满减券</el-radio>
-            <el-radio @change="typeClick" label="3">折扣券</el-radio>
+          <el-radio-group v-model="form1.couponConditionType" disabled>
+            <el-radio label="1" >现金券</el-radio>
+            <el-radio label="2" >满减券</el-radio>
+            <el-radio label="3" >折扣券</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="优惠内容：" v-if="form1.couponConditionType !== null">
-          <el-radio-group v-model="form1.fullDiscount" v-if="form1.couponConditionType === '1'">
+          <el-radio-group v-model="form1.fullDiscount" v-if="form1.couponConditionType === '1'" disabled>
             <el-radio label="1">
               <span>减</span> 
-              <el-input class="w100" v-model="form1.couponValue1"></el-input> 
+              <el-input class="w100" v-model="form1.couponValue1" :disabled="true"></el-input> 
               <span>元</span>
             </el-radio>
             <el-radio label="2">
               <span>打</span> 
-              <el-input class="w100" v-model="form1.couponValue2"></el-input> 
+              <el-input class="w100" v-model="form1.couponValue2" :disabled="true"></el-input> 
               <span>折</span>
             </el-radio>
           </el-radio-group>
           <div v-if="form1.couponConditionType === '2'">
-            订单满 <el-input class="w100" v-model="form1.couponConditionValue"></el-input> 元时享受优惠，减 <el-input class="w100" v-model="form1.couponValue1"></el-input> 元
+            订单满 <el-input class="w100" v-model="form1.couponConditionValue" :disabled="true"></el-input> 元时享受优惠，减 <el-input class="w100" :disabled="true" v-model="form1.couponValue1"></el-input> 元
           </div>
           <div v-if="form1.couponConditionType === '3'">
-            订单满 <el-input class="w100" v-model="form1.couponConditionValue"></el-input> 元时享受优惠，打 <el-input class="w100" v-model="form1.couponValue2"></el-input> 折
+            订单满 <el-input class="w100" v-model="form1.couponConditionValue" :disabled="true"></el-input> 元时享受优惠，打 <el-input class="w100" :disabled="true" v-model="form1.couponValue2"></el-input> 折
           </div>
         </el-form-item>
         <el-form-item label="适用范围：">
-          <el-radio-group v-model="form1.productScope">
+          <el-radio-group v-model="form1.productScope" disabled>
             <el-radio label="1">全店商品</el-radio>
             <el-radio label="2">指定商品</el-radio>
             <el-radio label="3">指定商品不可用</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="添加商品：" v-if="form1.productScope !== '1'">
-          <el-button size="small" type="primary" icon="el-icon-plus" @click="plus" plain>添加商品</el-button>
+          <el-button size="small" type="primary" icon="el-icon-plus" disabled plain>添加商品</el-button>
           <span v-if="form1.productIdList.length !== 0">已选{{form1.productIdList.length}}件商品</span>
         </el-form-item>
       </el-form>
@@ -110,34 +110,34 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item label="领取人限制：">
-          <el-radio-group v-model="form.forUser">
+          <el-radio-group v-model="form.forUser" disabled>
             <el-radio label="0">不限制，所有人可以领取</el-radio>
             <el-radio label="1">只有店铺会员可以领取</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="每人限领次数：">
-          <el-radio-group v-model="form.isLimitNum">
+          <el-radio-group v-model="form.isLimitNum" disabled>
             <el-radio label="0">不限制</el-radio>
-            <el-radio label="1"><el-input class="w100" v-model="form.limitNum"></el-input> 次</el-radio>
+            <el-radio label="1"><el-input class="w100" v-model="form.limitNum" :disabled="true"></el-input> 次</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="过期提醒：">
-          <el-checkbox-group v-model="form.isRemind">
+          <el-checkbox-group v-model="form.isRemind" disabled>
             <el-checkbox label="1" name="type">优惠券过期前提醒买家</el-checkbox>
           </el-checkbox-group>
         </el-form-item>
         <el-form-item label="购买限制：">
-          <el-checkbox-group v-model="form.isProductOriginal">
+          <el-checkbox-group v-model="form.isProductOriginal" disabled>
             <el-checkbox label="1" name="type">优惠券仅购买原价商品时可用</el-checkbox>
           </el-checkbox-group>
         </el-form-item>
         <el-form-item label="分享设置：">
-          <el-checkbox-group v-model="form.isShare">
+          <el-checkbox-group v-model="form.isShare" disabled>
             <el-checkbox label="1" name="type">是否显示分享按钮</el-checkbox>
           </el-checkbox-group>
         </el-form-item>
         <el-form-item label="使用说明：">
-          <el-input type="textarea" v-model="form.decription"></el-input>
+          <el-input type="textarea" v-model="form.decription" :disabled="true"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSubmit">立即创建</el-button>
@@ -145,30 +145,17 @@
         </el-form-item>
       </el-form>
     </div>
-    <el-dialog
-      title="选择商品"
-      :visible.sync="dialogVisible"
-      width="50%"
-      :before-close="handleClose">
-      <v-tabs ref="vTabs" :label="label" />
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="handleClose">取 消</el-button>
-        <el-button type="primary" @click="sub">确 定</el-button>
-      </span>
-    </el-dialog>
   </div>
 </template>
 
 <script>
 import formatDate from '../timeToString.js'
 
-import vTabs from './zujian/vTabs.vue'
-
-import { couponCreate } from '../server'
+import { couponEditResponse, couponEditRequest } from '../server'
 export default {
   data() {
     return {
-      dialogVisible: false,
+      couponId: null,
       label: {
         name1: '选择商品',
         name2: '已择商品',
@@ -231,85 +218,66 @@ export default {
       }
     }
   },
-  components: {
-    vTabs
+  mounted() {
+    this.couponId = localStorage.getItem('couponId')
+    this.couponEditResponse({couponId: this.couponId})
   },
   methods: {
+    couponEditResponse(v) {
+      couponEditResponse(v).then(res => {
+        if (res.code === 200) {
+          let list = res.data
+          this.form1.couponName = list.couponName
+          this.form1.couponNum = list.couponNum
+          this.form1.couponConditionType = `${list.couponConditionType}`
+          this.form1.fullDiscount = `${list.fullDiscount}`
+          this.form1.couponConditionValue = list.couponConditionValue
+          if (this.form1.couponConditionType === '1') {
+            if (this.form1.fullDiscount === '1') {
+              this.form1.couponValue1 = list['couponValue']
+            }
+            if (this.form1.fullDiscount === '2') {
+              this.form1.couponValue2 = list['couponValue']
+            }
+          } else if (this.form1.couponConditionType === '2') {
+            this.form1.couponValue1 = list['couponValue']
+          } else if (this.form1.couponConditionType === '3') {
+            this.form1.couponValue2 = list['couponValue']
+          }
+          this.form1.productScope = `${list.productScope}`
+          this.form1.productIdList = list.productIdList
+
+          this.form.validTimeType = `${list.validTimeType}`
+          if (this.form.validTimeType === '1') {
+            this.form.value1 = [list.validStartTime, list.validEndTime]
+          }
+          if (this.form.validTimeType === '2') {
+            this.form.validDays1 = list['validDays']
+          }
+          if (this.form.validTimeType === '3') {
+            this.form.validDays2 = list['validDays']
+          }
+          this.form.value2 = [list.sendStartTime, list.sendEndTime]
+          this.form.forUser = `${list.forUser}`
+          this.form.isLimitNum = `${list.isLimitNum}`
+          this.form.limitNum = list.limitNum
+          this.form.isShare = list.isShare === 1 ? true : false
+          this.form.isProductOriginal = list.isProductOriginal === 1 ? true : false
+          this.form.isRemind = list.isRemind === 1 ? true : false
+          this.form.decription = list.decription
+        } else {
+          console.log(res)
+        }
+      }).catch(err => console.log(err))
+    },
     logTimeChange() {
       this.validTimeTypeTime = formatDate(this.form.value1[0], 'yyyy-mm-dd') + ' - ' + formatDate(this.form.value1[1], 'yyyy-mm-dd')
     },
     isDate(v) {
       return Object.prototype.toString.call(v) === '[object Date]'
     },
-    typeClick(v) {
-      this.form1.couponValue1 = ''
-      this.form1.couponValue2 = ''
-      this.form1.couponConditionValue = ''
-      this.form1.fullDiscount = null
-    },
-    plus() {
-      this.dialogVisible = true
-    },
-    handleClose(done) {
-      this.$confirm('确认关闭？').then(_ => {
-        this.dialogVisible = false
-        done()
-      }).catch(_ => {})
-    },
-    sub() {
-      this.dialogVisible = false
-      let list = this.$refs.vTabs.TableList().map(res => res.product.id)
-      this.form1.productIdList = list
-      console.log(list)
-    },
-    isForm1Coupon(v, s, con = null) {
-      if (this.form1[v] === con) {
-        this.$message.error(s)
-        return
-      }
-    },
     onSubmit() {
       let list = {}
-      list['productScope'] = this.form1.productScope
-
-      this.isForm1Coupon('couponName', '请填写优惠券标题！', '')
-      list['couponName'] = this.form1.couponName
-
-      this.isForm1Coupon('couponNum', '请填写优惠券发放总量！', '')
-      list['couponNum'] = this.form1.couponNum
-      
-      this.isForm1Coupon('couponConditionType', '请选择券种选择！')
-      list['couponConditionType'] = this.form1.couponConditionType
-
-      if (this.form1.couponConditionType === '1') {
-        this.isForm1Coupon('fullDiscount', '请选择优惠内容！')
-        list['fullDiscount'] = this.form1.fullDiscount
-  
-        if (this.form1.fullDiscount === '1') {
-          this.isForm1Coupon('couponValue1', '请填写优惠内容！', '')
-          list['couponValue'] = this.form1.couponValue1
-        }
-        if (this.form1.fullDiscount === '2') {
-          this.isForm1Coupon('couponValue2', '请填写优惠内容！', '')
-          list['couponValue'] = this.form1.couponValue2
-        }
-      } else if (this.form1.couponConditionType === '2') {
-        this.isForm1Coupon('couponConditionValue', '请填写优惠条件！', '')
-        list['couponConditionValue'] = this.form1.couponConditionValue
-
-        this.isForm1Coupon('couponValue1', '请填写优惠内容！', '')
-        list['couponValue'] = this.form1.couponValue1
-      } else if (this.form1.couponConditionType === '3') {
-        this.isForm1Coupon('couponConditionValue', '请填写优惠条件！', '')
-        list['couponConditionValue'] = this.form1.couponConditionValue
-
-        this.isForm1Coupon('couponValue2', '请填写优惠内容！', '')
-        list['couponValue'] = this.form1.couponValue2
-      }
-
-      if (this.form1.productIdList.length !== 0) {
-        list['productIdList'] = this.form1.productIdList
-      }
 
       if (this.form.validTimeType === null) {
         this.$message.error('请选择使用时间！')
@@ -348,38 +316,9 @@ export default {
       }
       list['sendStartTime'] = this.isDate(this.form.value2[0]) ? formatDate(this.form.value2[0]) : this.form.value2[0]
       list['sendEndTime'] = this.isDate(this.form.value2[1]) ? formatDate(this.form.value2[1]) : this.form.value2[1]
-      
+      list['couponId'] = this.couponId
 
-      if (this.form.forUser === null) {
-        this.$message.error('请选择领取人限制！')
-        return
-      }
-      list['forUser'] = this.form.forUser
-
-      if (this.form.isLimitNum === null) {
-        this.$message.error('请选择每人限领次数！')
-        return
-      }
-      if (this.form.isLimitNum === '1') {
-        if (this.form.limitNum === '') {
-          this.$message.error('请填写每人限领次数！')
-          return
-        } else {
-          list['limitNum'] = this.form.limitNum
-        }
-      }
-      list['isLimitNum'] = this.form.isLimitNum
-
-      if (this.form.decription === '') {
-        this.$message.error('请填写使用说明！')
-        return
-      }
-      list['decription'] = this.form.decription
-      list['isProductOriginal'] = this.form.isProductOriginal ? 1 : 0
-      list['isRemind'] = this.form.isRemind ? 1 : 0
-      list['isShare'] = this.form.isShare ? 1 : 0
-
-      couponCreate(list).then(res => res.code === 200 ? this.$router.push('/ump/coupon') : console.log(res)).catch(err => console.log(err))
+      couponEditRequest(list).then(res => res.code === 200 ? this.$router.push('/ump/coupon') : console.log(res)).catch(err => console.log(err))
     }
   }
 }

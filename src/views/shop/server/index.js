@@ -131,3 +131,4 @@ export const couponEditResponse = data => get(urlList.couponEditResponse, { para
 export const couponEditRequest = data => post(urlList.couponEditRequest, data)
 // POST /api/v1/vendor/coupon/create 创建优惠券
 export const couponCreate = data => post(urlList.couponCreate, data)
+export const couponStopSend = data => post(`${urlList.couponStopSend}?couponId=${data}`)

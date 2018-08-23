@@ -2,8 +2,7 @@
   <div>
     <p class="p">新建优惠券</p>
     <p>
-      <el-button type="primary" size="small" plain @click="primary({couponSendType: '1'})">全平台（店铺）优惠券</el-button>
-      <el-button type="success" size="small" plain @click="success({couponSendType: '2'})">商品优惠券</el-button>
+      <el-button type="success" size="small" plain @click="success">新增优惠券</el-button>
     </p>
     <p class="p">管理优惠券</p>
     <el-form :inline="true" :model="formInline" class="demo-form-inline">
@@ -27,7 +26,7 @@
       </el-form-item>
     </el-form>
 
-    <v-table :row="row" :list="list" @response="response" />
+    <v-table :row="row" :list="list" @response="response" @show="show" />
     <v-pagination v-if="pagination.total !== 0" :pagination="pagination" @handleSizeChange="handleSizeChange" @handleCurrentChange="handleCurrentChange" />
   </div>
 </template>
@@ -36,7 +35,7 @@
 import vTable from './zujian/vTable.vue'
 import vPagination from '../pagination/pagination.vue'
 
-import { couponSelectParmas, couponEditResponse, couponEditRequest, couponCreate } from '../server'
+import { couponSelectParmas, couponEditResponse, couponEditRequest, couponCreate, couponStopSend } from '../server'
 export default {
   data() {
     return {
@@ -70,7 +69,7 @@ export default {
         {
           align: "center",
           label: "已领取/剩余",
-          width: "100",
+          width: "180",
           name: 'collectRemaining'
         },
         {
@@ -129,21 +128,20 @@ export default {
         }
       }).catch(err => console.log(err))
     },
-    primary(v) {
-      this.$emit('coupon', v)
-    },
     success(v) {
       this.$emit('coupon', v)
     },
     response(v) {
-      if (v.couponSendType === 1) {
-        this.primary(v)
-      } else {
-        this.success(v)
-      }
+      this.success(v)
+    },
+    show(v) {
+      this.$confirm('确认停止发放吗？').then(_ => {
+        couponStopSend(v.couponId).then(res => res.code === 200 ? this.couponSelectParmas(): console.log(res)).catch(err => console.log(err))
+        done()
+      }).catch(_ => {})
     },
     onSubmit() {
-      console.log('submit!')
+      console.log(this.formInline)
     },
     handleSizeChange(val) {
       this.pagination.size = val
