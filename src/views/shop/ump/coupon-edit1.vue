@@ -81,7 +81,7 @@
       <p>领取和使用规则：</p>
       <el-form :model="form" label-width="130px">
         <el-form-item label="使用时间：">
-          <el-radio-group v-model="form.validTimeType">
+          <el-radio-group v-model="form.validTimeType" @change="typeClick">
             <el-radio class="elradio" label="1">
               <el-date-picker
                 @change="logTimeChange"
@@ -272,6 +272,11 @@ export default {
     },
     logTimeChange() {
       this.validTimeTypeTime = formatDate(this.form.value1[0], 'yyyy-mm-dd') + ' - ' + formatDate(this.form.value1[1], 'yyyy-mm-dd')
+    },
+    typeClick(v) {
+      this.form.value1 = []
+      this.form.validDays1 = ''
+      this.form.validDays2 = ''
     },
     isDate(v) {
       return Object.prototype.toString.call(v) === '[object Date]'

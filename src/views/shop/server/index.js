@@ -128,7 +128,7 @@ export const couponSelectParmas = data => get(urlList.couponSelectParmas, { para
 // GET /api/v1/vendor/coupon/edit/response 编辑
 export const couponEditResponse = data => get(urlList.couponEditResponse, { params: data })
 // POST /api/v1/vendor/coupon/edit/request 修改存入数据库
-export const couponEditRequest = data => post(urlList.couponEditRequest, data)
+export const couponEditRequest = data => post(`${urlList.couponEditRequest}?couponId=${data.couponId}`, data)
 // POST /api/v1/vendor/coupon/create 创建优惠券
 export const couponCreate = data => post(urlList.couponCreate, data)
 export const couponStopSend = data => post(`${urlList.couponStopSend}?couponId=${data}`)
