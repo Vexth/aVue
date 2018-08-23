@@ -183,9 +183,9 @@ export default {
       await this.getSkuAttrOption()
     },
     sub() {
-      if (this.state1.length > 5) {
-        this.state1.length = 5
-      }
+      // if (this.state1.length > 5) {
+      //   this.state1.length = 5
+      // }
       let stat
       if (this.productType !== '1') {
         stat = this.options5.filter(res => res.id === this.state1.filter(v => v === res.id)[0]).map(res => {
