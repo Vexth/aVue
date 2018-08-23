@@ -89,6 +89,7 @@ export default {
     // navsys: '菜单配置',
     grouping: '商品分组',
     homepage1: '首页配置',
+    homepage: '配置',
     banner1: '轮播图配置',
     banner2: '多轮播图1',
     banner3: '多轮播图2',

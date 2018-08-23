@@ -111,12 +111,14 @@ export const urlList = {
   deleteVideo: `api/v1/shop/video/delete`,
 
   // 优惠券
-  // POST /api/v1/vendor/coupon/select/parmas 商户查询优惠券
-  couponSelectParmas: `api/v1/vendor/coupon/select/parmas`,
-  // POST /api/v1/vendor/coupon/edit/response 编辑
-  couponEditResponse: `api/v1/vendor/coupon/edit/response`,
-  // POST /api/v1/vendor/coupon/edit/request 修改存入数据库
-  couponEditRequest: `api/v1/vendor/coupon/edit/request`,
-  // POST /api/v1/vendor/coupon/create 创建优惠券
-  couponCreate: `api/v1/vendor/coupon/create`,
+  // GET /api/v1/admin/coupon/select/parmas 商户查询优惠券
+  couponSelectParmas: `api/v1/admin/coupon/select/parmas`,
+  // GET /api/v1/admin/coupon/edit/response 编辑
+  couponEditResponse: `api/v1/admin/coupon/edit/response`,
+  // POST /api/v1/admin/coupon/edit/request 修改存入数据库
+  couponEditRequest: `api/v1/admin/coupon/edit/request`,
+  // POST /api/v1/admin/coupon/create 创建优惠券
+  couponCreate: `api/v1/admin/coupon/create`,
+  // POST /api/v1/admin/coupon/stop/send 停止发放
+  couponStopSend: `api/v1/admin/coupon/stop/send`,
 }

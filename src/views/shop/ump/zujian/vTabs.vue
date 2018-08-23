@@ -3,7 +3,7 @@
     <el-tab-pane :label="label.name1">
       <el-form :inline="true" :model="formInline" class="demo-form-inline">
         <el-form-item label="商品分类：">
-          <el-select v-model="formInline.region" placeholder="选择商品分类">
+          <el-select v-model="formInline.groupId" placeholder="选择商品分类" clearable>
             <el-option
               v-for="item in options"
               :key="item.value"
@@ -13,7 +13,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="商品名称：">
-          <el-input v-model="formInline.user" placeholder="商品名称"></el-input>
+          <el-input v-model="formInline.title" placeholder="商品名称" clearable></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSubmit">查询</el-button>
@@ -21,40 +21,42 @@
       </el-form>
       <el-table
         ref="multipleTable"
-        :data="tableData3"
+        :data="tableData"
         tooltip-effect="dark"
-        style="width: 100%">
+        style="width: 100%" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55">
         </el-table-column>
         <el-table-column label="商品信息">
-          <template slot-scope="scope">{{ scope.row.address }}</template>
+          <template slot-scope="scope">{{ scope.row.product.title }}</template>
         </el-table-column>
-        <el-table-column prop="name" label="库存" width="120">
+        <el-table-column label="库存" width="120">
+          <template slot-scope="scope">{{ scope.row.stockAmount }}</template>
         </el-table-column>
       </el-table>
+      <v-pagination v-if="pagination.total !== 0" :pagination="pagination" @handleSizeChange="handleSizeChange" @handleCurrentChange="handleCurrentChange" />
     </el-tab-pane>
     <el-tab-pane :label="label.name2">
       <el-table
-        ref="multipleTable"
+        ref="multipleTable2"
         :data="tableData2"
         tooltip-effect="dark"
         style="width: 100%">
         <el-table-column
           label="">
-          <template slot-scope="scope">{{ scope.row.address }}</template>
+          <template slot-scope="scope">{{ scope.row.product.title }}</template>
         </el-table-column>
         <el-table-column
           prop="name"
           label=""
           width="120">
+          <template slot-scope="scope">{{ scope.row.stockAmount }}</template>
         </el-table-column>
         <el-table-column
           align="center"
           label=""
           width="200">
           <template slot-scope="scope">
-            <el-button type="success" @click="confirmEdit(scope.row)" size="small" icon="el-icon-circle-check-outline">Ok</el-button>
-            <el-button type="primary" size="small" icon="el-icon-edit">Edit</el-button>
+            <el-button size="small" @click="confirmEdit(scope.row)" type="danger" icon="el-icon-delete">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -63,69 +65,68 @@
 </template>
 
 <script>
-import { tree } from '../../server'
+import { tree, shopProductList } from '../../server'
+
+import vPagination from '../../pagination/pagination.vue'
 export default {
+  components: {
+    vPagination
+  },
   data() {
     return {
       formInline: {
-        user: '',
-        region: ''
+        title: '',
+        groupId: ''
       },
       options: [],
-      tableData2: [{
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-04',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }],
-      tableData3: [{
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-04',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-08',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-06',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-07',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }]
+      tableData: [],
+      tableData2: [],
+      pagination: {
+        total: 100,
+        size: 10,
+        page: 1,
+        sizes: [10, 20, 50, 100]
+      }
     }
   },
   props: ['label'],
   mounted() {
+    this.getList()
     tree().then(res => this.options = res.data)
   },
   methods: {
+    getList() {
+      this.listLoading = false
+      const params = this.formInline
+      params['pageNum'] = this.pagination.page
+      params['pageSize'] = this.pagination.size
+      shopProductList(params).then(res => {
+        this.pagination.total = res.total
+        const items = res.data
+        this.tableData = items
+        this.listLoading = false
+      }).catch(err => console.log(err))
+    },
+    handleSizeChange(val) {
+      this.pagination.size = val
+      this.getList()
+    },
+    handleCurrentChange(val) {
+      this.pagination.page = val
+      this.getList()
+    },
+    handleSelectionChange(val) {
+      this.tableData2 = val
+    },
     confirmEdit(row) {
-      console.log(row)
+      this.$refs.multipleTable.toggleRowSelection(row)
+      this.tableData2 = this.tableData2.filter(res => res.product.id !== row.product.id)
+    },
+    TableList() {
+      return this.tableData2
     },
     onSubmit() {
-      console.log('submit!')
+      this.getList()
     }
   }
 }

@@ -6,7 +6,7 @@
         <div v-if="v.p">
           <span>{{v.p[`${scope.row[v['name']]}`]}}</span>
         </div>
-        <component v-else-if="v.fn" :is="componentId" :row="scope.row" @response="response"></component>
+        <component v-else-if="v.fn" :is="componentId" :row="scope.row" @response="response" @show="show"></component>
         <span v-else>{{scope.row[v['name']]}}</span>
       </template>
     </el-table-column>
@@ -27,7 +27,11 @@ export default {
   props: ['row', 'list'],
   methods: {
     response(v) {
+      localStorage.setItem('couponId', v.couponId)
       this.$emit('response', v)
+    },
+    show(v) {
+      this.$emit('show', v)
     }
   }
 }

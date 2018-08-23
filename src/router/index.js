@@ -301,7 +301,8 @@ export const asyncRouterMap = [
       { path: 'specialSubject', component: () => import('@/views/shop/homepage/specialSubject'), name: 'specialSubject', meta: { title: 'specialSubject', noCache: true }},
       { path: 'endorsement', component: () => import('@/views/shop/homepage/endorsement'), name: 'endorsement', meta: { title: 'endorsement', noCache: true }},
       { path: 'notify', component: () => import('@/views/shop/homepage/notify'), name: 'notify', meta: { title: 'notify', noCache: true }},
-      { path: 'bindvideo', component: () => import('@/views/shop/homepage/bindvideo'), name: 'bindvideo', meta: { title: 'bindvideo', noCache: true }}
+      { path: 'bindvideo', component: () => import('@/views/shop/homepage/bindvideo'), name: 'bindvideo', meta: { title: 'bindvideo', noCache: true }},
+      { path: 'homepage', component: () => import('@/views/shop/homepage/homepage'), name: 'homepage', meta: { title: 'homepage', noCache: true }},
     ]
   },
   {
