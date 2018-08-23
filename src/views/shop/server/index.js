@@ -90,7 +90,7 @@ export const shopProductGropDelete = data => dele(`${urlList.shopProductGropDele
 export const shopProductGropModify = data => post(urlList.shopProductGropModify, data)
 
 // // post /api/v1/shop/order/list 查询订单列表
-export const shopOrderList = data => post(urlList.shopOrderList, data)
+export const shopOrderList = data => post(`${urlList.shopOrderList}?pageNum=${data.pageNum}&pageSize=${data.pageSize}`, data)
 // // POST /api/v1/shop/order/modify/star 设置订单加星状态
 export const shopOrderModifyStar = data => post(urlList.shopOrderModifyStar, data)
 // // DELETE /api/v1/shop/order/close 关闭订单
@@ -132,3 +132,4 @@ export const couponEditRequest = data => post(urlList.couponEditRequest, data)
 // POST /api/v1/vendor/coupon/create 创建优惠券
 export const couponCreate = data => post(urlList.couponCreate, data)
 export const couponStopSend = data => post(`${urlList.couponStopSend}?couponId=${data}`)
+
