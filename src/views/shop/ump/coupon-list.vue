@@ -7,18 +7,19 @@
     <p class="p">管理优惠券</p>
     <el-form :inline="true" :model="formInline" class="demo-form-inline">
       <el-form-item label="优惠券名称：">
-        <el-input v-model="formInline.user" placeholder="优惠券名称"></el-input>
+        <el-input v-model="formInline.couponName" placeholder="优惠券名称"></el-input>
       </el-form-item>
       <el-form-item label="优惠券状态：">
-        <el-select v-model="formInline.region" placeholder="优惠券状态">
-          <el-option label="区域一" value="shanghai"></el-option>
-          <el-option label="区域二" value="beijing"></el-option>
+        <el-select v-model="formInline.statusCode" placeholder="优惠券状态">
+          <el-option label="已结束" value="0"></el-option>
+          <el-option label="进行中" value="1"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="优惠券类别：">
-        <el-select v-model="formInline.region" placeholder="优惠券类别">
-          <el-option label="区域一" value="shanghai"></el-option>
-          <el-option label="区域二" value="beijing"></el-option>
+        <el-select v-model="formInline.couponConditionType" placeholder="优惠券类别">
+          <el-option label="现金券" value="1"></el-option>
+          <el-option label="满减券" value="2"></el-option>
+          <el-option label="折扣券" value="3"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item>
@@ -40,8 +41,9 @@ export default {
   data() {
     return {
       formInline: {
-        user: '',
-        region: ''
+        couponName: '',
+        statusCode: '',
+        couponConditionType: ''
       },
       row: [
         {
@@ -119,6 +121,7 @@ export default {
         pageSize: this.pagination.size,
         pageNum: this.pagination.page
       }
+      list = {...list, ...this.formInline}
       couponSelectParmas(list).then(res => {
         if (res.code === 200) {
           this.list = res.data
@@ -141,7 +144,7 @@ export default {
       }).catch(_ => {})
     },
     onSubmit() {
-      console.log(this.formInline)
+      this.couponSelectParmas()
     },
     handleSizeChange(val) {
       this.pagination.size = val
