@@ -2,7 +2,7 @@
   <div class="dashboard-editor-container">
     <!-- <github-corner></github-corner> -->
 
-    <panel-group @handleSetLineChartData="handleSetLineChartData"></panel-group>
+    <panel-group @handleSetLineChartData="handleSetLineChartData" :indicators-data="currentIndicators"></panel-group>
 
     <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
       <line-chart :chart-data="lineChartData"></line-chart>
@@ -11,17 +11,22 @@
     <el-row :gutter="32">
       <el-col :xs="24" :sm="24" :lg="8">
         <div class="chart-wrapper">
-          <raddar-chart></raddar-chart>
+          <!-- <raddar-chart></raddar-chart> -->
+          <box-card></box-card>
+          <!-- <bar-chart></bar-chart> -->
         </div>
       </el-col>
       <el-col :xs="24" :sm="24" :lg="8">
         <div class="chart-wrapper">
-          <pie-chart></pie-chart>
+          <!-- <pie-chart></pie-chart> -->
+          <!-- <box-card></box-card> -->
+          <transaction-table></transaction-table>
         </div>
       </el-col>
       <el-col :xs="24" :sm="24" :lg="8">
         <div class="chart-wrapper">
-          <bar-chart></bar-chart>
+          <!-- <bar-chart></bar-chart> -->
+          <transaction-table></transaction-table>
         </div>
       </el-col>
     </el-row>
@@ -51,25 +56,7 @@ import BarChart from './components/BarChart'
 import TransactionTable from './components/TransactionTable'
 import TodoList from './components/TodoList'
 import BoxCard from './components/BoxCard'
-
-const lineChartData = {
-  newVisitis: {
-    expectedData: [100, 120, 161, 134, 105, 160, 165],
-    actualData: [120, 82, 91, 154, 162, 140, 145]
-  },
-  messages: {
-    expectedData: [200, 192, 120, 144, 160, 130, 140],
-    actualData: [180, 160, 151, 106, 145, 150, 130]
-  },
-  purchases: {
-    expectedData: [80, 100, 121, 104, 105, 90, 100],
-    actualData: [120, 90, 100, 138, 142, 130, 130]
-  },
-  shoppings: {
-    expectedData: [130, 140, 141, 142, 145, 150, 160],
-    actualData: [120, 82, 91, 154, 162, 140, 130]
-  }
-}
+import { mainIndicators } from '../../shop/server'
 
 export default {
   name: 'dashboard-admin',
@@ -84,14 +71,109 @@ export default {
     TodoList,
     BoxCard
   },
+  created() {
+    this.getMainIndicators()
+	},
   data() {
     return {
-      lineChartData: lineChartData.newVisitis
+      lineIndicators: {
+        newVisitis: {
+          indicatorsData: {
+            name: '新增用户',
+            dateName: [],
+            indicators: []
+          }
+        },
+        loginVisitis: {
+          indicatorsData: {
+            name: '访问用户',
+            dateName: [],
+            indicators: []
+          }
+        },
+        orderCount: {
+          indicatorsData: {
+            name: '付款订单',
+            dateName: [],
+            indicators: []
+          }
+        },
+        playmentSum: {
+          indicatorsData: {
+            name: '销售金额',
+            dateName: [],
+            indicators: []
+          }
+        }
+      },
+      lineChartData: {},
+      currentIndicators: {},
     }
   },
   methods: {
     handleSetLineChartData(type) {
-      this.lineChartData = lineChartData[type]
+      this.lineChartData = this.lineIndicators[type]
+    },
+    getMainIndicators() {
+        mainIndicators().then(res => {
+          if (res.code === 200) {
+            
+            for (var i=0; i < 7; i++){
+              var currentDate = this.addDate(res.data.dateStr, i-6)
+              var indicatorsInfo = res.data.mapIndicators[currentDate]
+              this.lineIndicators.newVisitis.indicatorsData.dateName.push(currentDate)
+              this.lineIndicators.loginVisitis.indicatorsData.dateName.push(currentDate)
+              this.lineIndicators.orderCount.indicatorsData.dateName.push(currentDate)
+              this.lineIndicators.playmentSum.indicatorsData.dateName.push(currentDate)
+              if ( indicatorsInfo !== undefined) {
+                this.lineIndicators.newVisitis.indicatorsData.indicators.push(indicatorsInfo["userCreateCount"])
+                this.lineIndicators.loginVisitis.indicatorsData.indicators.push(indicatorsInfo["userLoginCount"])
+                this.lineIndicators.orderCount.indicatorsData.indicators.push(indicatorsInfo["orderCount"])
+                this.lineIndicators.playmentSum.indicatorsData.indicators.push(indicatorsInfo["playmentSum"])
+              } else {
+                this.lineIndicators.newVisitis.indicatorsData.indicators.push(0)
+                this.lineIndicators.loginVisitis.indicatorsData.indicators.push(0)
+                this.lineIndicators.orderCount.indicatorsData.indicators.push(0)
+                this.lineIndicators.playmentSum.indicatorsData.indicators.push(0)
+              }
+              if (i == 6) {        
+                this.currentIndicators = indicatorsInfo
+                // this.currentIndicators["userCreateCount"] = 10
+              }
+            }
+            this.lineChartData = this.lineIndicators.loginVisitis
+          } else {
+            this.$message.error(res.msg)
+          }
+        }).catch(err => console.log(err))
+    },
+   
+    // 日期，在原有日期基础上，增加days天数，默认增加1天
+    addDate(date, days) {
+        // if (days == undefined || days == '') {
+        //     days = 1;
+        // }
+        var date = new Date(date);
+        if (days != 0) {
+          date.setDate(date.getDate() + days);
+        }
+        var month = date.getMonth() + 1;
+        var day = date.getDate();
+        return date.getFullYear() + '-' + this.getFormatDate(month) + '-' +this.getFormatDate(day);
+    },
+
+    // 日期月份/天的显示，如果是1位数，则在前面加上'0'
+    getFormatDate(arg) {
+        if (arg == undefined || arg == '') {
+            return '';
+        }
+
+        var re = arg + '';
+        if (re.length < 2) {
+            re = '0' + re;
+        }
+
+        return re;
     }
   }
 }
