@@ -136,3 +136,5 @@ export const couponStopSend = data => post(`${urlList.couponStopSend}?couponId=$
 // 指标数据
 // GET /api/v1//shop/main/indicators 主页指标
 export const mainIndicators = data => get(urlList.mainIndicators, { params: data })
+// GET /api/v1//shop/main/topIndicators 主页指标
+export const mainTopIndicators = data => get(urlList.mainTopIndicators, { params: data })

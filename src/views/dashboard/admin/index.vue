@@ -11,38 +11,20 @@
     <el-row :gutter="32">
       <el-col :xs="24" :sm="24" :lg="8">
         <div class="chart-wrapper">
-          <!-- <raddar-chart></raddar-chart> -->
-          <box-card></box-card>
-          <!-- <bar-chart></bar-chart> -->
+          <top-table :top-data="topSaleProduct"></top-table>
         </div>
       </el-col>
       <el-col :xs="24" :sm="24" :lg="8">
         <div class="chart-wrapper">
-          <!-- <pie-chart></pie-chart> -->
-          <!-- <box-card></box-card> -->
-          <transaction-table></transaction-table>
+          <top-table :top-data="topSaleProduct"></top-table>
         </div>
       </el-col>
       <el-col :xs="24" :sm="24" :lg="8">
         <div class="chart-wrapper">
-          <!-- <bar-chart></bar-chart> -->
-          <transaction-table></transaction-table>
+          <top-table :top-data="topSaleProduct"></top-table>
         </div>
       </el-col>
     </el-row>
-
-    <!-- <el-row :gutter="8">
-      <el-col :xs="{span: 24}" :sm="{span: 24}" :md="{span: 24}" :lg="{span: 12}" :xl="{span: 12}" style="padding-right:8px;margin-bottom:30px;">
-        <transaction-table></transaction-table>
-      </el-col>
-      <el-col :xs="{span: 24}" :sm="{span: 12}" :md="{span: 12}" :lg="{span: 6}" :xl="{span: 5}" style="margin-bottom:30px;">
-        <todo-list></todo-list>
-      </el-col>
-      <el-col :xs="{span: 24}" :sm="{span: 12}" :md="{span: 12}" :lg="{span: 6}" :xl="{span: 5}" style="margin-bottom:30px;" >
-        <box-card></box-card>
-      </el-col>
-    </el-row> -->
-
   </div>
 </template>
 
@@ -54,9 +36,10 @@ import RaddarChart from './components/RaddarChart'
 import PieChart from './components/PieChart'
 import BarChart from './components/BarChart'
 import TransactionTable from './components/TransactionTable'
+import TopTable from './components/TopTable'
 import TodoList from './components/TodoList'
 import BoxCard from './components/BoxCard'
-import { mainIndicators } from '../../shop/server'
+import { mainIndicators, mainTopIndicators } from '../../shop/server'
 
 export default {
   name: 'dashboard-admin',
@@ -68,11 +51,13 @@ export default {
     PieChart,
     BarChart,
     TransactionTable,
+    TopTable,
     TodoList,
     BoxCard
   },
   created() {
     this.getMainIndicators()
+    this.getMainTopIndicators()
 	},
   data() {
     return {
@@ -108,11 +93,37 @@ export default {
       },
       lineChartData: {},
       currentIndicators: {},
+      topSaleProduct: {
+        name: "销售排行",
+        list: []
+      },
     }
   },
   methods: {
     handleSetLineChartData(type) {
-      this.lineChartData = this.lineIndicators[type]
+      // this.lineChartData = this.lineIndicators[type]
+    },
+    getMainTopIndicators() {
+      mainTopIndicators().then(res => {
+        //  console.log(res)
+          if (res.code === 200) {
+
+            if (res.data != undefined && res.data["mapIndicators"] !== undefined){
+              var mapTop = res.data["mapIndicators"] 
+              if (mapTop["1"] !== undefined) {
+                
+                var temp = {}
+                temp["name"] = "七天产品销售排行(top10)"
+                temp["list"] = mapTop["1"]
+                this.topSaleProduct = temp
+                // console.log(this.topSaleProduct)
+              }
+            }
+
+          } else {
+            this.$message.error(res.msg)
+          }
+        }).catch(err => console.log(err))
     },
     getMainIndicators() {
         mainIndicators().then(res => {
