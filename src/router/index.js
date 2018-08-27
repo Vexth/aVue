@@ -368,7 +368,7 @@ export const asyncRouterMap = [
       icon: 'international'
     },
     children: [
-      { path: 'promotion_full_reduction', component: () => import('@/views/promotionCenter/full_reduction'), name: 'promotion_full_reduction', meta: { title: 'promotion_full_reduction', noCache: true }},
+      { path: 'promotion_full_reduction', component: () => import('@/views/promotionCenter/fullReductionCreate'), name: 'promotion_full_reduction', meta: { title: 'promotion_full_reduction', noCache: true }},
       { path: 'promotion_single_product', component: () => import('@/views/promotionCenter/single_product'), name: 'promotion_single_product', meta: { title: 'promotion_single_product', noCache: true }},
       { path: 'promotion_package', component: () => import('@/views/promotionCenter/package'), name: 'promotion_package', meta: { title: 'promotion_package', noCache: true }},
       { path: 'promotion_gift', component: () => import('@/views/promotionCenter/gift'), name: 'promotion_gift', meta: { title: 'promotion_gift', noCache: true }},

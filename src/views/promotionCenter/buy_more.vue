@@ -50,7 +50,7 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="参与方式">
-          <el-radio-group v-model="form.product_range">
+          <el-radio-group v-model="form.productRange">
             <el-radio label="全场商品" name="1"></el-radio>
             <el-radio label="部分商品参加" name="2"></el-radio>
             <el-radio label="部分商品不参加" name="3"></el-radio>
@@ -59,7 +59,7 @@
 
 
         <el-form-item  label="活动备注">
-          <el-input type="textarea" v-model="form.vendor_remark"></el-input>
+          <el-input type="textarea" v-model="form.vendorRemark"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSubmit">立即创建</el-button>
@@ -82,14 +82,14 @@
           }],
           title: '',
           tag: '',
-          limit_product_amount: '',
+          limitProductAmount: '',
           limit_user_amount: '',
           channel: [],
           user_range: '',
           resource: '',
-          promotion_link: '',
-          product_range: '',
-          vendor_remark: ''
+          promotionLink: '',
+          productRange: '',
+          vendorRemark: ''
         },
         pickerDateRange: '',
         pickerOptions: {

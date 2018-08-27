@@ -35,10 +35,10 @@ export const urlList = {
   modifyStatus: 'api/v1/shop/reservation/modify/status',
 
   // 后台查看咨询列表
-  // GET /api/v1/vendor/advisory/find 后台查看咨询列表
-  advisoryFind: 'api/v1/vendor/advisory/find',
-  // POST /api/v1/vendor/advisory/remark 商家设置备注
-  advisoryRemark: `api/v1/vendor/advisory/remark`,
+  // GET /api/v1/admin/advisory/find 后台查看咨询列表
+  advisoryFind: 'api/v1/admin/advisory/find',
+  // POST /api/v1/admin/advisory/remark 商家设置备注
+  advisoryRemark: `api/v1/admin/advisory/remark`,
 
   // 活动栏设置
   // GET /api/v1/shop/page/main/config/list 微信主页配置 列表
@@ -111,14 +111,14 @@ export const urlList = {
   deleteVideo: `api/v1/shop/video/delete`,
 
   // 优惠券
-  // GET /api/v1/admin/coupon/select/parmas 商户查询优惠券
-  couponSelectParmas: `api/v1/admin/coupon/select/parmas`,
-  // GET /api/v1/admin/coupon/edit/response 编辑
-  couponEditResponse: `api/v1/admin/coupon/edit/response`,
-  // POST /api/v1/admin/coupon/edit/request 修改存入数据库
-  couponEditRequest: `api/v1/admin/coupon/edit/request`,
-  // POST /api/v1/admin/coupon/create 创建优惠券
-  couponCreate: `api/v1/admin/coupon/create`,
-  // POST /api/v1/admin/coupon/stop/send 停止发放
-  couponStopSend: `api/v1/admin/coupon/stop/send`,
+  // GET /api/v1/shop/coupon/select/parmas 商户查询优惠券
+  couponSelectParmas: `api/v1/shop/coupon/select/parmas`,
+  // GET /api/v1/shop/coupon/edit/response 编辑
+  couponEditResponse: `api/v1/shop/coupon/edit/response`,
+  // POST /api/v1/shop/coupon/edit/request 修改存入数据库
+  couponEditRequest: `api/v1/shop/coupon/edit/request`,
+  // POST /api/v1/shop/coupon/create 创建优惠券
+  couponCreate: `api/v1/shop/coupon/create`,
+  // POST /api/v1/shop/coupon/stop/send 停止发放
+  couponStopSend: `api/v1/shop/coupon/stop/send`,
 }
