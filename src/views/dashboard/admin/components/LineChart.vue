@@ -67,15 +67,20 @@ export default {
     chartData: {
       deep: true,
       handler(val) {
-        this.setOptions(val)
+         this.setOptions(val)
+        //  console.log(val)
       }
     }
   },
   methods: {
-    setOptions({ expectedData, actualData } = {}) {
+    setOptions({ indicatorsData } = {}) {
+      if (indicatorsData === undefined || indicatorsData["dateName"] === undefined) {
+        return
+      }
+      var dateList = indicatorsData["dateName"]
       this.chart.setOption({
         xAxis: {
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          data: dateList,
           boundaryGap: false,
           axisTick: {
             show: false
@@ -101,44 +106,25 @@ export default {
           }
         },
         legend: {
-          data: ['expected', 'actual']
+          data: [ indicatorsData.name ]
         },
         series: [{
-          name: 'expected', itemStyle: {
-            normal: {
-              color: '#FF005A',
-              lineStyle: {
-                color: '#FF005A',
-                width: 2
-              }
-            }
-          },
-          smooth: true,
-          type: 'line',
-          data: expectedData,
-          animationDuration: 2800,
-          animationEasing: 'cubicInOut'
-        },
-        {
-          name: 'actual',
-          smooth: true,
-          type: 'line',
+          name: indicatorsData.name, 
           itemStyle: {
             normal: {
               color: '#3888fa',
               lineStyle: {
                 color: '#3888fa',
                 width: 2
-              },
-              areaStyle: {
-                color: '#f3f8ff'
               }
             }
           },
-          data: actualData,
+          smooth: true,
+          type: 'line',
+          data: indicatorsData.indicators,
           animationDuration: 2800,
-          animationEasing: 'quadraticOut'
-        }]
+          animationEasing: 'cubicInOut'
+          }]
       })
     },
     initChart() {
