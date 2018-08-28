@@ -1,7 +1,7 @@
 import { get, post, del } from '@/api/base'
 
 // 促销活动
-export const promotionList = data => get(`api/v1/shop/promotion/list`, data)
+export const promotionList = data => get(`api/v1/shop/promotion/list?pageNum=${data.pageNum}&pageSize=${data.pageSize}`, data)
 
 export const promotionCreate = data => post(`api/v1/shop/promotion/create`, data)
 

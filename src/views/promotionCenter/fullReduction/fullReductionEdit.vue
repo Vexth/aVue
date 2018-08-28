@@ -41,19 +41,19 @@
           </el-checkbox-group>
         </el-form-item>
         <el-form-item label="用户范围:">
-          <el-radio-group v-model="form.userRange">
+          <el-radio-group :disabled="true" v-model="form.userRange">
             <el-radio label="1">所有用户</el-radio>
             <el-radio label="2">用户首单</el-radio>
           </el-radio-group>
         </el-form-item>
 
-        <el-form-item  label="库存限制:">
-          <el-input-number size="mini" v-model="form.limitProductAmount" :precision="0" :step="10" ></el-input-number>
-        </el-form-item>
+        <!--<el-form-item  label="库存限制:">-->
+          <!--<el-input-number size="mini" v-model="form.limitProductAmount" :precision="0" :step="10" ></el-input-number>-->
+        <!--</el-form-item>-->
 
-        <el-form-item  label="用户购买限制:">
-          <el-input-number size="mini" v-model="form.limitUserAmount" :precision="0" :step="1" ></el-input-number>
-        </el-form-item>
+        <!--<el-form-item  label="用户购买限制:">-->
+          <!--<el-input-number size="mini" v-model="form.limitUserAmount" :precision="0" :step="1" ></el-input-number>-->
+        <!--</el-form-item>-->
 
         <el-form-item prop="fullReductionRules" label="活动规则:">
         </el-form-item>
@@ -64,11 +64,11 @@
           :key="rule.key"
           >
           <el-col :span="4">
-            <el-input-number v-model="rule.full" :precision="2" :step="100" ></el-input-number>
+            <el-input-number v-model="rule.full" :precision="2" :step="100" :min="0"></el-input-number>
           </el-col>
           <el-col :span="1">&nbsp;&nbsp;&nbsp;减:</el-col>
           <el-col :span="4">
-            <el-input-number v-model="rule.reduction" :precision="2" :step="10" ></el-input-number>
+            <el-input-number v-model="rule.reduction" :precision="2" :step="10" :min="0"></el-input-number>
           </el-col>
           <el-col :span="4">
             <el-button type="danger" size="mini" icon="el-icon-delete" @click.prevent="removeRule(rule)" circle></el-button>
@@ -107,7 +107,7 @@
 
         <!--<span slot="footer" class="dialog-footer">-->
           <el-form-item>
-            <el-button type="success" size="big" @click="onSubmit" round>创建活动</el-button>
+            <el-button type="success" size="big" @click="onSubmit" round>{{editType}}</el-button>
             <!--<el-button size="big" >取消</el-button>-->
           </el-form-item>
         <!--</span>-->
@@ -121,11 +121,51 @@
 </template>
 
 <script>
-  import { promotionCreate } from '@/api/promotion'
+  import { promotionCreate, promotionModify } from '@/api/promotion'
   import ProductTableSelectDialog from '@/views/promotionCenter/components/ProductTableSelectDialog'
   export default {
     name: 'fullReductionCreate',
     components: { ProductTableSelectDialog },
+    props: {
+      data: {
+        type: Object,
+        default: null
+      },
+      editType: {
+        type: String,
+        default: '创建活动'
+      }
+    },
+    // watch: {
+    //   form(val) {
+    //     console.log(val)
+    //     this.form.name = val.name
+    //   }
+    // },
+    mounted() {
+      if (this.data) {
+        console.log('mounted' + this.data)
+        this.form.promotionId = this.data.promotionId
+        this.form.name = this.data.name
+        this.form.tag = this.data.tag
+        this.form.limitProductAmount = this.data.limitProductAmount
+        this.form.limitUserAmount = this.data.limitUserAmount
+        this.form.vendorRemark = this.data.vendorRemark
+        this.form.productRange = this.data.productRange
+
+        this.form.fullReductionRules = JSON.parse(this.data.ruleStrategy)
+
+        if (this.data.productIdList) {
+          this.form.tableData = this.data.productIdList.map(id => {
+            return {
+              productId: id
+            }
+          })
+        }
+        this.pickerDateRange = [this.data.beginTime, this.data.endTime]
+      }
+
+    },
     data() {
       const validateNotNull = (rule, value, callback) => {
         // if (!isvalidUsername(value)) {
@@ -165,7 +205,7 @@
         dialogTableVisible: false,
         // 以下是表单数据
         form: {
-          fullReductionRules: [],
+          promotionId: '',
           name: '',
           tag: '',
           limitProductAmount: '', // 限制商品库存数量
@@ -173,6 +213,7 @@
           channel: ['1'],
           userRange: '1',
           promotionLink: '',
+          fullReductionRules: [], // 满减规则
           vendorRemark: '',
           productRange: '0',
           tableData: [] // 选择的表单数据
@@ -212,7 +253,7 @@
       tableDataChange(val) {
         console.log(val)
       },
-      // 产品范围变更 清空原有的
+      // 产品参加范围变更
       productRangeChange(val) {
         if (val === '0') { // 产品范围为 0 所有商品都参加
         //   this.form.tableData = []
@@ -238,7 +279,14 @@
               return
             }
 
+            const rules = this.form.fullReductionRules.map(rule => {
+              return {
+                full: rule.full,
+                reduction: rule.reduction
+              }
+            })
             const data = {
+              promotionId: this.form.promotionId,
               name: this.form.name,
               tag: this.form.tag,
               beginTime: this.pickerDateRange[0],
@@ -249,21 +297,37 @@
               userRange: this.form.userRange,
               vendorRemark: this.form.vendorRemark,
               ruleType: '1',
-              ruleStrategy: '' + JSON.stringify(this.form.fullReductionRules),
+              ruleStrategy: '' + JSON.stringify(rules),
               productRange: this.form.productRange,
               productIdList: this.form.tableData.map(e => e.productId)
             }
             console.log(data)
-            promotionCreate(data).then(response => {
-              console.log(response)
-              if (response.code === 200) {
-                this.$notify({
-                  title: '图片上传成功！',
-                  message: response.msg,
-                  type: 'success'
-                })
-              }
-            }).catch(err => console.log(err))
+            if (this.editType === '创建活动') {
+              promotionCreate(data).then(response => {
+                console.log(response)
+                if (response.code === 200) {
+                  this.$notify({
+                    title: '活动创建成功！',
+                    message: response.msg,
+                    type: 'success'
+                  })
+                  this.$emit('editSuccess')
+                }
+              }).catch(err => console.log(err))
+            } else if (this.editType === '更新活动') {
+              promotionModify(data).then(response => {
+                console.log(response)
+                if (response.code === 200) {
+                  this.$notify({
+                    title: '活动创建成功！',
+                    message: response.msg,
+                    type: 'success'
+                  })
+                  this.$emit('editSuccess')
+                }
+              }).catch(err => console.log(err))
+            }
+
           }
         })
       },
