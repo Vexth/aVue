@@ -126,6 +126,10 @@ export const urlList = {
   // GET /api/v1//shop/main/indicators 主页指标
   mainIndicators: `api/v1/shop/main/indicators`,
   // GET /api/v1//shop/main/topIndicators 主页排名指标
-  mainTopIndicators: `api/v1/shop/main/topIndicators`
+  mainTopIndicators: `api/v1/shop/main/topIndicators`,
+  // GET /api/v1/shop/order/top/ten 主页剩余库存
+  mainStockIndicators: `api/v1/shop/order/top/ten`,
+  // GET /api/v1/shop/order/not/send 主页代发货列表
+  mainNeedSendIndicators: `api/v1/shop/order/not/send`
 }
 
