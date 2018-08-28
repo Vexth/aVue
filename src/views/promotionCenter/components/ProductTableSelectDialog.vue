@@ -24,10 +24,11 @@
         </el-form-item>
       </el-form>
 
-      <el-table
-        :data="dialogTableData"
-        tooltip-effect="dark"
-      >
+      <el-table :data="dialogTableData"  tooltip-effect="dark"  @selection-change="handleSelectionChange">
+        <!--<el-table-column-->
+          <!--type="selection"-->
+          <!--width="55">-->
+        <!--</el-table-column>-->
         <el-table-column prop="productId" label="ID" width="150"></el-table-column>
         <el-table-column prop="productName" label="商品名称" width="400"></el-table-column>
         <el-table-column prop="productPrice" label="市场价(元)"></el-table-column>
@@ -236,9 +237,15 @@
               // }
               return o
             })
-            console.log(this.dialogTableData)
+            // console.log(this.dialogTableData)
           }
         }).catch(err => console.log(err))
+      },
+      handleSelectionChange(table) {
+        // console.log(table)
+        // table.forEach(row => {
+        //   this.handleAddProduct('', row)
+        // })
       },
       handleAddProduct(index, row) {
         // console.log(index)

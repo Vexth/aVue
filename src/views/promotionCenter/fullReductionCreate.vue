@@ -8,13 +8,7 @@
         <el-form-item label="活动标签:">
           <el-input v-model="form.tag"></el-input>
         </el-form-item>
-        <!--<el-form-item label="促销渠道">-->
-          <!--<el-select v-model="form.channel" placeholder="请选择活动促销渠道">-->
-            <!--<el-option label="小程序" value=1></el-option>-->
-            <!--<el-option label="App" value=2></el-option>-->
-            <!--<el-option label="H5" value=3></el-option>-->
-          <!--</el-select>-->
-        <!--</el-form-item>-->
+
         <el-form-item style="display: block" label="活动时间:">
           <el-col >
             <div class="block">
@@ -36,32 +30,23 @@
         <!--<el-form-item label="促销渠道">-->
           <!--<el-switch v-model="form.delivery"></el-switch>-->
         <!--</el-form-item>-->
-        <el-form-item style="display: block" label="促销渠道:">
+        <el-form-item style="display: block" label="促销渠道:" v-if="false">
           <el-checkbox-group v-model="form.channel">
-            <el-checkbox label="小程序" name="miniApp"></el-checkbox>
-            <el-checkbox label="app" name="app"></el-checkbox>
-            <el-checkbox label="H5" name="H5"></el-checkbox>
-            <el-checkbox label="PC" name="PC"></el-checkbox>
+            <el-checkbox label="1">小程序</el-checkbox>
+            <el-checkbox label="2">app</el-checkbox>
+            <el-checkbox label="3">H5</el-checkbox>
+            <el-checkbox label="4">PC</el-checkbox>
           </el-checkbox-group>
         </el-form-item>
         <el-form-item label="用户范围:">
-          <el-radio-group v-model="form.user_range">
-            <el-radio label="所有用户" name="1"></el-radio>
-            <el-radio label="用户首单" name="2"></el-radio>
+          <el-radio-group v-model="form.userRange">
+            <el-radio label="1">所有用户</el-radio>
+            <el-radio label="2">用户首单</el-radio>
           </el-radio-group>
         </el-form-item>
 
         <el-form-item label="活动规则:">
         </el-form-item>
-        <!--<el-form-item label="满：">-->
-          <!--<el-col :span="11">-->
-            <!--<el-input v-model="form.title"></el-input>-->
-          <!--</el-col>-->
-          <!--<el-col class="line" :span="1">减:</el-col>-->
-          <!--<el-col :span="11">-->
-            <!--<el-input v-model="form.title"></el-input>-->
-          <!--</el-col>-->
-        <!--</el-form-item>-->
 
         <el-form-item
           v-for="(rule, index) in form.fullReductionRules"
@@ -71,20 +56,15 @@
           <el-col :span="3">
             <el-input v-model="rule.full"></el-input>
           </el-col>
-          <!--<el-col :span="1">&nbsp;</el-col>-->
           <el-col :span="1">&nbsp;&nbsp;&nbsp;减:</el-col>
           <el-col :span="4">
             <el-input v-model="rule.reduction"></el-input>
           </el-col>
-          <!--<el-input v-model="domain.value.v1">-->
-          <!--<el-input v-model="domain.value.v2">-->
-          <!--<el-input v-model="domain.vauue2">-->
-          <!--<el-input v-model="domain.value">-->
-          <!--</el-input>-->
           <el-col :span="4">
             <el-button type="danger" size="mini" icon="el-icon-delete" @click.prevent="removeRule(rule)" circle></el-button>
           </el-col>
         </el-form-item>
+
         <el-form-item>
           <!--<el-button type="primary" @click="submitForm('dynamicValidateForm')">提交</el-button>-->
           <el-button type="primary" size="mini" @click="addRule">+ 新增满减规则</el-button>
@@ -93,6 +73,7 @@
         <el-form-item label="活动备注">
           <el-input type="textarea" v-model="form.vendorRemark"></el-input>
         </el-form-item>
+
         <el-form-item  label="活动商品:">
           <el-col>
             <el-radio-group v-model="form.productRange" @change="productRangeChange">
@@ -101,23 +82,17 @@
               <el-radio label="3" border>部分商品不参加</el-radio>
             </el-radio-group>
           </el-col>
-          <el-col v-if="form.productRange !== '1'">
+          <el-col v-if="showAddProductButton">
             <el-button type="primary" size="mini" @click="dialogTableVisible = true">+ 添加商品</el-button>
-
-            <!--弹窗依赖product_range类型-->
-            <product-table-select-dialog
-              :visible.sync="dialogTableVisible"
-              :tableData="form.tableData"
-              @onProductSelectChange="tableDataChange"
-            ></product-table-select-dialog>
-
           </el-col>
         </el-form-item>
 
         <!--选择商品的弹窗-->
-        <!--<el-dialog title="选择商品" width="60%" :visible.sync="dialogTableVisible">-->
-          <!--<product-table :tableData="form.tableData"></product-table>-->
-        <!--</el-dialog>-->
+        <product-table-select-dialog  v-if="showAddProductButton"
+          :visible.sync="dialogTableVisible"
+          :tableData="form.tableData"
+          @onProductSelectChange="tableDataChange"
+        ></product-table-select-dialog>
 
 
         <!--<span slot="footer" class="dialog-footer">-->
@@ -136,29 +111,27 @@
 </template>
 
 <script>
+  import { promotionCreate } from '@/api/promotion'
   import ProductTableSelectDialog from '@/views/promotionCenter/components/ProductTableSelectDialog';
   export default {
     name: 'fullReductionCreate',
     components: { ProductTableSelectDialog },
     data() {
       return {
+        showAddProductButton: false,
         dialogTableVisible: false,
         // 以下是表单数据
         form: {
-          fullReductionRules: [{
-            full: '',
-            reduction: ''
-          }],
+          fullReductionRules: [],
           name: '',
           tag: '',
           limitProductAmount: '', // 限制商品库存数量
           limitUserAmount: '', // 限制用户使用数量 每个用户1次
-          channel: [],
-          user_range: '',
-          resource: '',
+          channel: ['1'],
+          userRange: '1',
           promotionLink: '',
-          productRange: '2',
           vendorRemark: '',
+          productRange: '1',
           tableData: [] // 选择的表单数据
         },
         pickerDateRange: '',
@@ -198,15 +171,34 @@
       },
       // 产品范围变更 清空原有的
       productRangeChange(val) {
-        // if (val === '1') { // 产品范围为1 所有商品都参加
+        if (val === '1') { // 产品范围为1 所有商品都参加
         //   this.form.tableData = []
-        // }
+          this.showAddProductButton = false
+        } else {
+          this.showAddProductButton = true
+        }
         // console.log(val)
       },
       onSubmit() {
-        console.log('submit!')
-        console.log('date = ' + this.pickerDateRange)
-        console.log(this.form)
+        // console.log('submit!')
+        // console.log('date = ' + this.pickerDateRange)
+        // console.log(this.form)
+        const data = {
+          name: this.form.name,
+          tag: this.form.tag,
+          limitProductAmount: this.form.limitProductAmount,
+          limitUserAmount: this.form.limitUserAmount,
+          userRange: this.form.userRange,
+          vendorRemark: this.form.vendorRemark,
+          ruleType: 1,
+          ruleStrategy: '' + JSON.stringify(this.form.fullReductionRules),
+          productRange: this.form.productRange,
+          productIdList: this.form.tableData.map(e => e.productId)
+        }
+        console.log(data)
+        promotionCreate(data).then(response => {
+          console.log(response)
+        }).catch(err => console.log(err))
       },
       // 规则添加和修改
       removeRule(item) {

@@ -44,7 +44,7 @@
           </el-checkbox-group>
         </el-form-item>
         <el-form-item label="用户范围">
-          <el-radio-group v-model="form.user_range">
+          <el-radio-group v-model="form.userRange">
             <el-radio label="所有用户" name="1"></el-radio>
             <el-radio label="用户首单" name="2"></el-radio>
           </el-radio-group>
@@ -85,7 +85,7 @@
           limitProductAmount: '',
           limit_user_amount: '',
           channel: [],
-          user_range: '',
+          userRange: '',
           resource: '',
           promotionLink: '',
           productRange: '',
