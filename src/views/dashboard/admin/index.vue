@@ -100,7 +100,7 @@ export default {
       lineChartData: {},
       currentIndicators: {},
       topSaleProduct: {
-        name: "销售排行",
+        name: "七天产品销售排行(凌晨两点更新)",
         list: []
       },
       stockList: [],
@@ -151,7 +151,7 @@ export default {
               if (mapTop["1"] !== undefined) {
                 
                 var temp = {}
-                temp["name"] = "七天产品销售排行(top10)"
+                temp["name"] = "七天产品销售排行(凌晨两点更新)"
                 temp["list"] = mapTop["1"]
                 this.topSaleProduct = temp
                 // console.log(this.topSaleProduct)
