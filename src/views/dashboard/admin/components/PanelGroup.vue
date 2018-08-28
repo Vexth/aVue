@@ -8,7 +8,8 @@
         <div class="card-panel-description">
           <div class="card-panel-text">访问用户</div>
           <!-- <count-to class="card-panel-num" :startVal="0" :endVal="81212" :duration="3000"></count-to> -->
-          <count-to class="card-panel-num"  :startVal=indicatorsData.userLoginCount :endVal=indicatorsData.userLoginCount :duration="1"></count-to>
+          <!-- <count-to class="card-panel-num"  :startVal=indicatorsData.userLoginCount :endVal=indicatorsData.userLoginCount :duration="1"></count-to> -->
+          <span class="card-panel-num">{{indicatorsData.userLoginCount}}</span>
         </div>
       </div>
     </el-col>
@@ -20,7 +21,8 @@
         <div class="card-panel-description">
           <div class="card-panel-text">新增用户</div>
           <!-- <count-to class="card-panel-num" :startVal="0" :endVal="102400" :duration="2600"></count-to> -->
-          <count-to class="card-panel-num"  :startVal=indicatorsData.userCreateCount :endVal=indicatorsData.userCreateCount :duration="1"></count-to>
+          <!-- <count-to class="card-panel-num"  :startVal=indicatorsData.userCreateCount :endVal=indicatorsData.userCreateCount :duration="1"></count-to> -->
+          <span class="card-panel-num">{{indicatorsData.userCreateCount}}</span>
         </div>
       </div>
     </el-col>
@@ -32,7 +34,8 @@
         <div class="card-panel-description">
           <div class="card-panel-text">付款订单</div>
           <!-- <count-to class="card-panel-num" :startVal="0" :endVal="9280" :duration="3200"></count-to> -->
-          <count-to class="card-panel-num"  :startVal=indicatorsData.orderCount :endVal=indicatorsData.orderCount :duration="1"></count-to>
+          <!-- <count-to class="card-panel-num"  :startVal=indicatorsData.orderCount :endVal=indicatorsData.orderCount :duration="1"></count-to> -->
+          <span class="card-panel-num">{{indicatorsData.orderCount}}</span>
         </div>
       </div>
     </el-col>
@@ -43,8 +46,11 @@
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">销售金额</div>
+          <span class="card-panel-num">{{indicatorsData.playmentSum/100|numFilter}}</span>
           <!-- <count-to class="card-panel-num" :startVal="0" :endVal="13600" :duration="3600"></count-to> -->
-          <count-to class="card-panel-num"  :startVal=indicatorsData.playmentSum :endVal=indicatorsData.playmentSum :duration="1"></count-to>
+          <!-- <p class="card-panel-num">indicatorsData.playmentSum</p> -->
+          <!-- <count-to class="card-panel-num"  :startVal=indicatorsData.playmentSum :endVal=indicatorsData.playmentSum :duration="1"></count-to> -->
+          <!-- <span class="card-panel-num">{{indicatorsData.playmentSum/100|numFilter}}</span> -->
         </div>
       </div>
     </el-col>
@@ -75,6 +81,14 @@ export default {
   data() {
     return {
       // indicatorsData: {}
+    }
+  },
+  filters: {
+  numFilter(value) {
+      // 截取当前数据到小数点后两位
+      let realVal = Number(value).toFixed(2)
+      // num.toFixed(2)获取的是字符串
+      return Number(realVal)
     }
   },
   methods: {
