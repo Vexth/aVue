@@ -1,29 +1,31 @@
 <template>
   <div class="app-container" >
     <div style="width:80%">
-      <el-form ref="form" :model="form" label-width="80px" class="demo-form-inline">
-        <el-form-item   label="活动名称:">
+      <el-form ref="formRules" :rules="formRules" :model="form" label-width="100px" class="demo-form-inline">
+        <el-form-item  prop="name"  label="活动名称:">
           <el-input v-model="form.name"></el-input>
         </el-form-item>
-        <el-form-item label="活动标签:">
-          <el-input v-model="form.tag"></el-input>
+        <el-form-item prop="tag" label="活动标签:">
+          <el-input  v-model="form.tag"></el-input>
         </el-form-item>
 
-        <el-form-item style="display: block" label="活动时间:">
-          <el-col >
-            <div class="block">
-              <span class="demonstration"></span>
+        <el-form-item  prop="pickerDateRange" label="活动时间:">
+          <el-col>
+            <!--<div class="block">-->
+              <!--<span class="demonstration"></span>-->
               <el-date-picker
-                v-model="pickerDateRange"
-                type="daterange"
+                type="datetimerange"
+                size="large"
                 align="right"
                 unlink-panels
                 range-separator="-"
                 start-placeholder="开始日期"
                 end-placeholder="结束日期"
+                value-format="yyyy-MM-dd hh:mm:ss"
+                v-model="pickerDateRange"
                 :picker-options="pickerOptions">
               </el-date-picker>
-            </div>
+            <!--</div>-->
           </el-col>
         </el-form-item>
 
@@ -45,20 +47,28 @@
           </el-radio-group>
         </el-form-item>
 
-        <el-form-item label="活动规则:">
+        <el-form-item  label="库存限制:">
+          <el-input-number size="mini" v-model="form.limitProductAmount" :precision="0" :step="10" ></el-input-number>
         </el-form-item>
 
+        <el-form-item  label="用户购买限制:">
+          <el-input-number size="mini" v-model="form.limitUserAmount" :precision="0" :step="1" ></el-input-number>
+        </el-form-item>
+
+        <el-form-item prop="fullReductionRules" label="活动规则:">
+        </el-form-item>
+        <!--满减活动规则-->
         <el-form-item
           v-for="(rule, index) in form.fullReductionRules"
           :label="(index+1) + '级  满：'"
           :key="rule.key"
           >
-          <el-col :span="3">
-            <el-input v-model="rule.full"></el-input>
+          <el-col :span="4">
+            <el-input-number v-model="rule.full" :precision="2" :step="100" ></el-input-number>
           </el-col>
           <el-col :span="1">&nbsp;&nbsp;&nbsp;减:</el-col>
           <el-col :span="4">
-            <el-input v-model="rule.reduction"></el-input>
+            <el-input-number v-model="rule.reduction" :precision="2" :step="10" ></el-input-number>
           </el-col>
           <el-col :span="4">
             <el-button type="danger" size="mini" icon="el-icon-delete" @click.prevent="removeRule(rule)" circle></el-button>
@@ -77,9 +87,9 @@
         <el-form-item  label="活动商品:">
           <el-col>
             <el-radio-group v-model="form.productRange" @change="productRangeChange">
-              <el-radio label="1" border>所有商品参加</el-radio>
-              <el-radio label="2" border>部分商品参加</el-radio>
-              <el-radio label="3" border>部分商品不参加</el-radio>
+              <el-radio label="0" border>所有商品参加</el-radio>
+              <el-radio label="1" border>部分商品参加</el-radio>
+              <el-radio label="2" border>部分商品不参加</el-radio>
             </el-radio-group>
           </el-col>
           <el-col v-if="showAddProductButton">
@@ -112,12 +122,45 @@
 
 <script>
   import { promotionCreate } from '@/api/promotion'
-  import ProductTableSelectDialog from '@/views/promotionCenter/components/ProductTableSelectDialog';
+  import ProductTableSelectDialog from '@/views/promotionCenter/components/ProductTableSelectDialog'
   export default {
     name: 'fullReductionCreate',
     components: { ProductTableSelectDialog },
     data() {
+      const validateNotNull = (rule, value, callback) => {
+        // if (!isvalidUsername(value)) {
+        if (!value) {
+          callback(new Error('不能为空！'))
+        } else {
+          callback()
+        }
+      }
+      // const validateFullReductionRules = (rule, value, callback) => {
+      //   // if (!isvalidUsername(value)) {
+      //   console.log(value)
+      //   if (!value) {
+      //     callback(new Error('不能为空！'))
+      //   } else {
+      //     callback()
+      //   }
+      // }
+      // const validateDataTime = (rule, value, callback) => {
+      //   console.log(value)
+      //   // if (!isvalidUsername(value)) {
+      //   if (!value) {
+      //     callback(new Error('不能为空！'))
+      //   } else {
+      //     callback()
+      //   }
+      // }
       return {
+        formRules: {
+          name: [{ required: true, trigger: 'blur', validator: validateNotNull }],
+          tag: [{ required: true, trigger: 'blur', validator: validateNotNull }]
+          // fullReductionRules: [{ required: true, trigger: 'blur', validator: validateFullReductionRules }],
+          // pickerDateRange: [{ required: true, trigger: 'blur', validator: validateDataTime }]
+
+        },
         showAddProductButton: false,
         dialogTableVisible: false,
         // 以下是表单数据
@@ -131,10 +174,10 @@
           userRange: '1',
           promotionLink: '',
           vendorRemark: '',
-          productRange: '1',
+          productRange: '0',
           tableData: [] // 选择的表单数据
         },
-        pickerDateRange: '',
+        pickerDateRange: [],
         pickerOptions: {
           shortcuts: [{
             text: '最近一周',
@@ -171,7 +214,7 @@
       },
       // 产品范围变更 清空原有的
       productRangeChange(val) {
-        if (val === '1') { // 产品范围为1 所有商品都参加
+        if (val === '0') { // 产品范围为 0 所有商品都参加
         //   this.form.tableData = []
           this.showAddProductButton = false
         } else {
@@ -180,25 +223,49 @@
         // console.log(val)
       },
       onSubmit() {
-        // console.log('submit!')
-        // console.log('date = ' + this.pickerDateRange)
-        // console.log(this.form)
-        const data = {
-          name: this.form.name,
-          tag: this.form.tag,
-          limitProductAmount: this.form.limitProductAmount,
-          limitUserAmount: this.form.limitUserAmount,
-          userRange: this.form.userRange,
-          vendorRemark: this.form.vendorRemark,
-          ruleType: 1,
-          ruleStrategy: '' + JSON.stringify(this.form.fullReductionRules),
-          productRange: this.form.productRange,
-          productIdList: this.form.tableData.map(e => e.productId)
-        }
-        console.log(data)
-        promotionCreate(data).then(response => {
-          console.log(response)
-        }).catch(err => console.log(err))
+        this.$refs.formRules.validate(vaild => {
+          if (vaild) {
+            // console.log('submit!')
+            // console.log('date = ' + this.pickerDateRange)
+            // console.log(this.form)
+            console.log(this.pickerDateRange)
+            if (this.pickerDateRange.length !== 2) {
+              this.$notify.error({
+                title: '时间设置错误',
+                message: '必须制定时间区间',
+                type: 'error'
+              })
+              return
+            }
+
+            const data = {
+              name: this.form.name,
+              tag: this.form.tag,
+              beginTime: this.pickerDateRange[0],
+              endTime: this.pickerDateRange[1],
+              limitProductAmount: this.form.limitProductAmount,
+              limitUserAmount: this.form.limitUserAmount,
+              // channel: this.form.channel,
+              userRange: this.form.userRange,
+              vendorRemark: this.form.vendorRemark,
+              ruleType: '1',
+              ruleStrategy: '' + JSON.stringify(this.form.fullReductionRules),
+              productRange: this.form.productRange,
+              productIdList: this.form.tableData.map(e => e.productId)
+            }
+            console.log(data)
+            promotionCreate(data).then(response => {
+              console.log(response)
+              if (response.code === 200) {
+                this.$notify({
+                  title: '图片上传成功！',
+                  message: response.msg,
+                  type: 'success'
+                })
+              }
+            }).catch(err => console.log(err))
+          }
+        })
       },
       // 规则添加和修改
       removeRule(item) {
