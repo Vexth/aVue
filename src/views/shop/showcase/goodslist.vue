@@ -216,6 +216,7 @@ export default {
       params['pageNum'] = this.pagination.page
       params['pageSize'] = this.pagination.size
       shopProductList(params).then(res => {
+        console.log(res)
         this.pagination.total = res.total
         const items = res.data
         this.list = items

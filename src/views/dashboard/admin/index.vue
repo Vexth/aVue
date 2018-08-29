@@ -2,7 +2,7 @@
   <div class="dashboard-editor-container">
     <!-- <github-corner></github-corner> -->
 
-    <panel-group @handleSetLineChartData="handleSetLineChartData"></panel-group>
+    <panel-group @handleSetLineChartData="handleSetLineChartData" :indicators-data="currentIndicators"></panel-group>
 
     <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
       <line-chart :chart-data="lineChartData"></line-chart>
@@ -11,87 +11,219 @@
     <el-row :gutter="32">
       <el-col :xs="24" :sm="24" :lg="8">
         <div class="chart-wrapper">
-          <raddar-chart></raddar-chart>
+          <topsale-table :top-data="topSaleProduct"></topsale-table>
         </div>
       </el-col>
       <el-col :xs="24" :sm="24" :lg="8">
         <div class="chart-wrapper">
-          <pie-chart></pie-chart>
+          <stock-table :stock-data="stockList"></stock-table>
         </div>
       </el-col>
       <el-col :xs="24" :sm="24" :lg="8">
         <div class="chart-wrapper">
-          <bar-chart></bar-chart>
+          <needsend-table :send-data="needsendList"></needsend-table>
         </div>
       </el-col>
     </el-row>
-
-    <!-- <el-row :gutter="8">
-      <el-col :xs="{span: 24}" :sm="{span: 24}" :md="{span: 24}" :lg="{span: 12}" :xl="{span: 12}" style="padding-right:8px;margin-bottom:30px;">
-        <transaction-table></transaction-table>
-      </el-col>
-      <el-col :xs="{span: 24}" :sm="{span: 12}" :md="{span: 12}" :lg="{span: 6}" :xl="{span: 5}" style="margin-bottom:30px;">
-        <todo-list></todo-list>
-      </el-col>
-      <el-col :xs="{span: 24}" :sm="{span: 12}" :md="{span: 12}" :lg="{span: 6}" :xl="{span: 5}" style="margin-bottom:30px;" >
-        <box-card></box-card>
-      </el-col>
-    </el-row> -->
-
   </div>
 </template>
 
 <script>
-import GithubCorner from '@/components/GithubCorner'
 import PanelGroup from './components/PanelGroup'
 import LineChart from './components/LineChart'
 import RaddarChart from './components/RaddarChart'
 import PieChart from './components/PieChart'
 import BarChart from './components/BarChart'
 import TransactionTable from './components/TransactionTable'
+import TopsaleTable from './components/TopsaleTable'
+import StockTable from './components/StockTable'
+import NeedsendTable from './components/NeedsendTable'
 import TodoList from './components/TodoList'
 import BoxCard from './components/BoxCard'
-
-const lineChartData = {
-  newVisitis: {
-    expectedData: [100, 120, 161, 134, 105, 160, 165],
-    actualData: [120, 82, 91, 154, 162, 140, 145]
-  },
-  messages: {
-    expectedData: [200, 192, 120, 144, 160, 130, 140],
-    actualData: [180, 160, 151, 106, 145, 150, 130]
-  },
-  purchases: {
-    expectedData: [80, 100, 121, 104, 105, 90, 100],
-    actualData: [120, 90, 100, 138, 142, 130, 130]
-  },
-  shoppings: {
-    expectedData: [130, 140, 141, 142, 145, 150, 160],
-    actualData: [120, 82, 91, 154, 162, 140, 130]
-  }
-}
+import { mainIndicators, mainTopIndicators, mainStockIndicators, mainNeedSendIndicators } from '../../shop/server'
 
 export default {
   name: 'dashboard-admin',
   components: {
-    GithubCorner,
     PanelGroup,
     LineChart,
     RaddarChart,
     PieChart,
     BarChart,
     TransactionTable,
+    TopsaleTable,
+    NeedsendTable,
+    StockTable,
     TodoList,
     BoxCard
   },
+  created() {
+    this.getMainIndicators()
+    this.getMainTopIndicators()
+    this.getMainStockIndicators()
+    this.getMainNeedSendIndicators()
+	},
   data() {
     return {
-      lineChartData: lineChartData.newVisitis
+      lineIndicators: {
+        newVisitis: {
+          indicatorsData: {
+            name: '新增用户',
+            dateName: [],
+            indicators: []
+          }
+        },
+        loginVisitis: {
+          indicatorsData: {
+            name: '访问用户',
+            dateName: [],
+            indicators: []
+          }
+        },
+        orderCount: {
+          indicatorsData: {
+            name: '付款订单',
+            dateName: [],
+            indicators: []
+          }
+        },
+        playmentSum: {
+          indicatorsData: {
+            name: '销售金额',
+            dateName: [],
+            indicators: []
+            // dateName: ['2018-08-22','2018-08-23','2018-08-24','2018-08-25','2018-08-26','2018-08-27','2018-08-28'],
+            // indicators: [12.43, 15.11, 88.11, 43.02, 43.21, 43.53, 49.43]
+          }
+        }
+      },
+      lineChartData: {},
+      currentIndicators: {},
+      topSaleProduct: {
+        name: "七天产品销售排行(凌晨两点更新)",
+        list: []
+      },
+      stockList: [],
+      needsendList: []
     }
   },
   methods: {
     handleSetLineChartData(type) {
-      this.lineChartData = lineChartData[type]
+      this.lineChartData = this.lineIndicators[type]
+    },
+    getMainStockIndicators() {
+      mainStockIndicators().then(res => {
+        //  console.log(res)
+          if (res.code === 200) {
+
+            if (res.data != undefined){
+                this.stockList = res.data
+                // console.log(this.topSaleProduct)
+            }
+
+          } else {
+            this.$message.error(res.msg)
+          }
+        }).catch(err => console.log(err))
+    },
+    getMainNeedSendIndicators() {
+      mainNeedSendIndicators().then(res => {
+          console.log(res)
+          if (res.code === 200) {
+
+            if (res.data != undefined){
+                this.needsendList = res.data
+                // console.log(this.topSaleProduct)
+            }
+
+          } else {
+            this.$message.error(res.msg)
+          }
+        }).catch(err => console.log(err))
+    },
+    getMainTopIndicators() {
+      mainTopIndicators().then(res => {
+        //  console.log(res)
+          if (res.code === 200) {
+
+            if (res.data != undefined && res.data["mapIndicators"] !== undefined){
+              var mapTop = res.data["mapIndicators"] 
+              if (mapTop["1"] !== undefined) {
+                
+                var temp = {}
+                temp["name"] = "七天产品销售排行(凌晨两点更新)"
+                temp["list"] = mapTop["1"]
+                this.topSaleProduct = temp
+                // console.log(this.topSaleProduct)
+              }
+            }
+
+          } else {
+            this.$message.error(res.msg)
+          }
+        }).catch(err => console.log(err))
+    },
+    getMainIndicators() {
+        mainIndicators().then(res => {
+          if (res.code === 200) {
+            console.log(res)
+            for (var i=0; i < 7; i++){
+              var currentDate = this.addDate(res.data.dateStr, i-6)
+              var indicatorsInfo = res.data.mapIndicators[currentDate]
+              this.lineIndicators.newVisitis.indicatorsData.dateName.push(currentDate)
+              this.lineIndicators.loginVisitis.indicatorsData.dateName.push(currentDate)
+              this.lineIndicators.orderCount.indicatorsData.dateName.push(currentDate)
+              this.lineIndicators.playmentSum.indicatorsData.dateName.push(currentDate)
+              if ( indicatorsInfo !== undefined) {
+                this.lineIndicators.newVisitis.indicatorsData.indicators.push(indicatorsInfo["userCreateCount"])
+                this.lineIndicators.loginVisitis.indicatorsData.indicators.push(indicatorsInfo["userLoginCount"])
+                this.lineIndicators.orderCount.indicatorsData.indicators.push(indicatorsInfo["orderCount"])
+                this.lineIndicators.playmentSum.indicatorsData.indicators.push(indicatorsInfo["playmentSum"]/100)
+              } else {
+                this.lineIndicators.newVisitis.indicatorsData.indicators.push(0)
+                this.lineIndicators.loginVisitis.indicatorsData.indicators.push(0)
+                this.lineIndicators.orderCount.indicatorsData.indicators.push(0)
+                this.lineIndicators.playmentSum.indicatorsData.indicators.push(0)
+              }
+              if (i == 6) {        
+                this.currentIndicators = indicatorsInfo
+                this.currentIndicators["playmentSum"] = (this.currentIndicators["playmentSum"])
+                // this.currentIndicators["playmentSum"] = 9901
+              }
+            }
+            this.lineChartData = this.lineIndicators.loginVisitis
+          } else {
+            this.$message.error(res.msg)
+          }
+        }).catch(err => console.log(err))
+    },
+   
+    // 日期，在原有日期基础上，增加days天数，默认增加1天
+    addDate(date, days) {
+        // if (days == undefined || days == '') {
+        //     days = 1;
+        // }
+        var date = new Date(date);
+        if (days != 0) {
+          date.setDate(date.getDate() + days);
+        }
+        var month = date.getMonth() + 1;
+        var day = date.getDate();
+        return date.getFullYear() + '-' + this.getFormatDate(month) + '-' +this.getFormatDate(day);
+    },
+
+    // 日期月份/天的显示，如果是1位数，则在前面加上'0'
+    getFormatDate(arg) {
+        if (arg == undefined || arg == '') {
+            return '';
+        }
+
+        var re = arg + '';
+        if (re.length < 2) {
+            re = '0' + re;
+        }
+
+        return re;
     }
   }
 }

@@ -1,10 +1,4 @@
-import request from '@/utils/request'
-
-const get = (url, data) => request.get(url, data).then(res => res.status === 200 ? res.data : console.error(res)).catch(err => console.log(err))
-
-const post = (url, data) => request.post(url, data).then(res => res.status === 200 ? res.data : console.error(res)).catch(err => console.log(err))
-
-const del = (url, data) => request.delete(url, data).then(res => res.status === 200 ? res.data : console.error(res)).catch(err => console.log(err))
+import { get, post, del } from '@/api/base'
 
 // 菜单管理
 export const menuList = data => get('api/v1/admin/manager/admin/role/menu/list', data)
@@ -27,5 +21,5 @@ export const roleModify = data => post('api/v1/admin/manager/admin/role/modify',
 // 商户管理
 export const vendorList = data => get('api/v1/admin/manager/admin/user/list', data)
 export const vendorAdd = data => post('api/v1/admin/manager/admin/user/add', data)
-export const vendorDelete = data => del(`api/v1/admin/manager/admin/user/delete?vendorId=${data.vendorId}`, data)
+export const vendorDelete = data => del(`api/v1/admin/manager/admin/user/delete?accountId=${data.accountId}`, data)
 export const vendorModify = data => post('api/v1/admin/manager/admin/user/modify', data)

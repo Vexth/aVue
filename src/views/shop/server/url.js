@@ -35,10 +35,10 @@ export const urlList = {
   modifyStatus: 'api/v1/shop/reservation/modify/status',
 
   // 后台查看咨询列表
-  // GET /api/v1/vendor/advisory/find 后台查看咨询列表
-  advisoryFind: 'api/v1/vendor/advisory/find',
-  // POST /api/v1/vendor/advisory/remark 商家设置备注
-  advisoryRemark: `api/v1/vendor/advisory/remark`,
+  // GET /api/v1/admin/advisory/find 后台查看咨询列表
+  advisoryFind: 'api/v1/admin/advisory/find',
+  // POST /api/v1/admin/advisory/remark 商家设置备注
+  advisoryRemark: `api/v1/admin/advisory/remark`,
 
   // 活动栏设置
   // GET /api/v1/shop/page/main/config/list 微信主页配置 列表
@@ -111,6 +111,7 @@ export const urlList = {
   deleteVideo: `api/v1/shop/video/delete`,
 
   // 优惠券
+
   // GET /api/v1/admin/coupon/select/parmas 商户查询优惠券
   couponSelectParmas: `api/v1/admin/coupon/select/parmas`,
   // GET /api/v1/admin/coupon/edit/response 编辑
@@ -128,4 +129,16 @@ export const urlList = {
   shopPageUpdatepage: `api/v1/shop/page/updatepage`,
   // POST /api/v1/shop/page/pageinfo
   shopPagePageInfo: `api/v1/shop/page/pageinfo`,
+
+  // 指标数据
+  // GET /api/v1//shop/main/indicators 主页指标
+  mainIndicators: `api/v1/shop/main/indicators`,
+  // GET /api/v1//shop/main/topIndicators 主页排名指标
+  mainTopIndicators: `api/v1/shop/main/topIndicators`,
+  // GET /api/v1/shop/order/top/ten 主页剩余库存
+  mainStockIndicators: `api/v1/shop/order/top/ten`,
+  // GET /api/v1/shop/order/not/send 主页代发货列表
+  mainNeedSendIndicators: `api/v1/shop/order/not/send`
 }
+
+

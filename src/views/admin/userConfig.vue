@@ -47,6 +47,16 @@
             </el-popover>
           </template>
         </el-table-column>
+
+        <!--<el-table-column-->
+          <!--label="状态"-->
+          <!--width="100">-->
+          <!--<template slot-scope="scope">-->
+            <!--&lt;!&ndash;<i class="el-icon-time"></i>&ndash;&gt;-->
+            <!--<span style="margin-left: 10px">{{ scope.row.delFlag === 0 ? '生效' : '失效' }}</span>-->
+          <!--</template>-->
+        <!--</el-table-column>-->
+
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button
@@ -270,6 +280,16 @@
       },
       handleDelete(index, row) {
         console.log(row)
+        vendorDelete(row).then(response => {
+          if (response.code === 200) {
+            console.log(response)
+            this.$notify.success({
+              title: '成功！',
+              message: '删除成功!'
+            })
+            this.list()
+          }
+        }).catch(err => console.log(err))
       },
       submit(title) {
         this.$refs.formRules.validate((valid) => {
@@ -278,6 +298,10 @@
               vendorAdd(this.form).then(response => {
                 if (response.code === 200) {
                   console.log(response)
+                  this.$notify.success({
+                    title: '成功！',
+                    message: '创建成功!'
+                  })
                   this.dialogFormVisible = false
                   this.list()
                 }
@@ -287,6 +311,10 @@
               vendorModify(this.form).then(response => {
                 if (response.code === 200) {
                   console.log(response)
+                  this.$notify.success({
+                    title: '成功！',
+                    message: '修改成功!'
+                  })
                   this.dialogFormVisible = false
                   this.list()
                 }

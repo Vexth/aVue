@@ -56,7 +56,7 @@ export const advisoryRemark = data => post(`${urlList.advisoryRemark}?advisoryId
 // GET /api/v1/shop/page/main/config/list 微信主页配置 列表
 export const shopConfigList = data => get(urlList.shopConfigList, { params: data })
 // api/v1/shop/page/main/config/visable?cellId=xxx
-export const shopConfigVisable = data => get(urlList.shopConfigVisable,  { params: data })
+export const shopConfigVisable = data => get(urlList.shopConfigVisable, { params: data })
 // POST api/v1/shop/page/main/config/group/name
 export const shopConfigGroupName = data => post(urlList.shopConfigGroupName, data)
 // POST /api/v1/shop/page/main/config/save 微信主页配置 保存单元格
@@ -133,6 +133,17 @@ export const couponEditRequest = data => post(`${urlList.couponEditRequest}?coup
 export const couponCreate = data => post(urlList.couponCreate, data)
 export const couponStopSend = data => post(`${urlList.couponStopSend}?couponId=${data}`)
 
+
 export const shopPagePageList = data => get(urlList.shopPagePageList, { params: data })
 export const shopPageUpdatepage = data => post(urlList.shopPageUpdatepage, data)
 export const shopPagePageInfo = data => post(urlList.shopPagePageInfo, data)
+
+// 指标数据
+// GET /api/v1//shop/main/indicators 主页指标
+export const mainIndicators = data => get(urlList.mainIndicators, { params: data })
+// GET /api/v1//shop/main/topIndicators 主页指标
+export const mainTopIndicators = data => get(urlList.mainTopIndicators, { params: data })
+// GET /api/v1/shop/order/top/ten 主页剩余库存
+export const mainStockIndicators = data => get(urlList.mainStockIndicators, { params: data })
+// GET /api/v1/shop/order/not/send 主页代发货列表
+export const mainNeedSendIndicators = data => get(urlList.mainNeedSendIndicators, { params: data })
