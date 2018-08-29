@@ -146,6 +146,7 @@
       if (this.data) {
         console.log('mounted' + this.data)
         this.form.promotionId = this.data.promotionId
+        this.form.vendorId = this.data.vendorId
         this.form.name = this.data.name
         this.form.tag = this.data.tag
         this.form.limitProductAmount = this.data.limitProductAmount
@@ -206,6 +207,7 @@
         // 以下是表单数据
         form: {
           promotionId: '',
+          vendorId: '',
           name: '',
           tag: '',
           limitProductAmount: '', // 限制商品库存数量
@@ -287,6 +289,7 @@
             })
             const data = {
               promotionId: this.form.promotionId,
+              vendorId: this.form.vendorId,
               name: this.form.name,
               tag: this.form.tag,
               beginTime: this.pickerDateRange[0],

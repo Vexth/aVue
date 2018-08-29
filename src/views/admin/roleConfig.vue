@@ -13,7 +13,7 @@
         style="width: 100%">
         <el-table-column
           label="ID"
-          width="180">
+          width="80">
           <template slot-scope="scope">
             <!--<i class="el-icon-time"></i>-->
             <span style="margin-left: 10px">{{ scope.row.roleId }}</span>
@@ -45,12 +45,22 @@
             </el-popover>
           </template>
         </el-table-column>
+
+        <el-table-column
+          label="状态"
+          width="100">
+          <template slot-scope="scope">
+            <!--<i class="el-icon-time"></i>-->
+            <span style="margin-left: 10px">{{ scope.row.delFlag === 0 ? '生效' : '失效' }}</span>
+          </template>
+        </el-table-column>
+
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button
               size="mini"
               @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-            <el-button
+            <el-button v-if="scope.row.delFlag === 0"
               size="mini"
               type="danger"
               @click="handleDelete(scope.$index, scope.row)">删除</el-button>
@@ -112,7 +122,8 @@
           roleName: '',
           createTime: '',
           updateTime: '',
-          description: ''
+          description: '',
+          delFlag: 0
         }],
         dialogVisible: false,
         treeData: [],
@@ -132,16 +143,17 @@
       }
     },
     created() {
-      roleList().then(response => {
-        console.log(response)
-        if (response.code === 200) {
-          // console.log(response.data)
-          this.tableData = response.data
-        }
-      }).catch(err => console.log(err))
+      this.list()
+      // roleList().then(response => {
+      //   console.log(response)
+      //   if (response.code === 200) {
+      //     // console.log(response.data)
+      //     this.tableData = response.data
+      //   }
+      // }).catch(err => console.log(err))
 
       menuList().then(response => {
-        console.log(response)
+        // console.log(response)
         if (response.code === 200) {
           // console.log(response.data)
           this.treeData = response.data

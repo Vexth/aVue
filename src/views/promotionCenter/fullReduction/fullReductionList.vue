@@ -4,7 +4,7 @@
       <!--<el-button @click="getCheckedNodes">通过 node 获取</el-button>-->
       <!--<el-button @click="getCheckedKeys">通过 key 获取</el-button>-->
       <!--<el-button @click="setCheckedNodes">通过 node 设置</el-button>-->
-      <el-button v-if="showEditCompoent" @click="goToList">回到列表</el-button>
+      <el-button icon="el-icon-back" v-if="showEditCompoent" type="danger" @click="goToList">回到列表</el-button>
     </div>
     <!--<full-reduction-create v-if="showCreateCompoent" @createSuccess="onCreateSuccess">-->
     <!--</full-reduction-create>-->
