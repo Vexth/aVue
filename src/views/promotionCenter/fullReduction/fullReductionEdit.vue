@@ -55,12 +55,12 @@
         <!--<el-input-number size="mini" v-model="form.limitUserAmount" :precision="0" :step="1" ></el-input-number>-->
         <!--</el-form-item>-->
 
-        <el-form-item prop="fullReductionRules" label="活动规则:">
+        <el-form-item prop="fullReductionRules" label="满减规则:">
         </el-form-item>
         <!--满减活动规则-->
         <el-form-item
           v-for="(rule, index) in form.fullReductionRules"
-          :label="(index+1) + '级  满:'"
+          :label="(index+1) + '级:'"
           :key="rule.key"
         >
           <el-col :span="4">
