@@ -18,6 +18,7 @@
         :data="tableData"
         style="width: 100%">
         <el-table-column
+          prop="id"
           label="ID"
           width="60">
           <template slot-scope="scope">
@@ -29,15 +30,23 @@
           label="活动名称"
           width="180">
           <template slot-scope="scope">
-            <el-popover trigger="hover" placement="top">
-              <p>活动名称: {{ scope.row.name }}</p>
-              <p>活动标签: {{ scope.row.tag }}</p>
-              <div slot="reference" class="name-wrapper">
-                <el-tag size="medium">{{ scope.row.name }}</el-tag>
-              </div>
-            </el-popover>
+            <!--<i class="el-icon-time"></i>-->
+            <span style="margin-left: 10px">{{ scope.row.name }}</span>
           </template>
         </el-table-column>
+        <!--<el-table-column-->
+          <!--label="活动名称"-->
+          <!--width="180">-->
+          <!--<template slot-scope="scope">-->
+            <!--<el-popover trigger="hover" placement="top">-->
+              <!--<p>活动名称: {{ scope.row.name }}</p>-->
+              <!--<p>活动标签: {{ scope.row.tag }}</p>-->
+              <!--<div slot="reference" class="name-wrapper">-->
+                <!--<el-tag size="medium">{{ scope.row.name }}</el-tag>-->
+              <!--</div>-->
+            <!--</el-popover>-->
+          <!--</template>-->
+        <!--</el-table-column>-->
         <el-table-column
           label="开始时间"
           width="210">
@@ -103,7 +112,7 @@
           label="平均单笔价"
           width="120">
           <template slot-scope="scope">
-            <span>{{ scope.row.pormotionId }}</span>
+            <span>{{ scope.row.promotionId }}</span>
           </template>
         </el-table-column>
 
@@ -112,7 +121,7 @@
           width="180">
           <template slot-scope="scope">
             <!--<i class="el-icon-time"></i>-->
-            <span>{{ scope.row.status === 0 ? '已结束': scope.row.status === 1? '未开始': '进行中' }}</span>
+            <span>{{ scope.row.status === 0 ? '已结束': '正在进行' }}</span>
           </template>
         </el-table-column>
 
@@ -120,12 +129,18 @@
           <template slot-scope="scope">
             <el-button
               size="mini"
+              type="primary"
               @click="handleEdit(scope.$index, scope.row)">编辑
             </el-button>
-            <el-button
+            <el-button v-if="scope.row.status === 1"
               size="mini"
               type="danger"
-              @click="handlePromotionOver(scope.$index, scope.row)">结束活动
+              @click="handlePromotionStatus(scope.$index, scope.row, 0)">结束活动
+            </el-button>
+            <el-button v-if="scope.row.status === 0"
+                       size="mini"
+                       type="success"
+                       @click="handlePromotionStatus(scope.$index, scope.row, 1)">开启活动
             </el-button>
           </template>
         </el-table-column>
@@ -138,8 +153,7 @@
           :page-sizes="pagination.sizes"
           :page-size="pagination.size"
           :total="pagination.total"
-          layout="total, sizes, prev, pager, next, jumper"
-        >
+          layout="total, sizes, prev, pager, next, jumper">
         </el-pagination>
       </div>
     </div>
@@ -149,7 +163,7 @@
 </template>
 
 <script>
-  import {promotionList} from '@/api/promotion'
+  import { promotionList,promotionStatus } from '@/api/promotion'
   // import fullReductionCreate from '@/views/promotionCenter/fullReduction/fullReductionCreate'
   import fullReductionEdit from '@/views/promotionCenter/fullReduction/fullReductionEdit'
 
@@ -183,7 +197,7 @@
           ruleType: '',
           ruleStrategy: [],
           productRange: '',
-          productIdList: '',
+          productIdList: ''
         }],
         selectRow: null,
         editType: '创建活动'
@@ -193,14 +207,14 @@
       this.queryList({})
     },
     methods: {
-      handleSizeChange(val) {
-        console.log(`每页 ${val} 条`)
-        this.pagination.size = val
+      handleSizeChange(pageSize) {
+        console.log(`每页 ${pageSize} 条`)
+        this.pagination.size = pageSize
         this.queryList({})
       },
-      handleCurrentChange(val) {
-        console.log(`当前页: ${val}`)
-        this.pagination.page = val
+      handleCurrentChange(pageNum) {
+        console.log(`当前页: ${pageNum}`)
+        this.pagination.page = pageNum
         this.queryList({})
       },
 
@@ -211,9 +225,10 @@
         promotionList(param).then(response => {
           console.log(response)
           if (response.code === 200) {
-            this.tableData = response.data
+            this.pagination.total = response.total
+            this.tableData = response.data.sort((a, b) => a.promotionId - b.promotionId)
             this.tableData.forEach(e => {
-              if (e.ruleStrategy) { // 规则是字符串必须转换成数组
+              if (e.ruleStrategy && typeof e.ruleStrategy === 'string') { // 规则是字符串必须转换成数组
                 e.ruleStrategy = JSON.parse(e.ruleStrategy)
               }
             })
@@ -221,7 +236,7 @@
             //   return {}
             // })
           }
-        })
+        }).catch(err => console.log(err))
       },
       goToList() {
         // this.showCreateCompoent = false
@@ -248,8 +263,19 @@
         this.showEditCompoent = false
         this.queryList({})
       },
-      handlePromotionOver(index, row) {
-        console.log(row)
+      handlePromotionStatus(index, row, status) {
+        // console.log(row)
+        const params = {}
+        params.vendorId = row.vendorId
+        params.promotionId = row.promotionId
+        params.status = status
+        promotionStatus(params).then(response => {
+          if (response.code === 200) {
+            console.log(response)
+            this.$message.success(response.msg)
+            this.queryList({})
+          }
+        }).catch(err => console.log(err))
       }
     }
   }

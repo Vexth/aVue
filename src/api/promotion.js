@@ -7,4 +7,6 @@ export const promotionCreate = data => post(`api/v1/shop/promotion/create`, data
 
 export const promotionModify = data => post(`api/v1/shop/promotion/modify`, data)
 
+export const promotionStatus = data => post(`api/v1/shop/promotion/status`, data)
+
 export const promotionDelete = data => del(`api/v1/shop/promotion/delete`, data)

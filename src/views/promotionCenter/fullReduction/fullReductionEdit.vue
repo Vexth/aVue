@@ -5,7 +5,7 @@
         <el-form-item prop="name" label="活动名称:">
           <el-input v-model="form.name"></el-input>
         </el-form-item>
-        <el-form-item prop="tag" label="活动标签:">
+        <el-form-item prop="tag" label="活动标签:" v-if="false">
           <el-input v-model="form.tag"></el-input>
         </el-form-item>
 
@@ -40,7 +40,7 @@
             <el-checkbox label="4">PC</el-checkbox>
           </el-checkbox-group>
         </el-form-item>
-        <el-form-item label="用户范围:">
+        <el-form-item label="用户范围:" v-if="false">
           <el-radio-group :disabled="true" v-model="form.userRange">
             <el-radio label="1">所有用户</el-radio>
             <el-radio label="2">用户首单</el-radio>
@@ -60,7 +60,7 @@
         <!--满减活动规则-->
         <el-form-item
           v-for="(rule, index) in form.fullReductionRules"
-          :label="(index+1) + '级  满：'"
+          :label="(index+1) + '级  满:'"
           :key="rule.key"
         >
           <el-col :span="4">
@@ -78,7 +78,7 @@
 
         <el-form-item>
           <!--<el-button type="primary" @click="submitForm('dynamicValidateForm')">提交</el-button>-->
-          <el-button type="primary" size="mini" @click="addRule">+ 新增满减规则</el-button>
+          <el-button v-if="this.form.fullReductionRules.length < 5" type="primary" size="mini" @click="addRule">+ 新增满减规则</el-button>
           <!--<el-button @click="resetForm('form')">重置</el-button>-->
         </el-form-item>
         <el-form-item label="活动备注">
@@ -192,10 +192,12 @@
       }
     },
     data() {
-      const validateNotNull = (rule, value, callback) => {
+      const validateName = (rule, value, callback) => {
         // if (!isvalidUsername(value)) {
         if (!value) {
           callback(new Error('不能为空！'))
+        } else if (value.length > 20) {
+          callback(new Error('活动名称过长，请保持在20个字以内！'))
         } else {
           callback()
         }
@@ -220,10 +222,10 @@
       // }
       return {
         formRules: {
-          name: [{required: true, trigger: 'blur', validator: validateNotNull}],
-          tag: [{required: true, trigger: 'blur', validator: validateNotNull}]
-          // fullReductionRules: [{ required: true, trigger: 'blur', validator: validateFullReductionRules }],
-          // pickerDateRange: [{ required: true, trigger: 'blur', validator: validateDataTime }]
+          name: [{ required: true, trigger: 'blur', validator: validateName }],
+          // tag: [{required: true, trigger: 'blur', validator: validateNotNull}]
+          fullReductionRules: [{ required: true, trigger: 'blur' }],
+          // pickerDateRange: [{ required: true, trigger: 'blur' }]
 
         },
         showAddProductButton: false,
@@ -246,6 +248,9 @@
         },
         pickerDateRange: [],
         pickerOptions: {
+          disabledDate: (time) => {
+            return time.getTime() < Date.now()
+          },
           shortcuts: [{
             text: '最近一周',
             onClick(picker) {
@@ -367,11 +372,13 @@
         }
       },
       addRule() {
-        this.form.fullReductionRules.push({
-          full: '',
-          reduction: '',
-          key: Date.now()
-        })
+        if (this.form.fullReductionRules.length < 5) {
+          this.form.fullReductionRules.push({
+            full: '',
+            reduction: '',
+            key: Date.now()
+          })
+        }
       }
     }
   }

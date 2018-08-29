@@ -31,7 +31,11 @@
         <!--</el-table-column>-->
         <el-table-column prop="productId" label="ID" width="150"></el-table-column>
         <el-table-column prop="productName" label="商品名称" width="400"></el-table-column>
-        <el-table-column prop="productPrice" label="市场价(元)"></el-table-column>
+        <el-table-column label="市场价(元)" >
+          <template slot-scope="scope">
+            <span>{{ scope.row.productPrice | formatPrice}}</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="productStock" label="库存"></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
@@ -39,13 +43,13 @@
               v-if="scope.row.isShow"
               size="mini"
               type="primary"
-              @click="handleAddProduct(scope.$index, scope.row)">参加</el-button>
+              @click="handleAddProduct(scope.$index, scope.row)">选择</el-button>
             <el-button
               v-else
               disabled="disabled"
               size="mini"
               type="success"
-              @click="handleAddProduct(scope.$index, scope.row)">已参加</el-button>
+              @click="handleAddProduct(scope.$index, scope.row)">已选中</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -105,7 +109,7 @@
         width="180">
         <template slot-scope="scope">
           <!--<i class="el-icon-time"></i>-->
-          <span style="margin-left: 10px">{{ scope.row.productPrice }} 元</span>
+          <span style="margin-left: 10px">{{ scope.row.productPrice | formatPrice }} 元</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -121,7 +125,7 @@
           <el-button
             size="mini"
             type="danger"
-            @click="handleDeleteProduct(scope.$index, scope.row)">取消参加</el-button>
+            @click="handleDeleteProduct(scope.$index, scope.row)">取消</el-button>
         </template>
       </el-table-column>
     </el-table>
