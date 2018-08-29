@@ -196,3 +196,13 @@ code {
   height: 30px!important;
   line-height: 30px!important;
 }
+
+.v-li-uploadList {
+  cursor: pointer;
+  text-align: center;
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  img {
+    vertical-align: middle;
+  }
+}

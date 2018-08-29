@@ -7097,6 +7097,10 @@ vue-router@3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/vue-router/-/vue-router-3.0.1.tgz#d9b05ad9c7420ba0f626d6500d693e60092cc1e9"
 
+vue-slicksort@^0.1.10:
+  version "0.1.10"
+  resolved "https://registry.yarnpkg.com/vue-slicksort/-/vue-slicksort-0.1.10.tgz#4c2569603f5ffa266c23ac7b6bb1238e2a32bcfa"
+
 vue-splitpane@1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/vue-splitpane/-/vue-splitpane-1.0.2.tgz#a2459a2f102d0f0dbb6049f1244ed50a03a5b64a"

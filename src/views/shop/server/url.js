@@ -121,4 +121,11 @@ export const urlList = {
   couponCreate: `api/v1/admin/coupon/create`,
   // POST /api/v1/admin/coupon/stop/send 停止发放
   couponStopSend: `api/v1/admin/coupon/stop/send`,
+
+  // GET /shop/page/pagelist
+  shopPagePageList: `api/v1/shop/page/pagelist`,
+  // POST /api/v1/shop/page/updatepage
+  shopPageUpdatepage: `api/v1/shop/page/updatepage`,
+  // POST /api/v1/shop/page/pageinfo
+  shopPagePageInfo: `api/v1/shop/page/pageinfo`,
 }
