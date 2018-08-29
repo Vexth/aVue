@@ -1,36 +1,36 @@
 <template>
-  <div class="app-container" >
+  <div class="app-container">
     <div style="width:80%">
       <el-form ref="formRules" :rules="formRules" :model="form" label-width="100px" class="demo-form-inline">
-        <el-form-item  prop="name"  label="活动名称:">
+        <el-form-item prop="name" label="活动名称:">
           <el-input v-model="form.name"></el-input>
         </el-form-item>
         <el-form-item prop="tag" label="活动标签:">
-          <el-input  v-model="form.tag"></el-input>
+          <el-input v-model="form.tag"></el-input>
         </el-form-item>
 
-        <el-form-item  prop="pickerDateRange" label="活动时间:">
+        <el-form-item prop="pickerDateRange" label="活动时间:">
           <el-col>
             <!--<div class="block">-->
-              <!--<span class="demonstration"></span>-->
-              <el-date-picker
-                type="datetimerange"
-                size="large"
-                align="right"
-                unlink-panels
-                range-separator="-"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
-                value-format="yyyy-MM-dd hh:mm:ss"
-                v-model="pickerDateRange"
-                :picker-options="pickerOptions">
-              </el-date-picker>
+            <!--<span class="demonstration"></span>-->
+            <el-date-picker
+              type="datetimerange"
+              size="large"
+              align="right"
+              unlink-panels
+              range-separator="-"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+              value-format="yyyy-MM-dd hh:mm:ss"
+              v-model="pickerDateRange"
+              :picker-options="pickerOptions">
+            </el-date-picker>
             <!--</div>-->
           </el-col>
         </el-form-item>
 
         <!--<el-form-item label="促销渠道">-->
-          <!--<el-switch v-model="form.delivery"></el-switch>-->
+        <!--<el-switch v-model="form.delivery"></el-switch>-->
         <!--</el-form-item>-->
         <el-form-item style="display: block" label="促销渠道:" v-if="false">
           <el-checkbox-group v-model="form.channel">
@@ -48,11 +48,11 @@
         </el-form-item>
 
         <!--<el-form-item  label="库存限制:">-->
-          <!--<el-input-number size="mini" v-model="form.limitProductAmount" :precision="0" :step="10" ></el-input-number>-->
+        <!--<el-input-number size="mini" v-model="form.limitProductAmount" :precision="0" :step="10" ></el-input-number>-->
         <!--</el-form-item>-->
 
         <!--<el-form-item  label="用户购买限制:">-->
-          <!--<el-input-number size="mini" v-model="form.limitUserAmount" :precision="0" :step="1" ></el-input-number>-->
+        <!--<el-input-number size="mini" v-model="form.limitUserAmount" :precision="0" :step="1" ></el-input-number>-->
         <!--</el-form-item>-->
 
         <el-form-item prop="fullReductionRules" label="活动规则:">
@@ -62,7 +62,7 @@
           v-for="(rule, index) in form.fullReductionRules"
           :label="(index+1) + '级  满：'"
           :key="rule.key"
-          >
+        >
           <el-col :span="4">
             <el-input-number v-model="rule.full" :precision="2" :step="100" :min="0"></el-input-number>
           </el-col>
@@ -71,7 +71,8 @@
             <el-input-number v-model="rule.reduction" :precision="2" :step="10" :min="0"></el-input-number>
           </el-col>
           <el-col :span="4">
-            <el-button type="danger" size="mini" icon="el-icon-delete" @click.prevent="removeRule(rule)" circle></el-button>
+            <el-button type="danger" size="mini" icon="el-icon-delete" @click.prevent="removeRule(rule)"
+                       circle></el-button>
           </el-col>
         </el-form-item>
 
@@ -84,7 +85,7 @@
           <el-input type="textarea" v-model="form.vendorRemark"></el-input>
         </el-form-item>
 
-        <el-form-item  label="活动商品:">
+        <el-form-item label="商品范围:">
           <el-col>
             <el-radio-group v-model="form.productRange" @change="productRangeChange">
               <el-radio label="0" border>所有商品参加</el-radio>
@@ -92,28 +93,32 @@
               <el-radio label="2" border>部分商品不参加</el-radio>
             </el-radio-group>
           </el-col>
-          <el-col v-if="showAddProductButton">
-            <el-button type="primary" size="mini" @click="dialogTableVisible = true">+ 添加商品</el-button>
-          </el-col>
+          <!--<el-col v-if="showAddProductButton">-->
+          <!--<el-button type="primary" size="mini" @click="dialogTableVisible = true">+ 添加商品</el-button>-->
+          <!--</el-col>-->
         </el-form-item>
 
         <!--选择商品的弹窗-->
-        <product-table-select-dialog  v-if="showAddProductButton"
-          :visible.sync="dialogTableVisible"
-          :tableData="form.tableData"
-          @onProductSelectChange="tableDataChange"
-        ></product-table-select-dialog>
+        <el-form-item label="商品列表:" v-if="showAddProductButton">
+          <el-button type="primary" size="mini" @click="dialogTableVisible = true">+ 添加商品</el-button>
+          <span>(已添加商品数：{{form.tableData.length}})</span>
+          <product-table-select-dialog
+            :visible.sync="dialogTableVisible"
+            :tableData="form.tableData"
+            @onProductSelectChange="tableDataChange"
+          ></product-table-select-dialog>
+
+        </el-form-item>
 
 
         <!--<span slot="footer" class="dialog-footer">-->
-          <el-form-item>
-            <el-button type="success" size="big" @click="onSubmit" round>{{editType}}</el-button>
-            <!--<el-button size="big" >取消</el-button>-->
-          </el-form-item>
+        <el-form-item>
+          <el-button type="success" size="big" @click="onSubmit" round>{{editType}}</el-button>
+          <!--<el-button size="big" >取消</el-button>-->
+        </el-form-item>
         <!--</span>-->
       </el-form>
     </div>
-
 
 
   </div>
@@ -121,11 +126,13 @@
 </template>
 
 <script>
-  import { promotionCreate, promotionModify } from '@/api/promotion'
+  import {promotionCreate, promotionModify} from '@/api/promotion'
+  import {shopProductLoad} from '@/views/shop/server'
   import ProductTableSelectDialog from '@/views/promotionCenter/components/ProductTableSelectDialog'
+
   export default {
     name: 'fullReductionCreate',
-    components: { ProductTableSelectDialog },
+    components: {ProductTableSelectDialog},
     props: {
       data: {
         type: Object,
@@ -144,7 +151,8 @@
     // },
     mounted() {
       if (this.data) {
-        console.log('mounted' + this.data)
+        console.log('mounted')
+        console.log(this.data)
         this.form.promotionId = this.data.promotionId
         this.form.vendorId = this.data.vendorId
         this.form.name = this.data.name
@@ -152,20 +160,36 @@
         this.form.limitProductAmount = this.data.limitProductAmount
         this.form.limitUserAmount = this.data.limitUserAmount
         this.form.vendorRemark = this.data.vendorRemark
-        this.form.productRange = this.data.productRange
+        this.form.productRange = String(this.data.productRange)
+        this.productRangeChange(this.form.productRange)
 
-        this.form.fullReductionRules = JSON.parse(this.data.ruleStrategy)
+        // if (this.data.ruleStrategy) {
+        this.form.fullReductionRules = this.data.ruleStrategy
+        // }
 
         if (this.data.productIdList) {
           this.form.tableData = this.data.productIdList.map(id => {
-            return {
-              productId: id
-            }
+            const product = {}
+            product.productId = id
+            product.productName = ''
+            shopProductLoad(id).then(response => {
+              console.log(response)
+              if (response.code === 200 && response.data) {
+                product.productName = response.data.product.title
+                product.productPrice = response.data.product.priceUnderline
+                // response.data.tbody
+                product.productStock = response.data.tbody.map(row => row.stockAmount).reduce((pre, cur, index, array) => {
+                  return pre + cur
+                }, 0)
+                product.isShow = false
+              }
+            }).catch(err => console.log(err))
+            return product
           })
         }
+        console.log(this.form.tableData)
         this.pickerDateRange = [this.data.beginTime, this.data.endTime]
       }
-
     },
     data() {
       const validateNotNull = (rule, value, callback) => {
@@ -196,8 +220,8 @@
       // }
       return {
         formRules: {
-          name: [{ required: true, trigger: 'blur', validator: validateNotNull }],
-          tag: [{ required: true, trigger: 'blur', validator: validateNotNull }]
+          name: [{required: true, trigger: 'blur', validator: validateNotNull}],
+          tag: [{required: true, trigger: 'blur', validator: validateNotNull}]
           // fullReductionRules: [{ required: true, trigger: 'blur', validator: validateFullReductionRules }],
           // pickerDateRange: [{ required: true, trigger: 'blur', validator: validateDataTime }]
 
@@ -258,7 +282,7 @@
       // 产品参加范围变更
       productRangeChange(val) {
         if (val === '0') { // 产品范围为 0 所有商品都参加
-        //   this.form.tableData = []
+          //   this.form.tableData = []
           this.showAddProductButton = false
         } else {
           this.showAddProductButton = true
@@ -273,7 +297,7 @@
             // console.log(this.form)
             console.log(this.pickerDateRange)
             if (this.pickerDateRange.length !== 2) {
-              this.$notify.error({
+              this.$message.error({
                 title: '时间设置错误',
                 message: '必须制定时间区间',
                 type: 'error'
@@ -281,12 +305,21 @@
               return
             }
 
+            // 去除一个属性 不修改原始
             const rules = this.form.fullReductionRules.map(rule => {
               return {
                 full: rule.full,
                 reduction: rule.reduction
               }
             })
+            if (rules.length === 0) {
+              this.$message.error({
+                title: '满减规则设置错误',
+                message: '必须至少设置一条满减规则！',
+                type: 'error'
+              })
+              return
+            }
             const data = {
               promotionId: this.form.promotionId,
               vendorId: this.form.vendorId,
@@ -304,29 +337,21 @@
               productRange: this.form.productRange,
               productIdList: this.form.tableData.map(e => e.productId)
             }
-            console.log(data)
+            console.log('编辑数据发送=  ' + JSON.stringify(data))
             if (this.editType === '创建活动') {
               promotionCreate(data).then(response => {
                 console.log(response)
                 if (response.code === 200) {
-                  this.$notify({
-                    title: '活动创建成功！',
-                    message: response.msg,
-                    type: 'success'
-                  })
-                  this.$emit('editSuccess')
+                  this.$message.success(response.msg)
+                  this.$emit('editSuccess', this.editType)
                 }
               }).catch(err => console.log(err))
             } else if (this.editType === '更新活动') {
               promotionModify(data).then(response => {
                 console.log(response)
                 if (response.code === 200) {
-                  this.$notify({
-                    title: '活动创建成功！',
-                    message: response.msg,
-                    type: 'success'
-                  })
-                  this.$emit('editSuccess')
+                  this.$message.success(response.msg)
+                  this.$emit('editSuccess', this.editType)
                 }
               }).catch(err => console.log(err))
             }

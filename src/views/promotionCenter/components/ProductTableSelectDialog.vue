@@ -101,19 +101,19 @@
         </template>
       </el-table-column>
       <el-table-column
-        label="市场价"
+        label="商品市场价"
         width="180">
         <template slot-scope="scope">
           <!--<i class="el-icon-time"></i>-->
-          <span style="margin-left: 10px">{{ scope.row.productPrice }}</span>
+          <span style="margin-left: 10px">{{ scope.row.productPrice }} 元</span>
         </template>
       </el-table-column>
       <el-table-column
-        label="库存"
+        label="商品总库存"
         width="180">
         <template slot-scope="scope">
           <!--<i class="el-icon-time"></i>-->
-          <span style="margin-left: 10px">{{ scope.row.productStock }}</span>
+          <span style="margin-left: 10px">{{ scope.row.productStock }} 件</span>
         </template>
       </el-table-column>
       <el-table-column label="操作">

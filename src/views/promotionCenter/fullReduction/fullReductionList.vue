@@ -1,6 +1,6 @@
 <template>
-  <div class="app-container" >
-    <div >
+  <div class="app-container">
+    <div>
       <!--<el-button @click="getCheckedNodes">通过 node 获取</el-button>-->
       <!--<el-button @click="getCheckedKeys">通过 key 获取</el-button>-->
       <!--<el-button @click="setCheckedNodes">通过 node 设置</el-button>-->
@@ -57,8 +57,21 @@
           label="活动详情"
           width="180">
           <template slot-scope="scope">
+            <el-popover trigger="hover" placement="top">
+              <!--<i class="el-icon-time"></i>-->
+              <p v-for="strategy in scope.row.ruleStrategy">满: {{ strategy.full }} 减: {{ strategy.reduction }}</p>
+              <div slot="reference" class="name-wrapper">
+                <!--<el-tag size="medium">{{ scope.row.ruleStrategy[0] }}</el-tag>-->
+                <el-tag size="medium" v-if="scope.row.ruleStrategy.length !== 0">满: {{ scope.row.ruleStrategy[0].full }}
+                  减: {{ scope.row.ruleStrategy[0].reduction }}
+                </el-tag>
+              </div>
+            </el-popover>
             <!--<i class="el-icon-time"></i>-->
-            <span>{{ scope.row.ruleStrategy }}</span>
+            <!--<span v-for="e in JSON.parse(scope.row.ruleStrategy)" >{{ e }}</span>-->
+            <!--<span>{{ JSON.parse(scope.row.ruleStrategy) }}</span>-->
+            <!--<span v-for="e in scope.row.ruleStrategy">{{ e }}</span>-->
+            <!--<span>{{ scope.row.ruleStrategy }}</span>-->
           </template>
         </el-table-column>
 
@@ -67,39 +80,39 @@
           width="120">
           <template slot-scope="scope">
             <!--<i class="el-icon-time"></i>-->
-              <span>{{ scope.row.promotionId }}</span>
+            <span>{{ scope.row.promotionId }}</span>
           </template>
         </el-table-column>
         <el-table-column
           label="已付款用户数"
           width="120">
           <template slot-scope="scope">
-              <span>{{ scope.row.promotionId }}</span>
+            <span>{{ scope.row.promotionId }}</span>
           </template>
         </el-table-column>
 
         <el-table-column
           label="实际支付总额"
           width="120">
-            <template slot-scope="scope">
-              <span>{{ scope.row.promotionId }}</span>
-            </template>
+          <template slot-scope="scope">
+            <span>{{ scope.row.promotionId }}</span>
+          </template>
         </el-table-column>
 
         <el-table-column
           label="平均单笔价"
           width="120">
-            <template slot-scope="scope">
-              <span>{{ scope.row.pormotionId }}</span>
-            </template>
+          <template slot-scope="scope">
+            <span>{{ scope.row.pormotionId }}</span>
+          </template>
         </el-table-column>
 
         <el-table-column
           label="状态"
           width="180">
           <template slot-scope="scope">
-              <!--<i class="el-icon-time"></i>-->
-              <span>{{ scope.row.status === 0 ? '已结束': scope.row.status === 1? '未开始': '进行中' }}</span>
+            <!--<i class="el-icon-time"></i>-->
+            <span>{{ scope.row.status === 0 ? '已结束': scope.row.status === 1? '未开始': '进行中' }}</span>
           </template>
         </el-table-column>
 
@@ -107,11 +120,13 @@
           <template slot-scope="scope">
             <el-button
               size="mini"
-              @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+              @click="handleEdit(scope.$index, scope.row)">编辑
+            </el-button>
             <el-button
               size="mini"
               type="danger"
-              @click="handlePromotionOver(scope.$index, scope.row)">结束活动</el-button>
+              @click="handlePromotionOver(scope.$index, scope.row)">结束活动
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -134,13 +149,14 @@
 </template>
 
 <script>
-  import { promotionList } from '@/api/promotion'
-  import fullReductionCreate from '@/views/promotionCenter/fullReduction/fullReductionCreate'
+  import {promotionList} from '@/api/promotion'
+  // import fullReductionCreate from '@/views/promotionCenter/fullReduction/fullReductionCreate'
   import fullReductionEdit from '@/views/promotionCenter/fullReduction/fullReductionEdit'
+
   export default {
     name: 'fullReductionList',
     components: {
-      fullReductionCreate,
+      // fullReductionCreate,
       fullReductionEdit
     },
     data() {
@@ -165,7 +181,7 @@
           userRange: '',
           vendorRemark: '',
           ruleType: '',
-          ruleStrategy: '',
+          ruleStrategy: [],
           productRange: '',
           productIdList: '',
         }],
@@ -196,16 +212,25 @@
           console.log(response)
           if (response.code === 200) {
             this.tableData = response.data
+            this.tableData.forEach(e => {
+              if (e.ruleStrategy) { // 规则是字符串必须转换成数组
+                e.ruleStrategy = JSON.parse(e.ruleStrategy)
+              }
+            })
+            // this.tableData = this.tableData.map(a => {
+            //   return {}
+            // })
           }
         })
       },
       goToList() {
-        this.showCreateCompoent = false
+        // this.showCreateCompoent = false
         this.showEditCompoent = false
         this.queryList({})
       },
       handleCreate() {
-        this.selectRow = {}
+        this.editType = '创建活动'
+        this.selectRow = null
         this.showEditCompoent = true
       },
       handleEdit(index, row) {
@@ -218,7 +243,8 @@
       //   this.showCreateCompoent = false
       //   this.queryList({})
       // },
-      onEditSuccess() {
+      onEditSuccess(editType) {
+        console.log(editType)
         this.showEditCompoent = false
         this.queryList({})
       },
