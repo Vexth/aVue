@@ -75,7 +75,7 @@ export default {
     handleClose() {
       this.DialogVisible = false
     },
-    handleEdit(index, row) {
+    handleEditPromotion(index, row) {
       this.index = index
       this.DialogVisible = true
       const attrOption = []
