@@ -137,16 +137,18 @@ export default {
   },
   watch: {
     clickSelected(item) {
-      // console.log(item)
       this.items = this.items.map(res => {
         const list = JSON.parse(res)
         if (list['difference'] === item['type']) {
-          list['data'] = item['data'].map(res => JSON.parse(res))
-          console.log(list)
+          list['data'] = item['data'].map(res => {
+            if (Object.prototype.toString.call(res) === '[object String]') {
+              res = JSON.parse(res)
+            }
+            return res
+          })
         }
         return JSON.stringify(list)
       })
-      // console.log(this.items)
     },
     deleteModule(item) {
       if (this.items.length !== 0) {
