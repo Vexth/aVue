@@ -6,7 +6,7 @@
       </el-form-item>
       <el-form-item label="封面：">
         <div class="v-li-uploadList" @click="uploadList">
-          <img :src="videoList.posterUrl" alt="" :class="isbool ? '' : 'img'" srcset="">
+          <img :src="posterUrl" alt="" :class="isbool ? '' : 'img'" srcset="">
           <span v-if="isbool">添加图片</span>
         </div>
       </el-form-item>
@@ -27,9 +27,10 @@ export default {
     return {
       homePageList: [],
       isbool: true,
+      posterUrl: '/static/img/icon-add.png',
       videoList: {
         type: null,
-        posterUrl: '/static/img/icon-add.png',
+        posterUrl: '',
         videoUrl: ''
       },
       bool: true,
@@ -50,7 +51,7 @@ export default {
         }
         this.videoList = {
           type: newVal.difference,
-          posterUrl: '/static/img/icon-add.png',
+          posterUrl: '',
           videoUrl: ''
         }
         let data = {
@@ -80,7 +81,8 @@ export default {
       return this.$store.dispatch('videoList', this.videoList)
     },
     primary() {
-      console.log('video')
+      this.sub()
+      this.$store.commit('IS_PRIMARY', true)
     }
   }
 }

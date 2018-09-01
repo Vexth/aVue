@@ -11,6 +11,8 @@
 
 <script>
 import ImageLi from '@/views/shop/homepage/components/component/ImageLi.vue'
+
+import { shopPageUpdatepage } from '@/views/shop/server'
 export default {
   components: {
     ImageLi
@@ -44,6 +46,10 @@ export default {
           componentId: newVal.componentId,
           data: []
         }
+        if (newVal['data'] !== undefined) {
+          data = newVal['data']
+          this.tpList = data['data']
+        }
         this.$store.dispatch('addHomePageList', data)
       }
     }
@@ -58,26 +64,38 @@ export default {
       this.$emit('uploadListBool', {})
     },
     boolPage(item) {
-      this.tpList = item.map(res => {
-        res['url'] = res.product.imgDescList[0].url
-        return res
+      // console.log(item)
+      let data = []
+      item.map(res => {
+        const id = res['product']['id']
+        const list = {
+          imageUrl: res['product']['imgDescList'][0]['url'],
+          shopTitle: res['product']['title'],
+          shopPrice: res['price'],
+          navigateTo:  {
+            navigateName: 'detail',
+            navigateParam: id
+          }
+        }
+        data.push(list)
       })
+      this.tpList = [...this.tpList, ...data]
     },
     cha(item) {
       this.tpList = item
     },
     sub() {
       this.bool = false
-      let data = {
+      
+      const tpList = {
         type: this.type,
         data: this.tpList
       }
-      return this.$store.dispatch('commodityList', data)
+      return this.$store.dispatch('commodityList', tpList)
     },
     primary() {
-      console.log('primary')
-      // this.homePageList.push(data)
-      // sessionStorage.setItem('homePageList', JSON.stringify(this.homePageList))
+      this.sub()
+      this.$store.commit('IS_PRIMARY', true)
     }
   }
 }

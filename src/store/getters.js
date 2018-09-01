@@ -16,5 +16,9 @@ const getters = {
   errorLogs: state => state.errorLog.logs,
   homepage: state => state.homepage.homePageList,
   pageId: state => state.homepage.pageId,
+  deleteModule: state => state.homepage.delete_module,
+  isPrimary: state => state.homepage.isPrimary,
+  selected: state => state.homepage.selected,
+  clickSelected: state => state.homepage.clickSelected,
 }
 export default getters

@@ -6,7 +6,7 @@
       </el-form-item>
       <el-form-item label="图标：">
         <div class="v-li-uploadList" @click="uploadList">
-          <img :src="title.iconUrl" alt="" :class="isbool ? '' : 'img'" srcset="">
+          <img :src="iconUrl" alt="" :class="isbool ? '' : 'img'" srcset="">
           <span v-if="isbool">添加图片</span>
         </div>
       </el-form-item>
@@ -24,10 +24,11 @@ export default {
     return {
       homePageList: [],
       isbool: true,
+      iconUrl:  '/static/img/icon-add.png',
       title: {
         type: null,
         title:  '',
-        iconUrl:  '/static/img/icon-add.png',
+        iconUrl:  '',
         navigateTo:{
           navigateTitle:  '',
           navigateTo:  '',
@@ -53,7 +54,7 @@ export default {
         this.title = {
           type: newVal.difference,
           title:  '',
-          iconUrl:  '/static/img/icon-add.png',
+          iconUrl:  '',
           navigateTo:{
             navigateTitle:  '',
             navigateTo:  '',
@@ -64,6 +65,10 @@ export default {
           type: newVal.difference,
           componentId: newVal.componentId,
           data: {}
+        }
+        if (newVal['data'] !== undefined) {
+          data = newVal['data']
+          // this.bannerList = data['data'].map(res => JSON.stringify(res))
         }
         this.$store.dispatch('addHomePageList', data)
       }
@@ -80,14 +85,17 @@ export default {
     },
     boolPage(item) {
       this.isbool = false
-      this.title.posterUrl = item
+      this.iconUrl = item
+      this.title.iconUrl = item
     },
     sub() {
       this.bool = false
       return this.$store.dispatch('Title', this.title)
     },
     primary() {
-      console.log('title')
+      this.sub()
+      this.$store.commit('IS_PRIMARY', true)
+      // console.log('title')
     }
   }
 }

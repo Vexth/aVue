@@ -6,9 +6,7 @@
     </div>
     <div class="public left">
       <span>组件库</span>
-      <v-homepage-left :pageleft="list1" @ModuleSwitching="ModuleSwitching"></v-homepage-left>
-      <v-homepage-left :pageleft="list2" @ModuleSwitching="ModuleSwitching"></v-homepage-left>
-      <v-homepage-left :pageleft="list3" @ModuleSwitching="ModuleSwitching"></v-homepage-left>
+      <v-homepage-left v-for="(item, i) in listData" :key="i" :pageleft="item" @ModuleSwitching="ModuleSwitching"></v-homepage-left>
     </div>
     <div class="con">
       <div class="m-phone">
@@ -16,7 +14,6 @@
           <SortableList lockAxis="y" v-model="items" @input="input" @sortStart="sortStart">
             <SortableItem v-for="(item, index) in items" :index="index" :key="index" :item="item" :ref="item" />
           </SortableList>
-          <!-- <div v-for="(item, i) in con" :key="i">{{item['title']}}{{i+1}}</div> -->
         </div>
       </div>
     </div>
@@ -32,6 +29,7 @@
       width="50%"
       :before-close="handleClose"
       center>
+      <tree-grid v-if="isTreeGrid" ref="isTreeGrid" :columns="columns" :tree-structure="true" tree-type="" :data-source="dataSource"></tree-grid>
       <component :is="isImg" ref="Img"></component>
       <span slot="footer" class="dialog-footer">
         <el-button @click="handleClose">取 消</el-button>
@@ -40,6 +38,7 @@
     </el-dialog>
   </div>
 </template>
+
 
 <script>
 import SortableList from '@/views/shop/homepage/Sortable/SortableList.vue'
@@ -57,16 +56,24 @@ import vHomepageCategory from '@/views/shop/homepage/components/vHomepageCategor
 
 import vImg from '@/views/shop/showcase/zujian/img.vue'
 import CommodityAdComponent from '@/views/shop/homepage/components/component/CommodityAdComponent.vue'
+import highlightCurrentRow from '@/views/shop/homepage/components/component/highlightCurrentRow.vue'
 
-import { list1, list2, list3 } from './components/test.js'
+import TreeGrid from '@/views/shop/homepage/TreeGrid/TreeGrid.vue'
 
-import { shopPagePageList, shopPagePageInfo } from '@/views/shop/server'
+import { list } from './components/test.js'
+
+import { uniqueObj } from '@/utils'
+
+import { shopPagePageList, shopPagePageInfo, tree, shopPageUpdatepage } from '@/views/shop/server'
+
 
 export default {
   components: {
     SortableItem,
     SortableList,
     vHomepageLeft,
+    TreeGrid,
+    'CurrentRow': highlightCurrentRow,
     'vimg': vImg,
     'commodity': CommodityAdComponent,
     'banner': vHomepageBanner,
@@ -84,6 +91,14 @@ export default {
   },
   data() {
     return {
+      columns: [
+        {
+          text: '名称',
+          dataIndex: 'name'
+        }
+      ],
+      dataSource: [],
+      isTreeGrid: false,
       items: [],
       title: '',
       tpDialogVisible: false,
@@ -92,27 +107,95 @@ export default {
       isComponentList: [],
       isImg: '',
       componentId: null,
-      list1: list1,
-      list2: list2,
-      list3: list3,
+      listData: list,
       pageId: null,
-      index: 0
+      index: 0,
+      shopPagePageInfoList: []
     }
   },
   mounted() {
     this.shopPagePageList()
-    let list = []
-    sessionStorage.setItem('homePageList', JSON.stringify(list))
+    this.tree()
   },
   beforeDestroy() {
     // alert('11111')
   },
+  computed: {
+    deleteModule() {
+      return this.$store.getters.deleteModule
+    },
+    isPrimary() {
+      return this.$store.getters.isPrimary
+    },
+    selected() {
+      return this.$store.getters.selected
+    },
+    clickSelected() {
+      return this.$store.getters.clickSelected
+    }
+  },
   watch: {
-    items(val) {
-      // console.log(val)
+    clickSelected(item) {
+      this.items.map(res => {
+        const list = JSON.parse(res)
+        if (list['difference'] === item['type']) {
+          list['data'] = item['data']
+        }
+        return JSON.stringify(list)
+      })
+      console.log(this.items)
+      console.log(item)
+    },
+    deleteModule(item) {
+      console.log(item)
+      if (this.items.length !== 0) {
+        this.items = this.items.filter(res => {
+          const list = JSON.parse(res)
+          if (list['difference'] !== item['difference']) {
+            return JSON.stringify(res)
+          }
+        })
+      }
+    },
+    isPrimary(item) {
+      if (item) {
+        const homePageList = sessionStorage.getItem('homePageList')
+        const list = JSON.parse(homePageList)
+        const data = uniqueObj(list, 'type')
+        const config = JSON.stringify(data)
+        const listData = {
+          pageId: this.pageId,
+          config,
+          attach: config,
+        }
+        shopPageUpdatepage(listData).then(res => {
+          this.shopPagePageInfo(this.pageId)
+          this.$store.commit('IS_PRIMARY', false)
+        }).catch(err => console.log(err))
+      }
+    },
+    selected(item) {
+      const list = JSON.parse(item)
+      if (this.shopPagePageInfoList.length === 0) {
+        this.shopPagePageInfoList = JSON.parse(sessionStorage.getItem('homePageList'))
+      }
+      this.shopPagePageInfoList.map(res => {
+        if (res['componentId'] === list['componentId']) {
+          this.componentId = {
+            componentId: res['componentId'],
+            difference: res['type'],
+            data: res
+          }
+        }
+      })
+      
+      this.isComponent = list.url
     }
   },
   methods: {
+    tree() {
+      tree().then(res => res.code === 200 ? this.dataSource = res.data : console.log(res)).catch(err => console.log(err))
+    },
     shopPagePageList() {
       shopPagePageList().then(res => {
         if (res.code === 200) {
@@ -128,7 +211,25 @@ export default {
     shopPagePageInfo(pageId) {
       shopPagePageInfo({pageId: pageId}).then(res => {
         if (res.code === 200) {
-          console.log(res)
+          let list = []
+          this.items = []
+          if (res.data['config'] !== undefined) {
+            list = JSON.parse(res.data.config)
+            this.shopPagePageInfoList = list
+            const len = list.length
+            this.index = list[len - 1]['type'] + 1
+
+            let list_data = []
+            this.listData.map(res => list_data = [...list_data, ...res['items']])
+            
+            list.map(res => list_data.map(item => {
+              if (item['componentId'] === res['componentId']) {
+                item['difference'] = res['type']
+                this.items.push(JSON.stringify(item))
+              }
+            }))
+          }
+          sessionStorage.setItem('homePageList', JSON.stringify(list))
         } else {
           this.$message.error(res.msg)
         }
@@ -147,9 +248,18 @@ export default {
       this.index++
     },
     uploadListBool(item) {
-      if (Object.prototype.toString.call(item) === '[object Boolean]') {
+      const type = Object.prototype.toString.call(item)
+      this.isTreeGrid = false
+      if (type === '[object Boolean]') {
         this.isImg = 'vimg'
         this.title = '我的图片'
+      } else if (type === '[object String]') {
+        this.isImg = 'CurrentRow'
+        this.title = '我的商品'
+      } else if (type === '[object Number]') {
+        this.isTreeGrid = true
+        this.title = '我的商品分类'
+        this.isImg = ''
       } else {
         this.isImg = 'commodity'
         this.title = '我的商品'
@@ -169,6 +279,7 @@ export default {
         this.$refs[res][0].selected(false)
         if (res === item.node.dataset.item) {
           this.$refs[res][0].selected(true)
+          this.$store.commit('SELECTED', res)
         }
       })
     },
@@ -177,6 +288,12 @@ export default {
       // console.log(item)
     },
     sub() {
+      this.tpDialogVisible = false
+      if (this.isTreeGrid) {
+        let list = this.$refs.isTreeGrid.handleCurrent()
+        this.$refs.component.boolPage(list)
+        return
+      }
       const list = this.$refs.Img.sub()
       if (this.isImg === 'vimg') {
         if (list.length > 1) {
@@ -188,7 +305,9 @@ export default {
       } else {
         this.$refs.component.boolPage(list)
       }
-      this.tpDialogVisible = false
+      if (this.isImg === 'commodity') {
+        this.$refs.Img.clearSelection()
+      }
     },
   }
 }
@@ -292,5 +411,4 @@ export default {
     }
   }
 }
-
 </style>

@@ -42,7 +42,9 @@ export default {
       return this.$store.dispatch('Search')
     },
     primary() {
-      console.log('primary')
+      this.sub()
+      this.$store.commit('IS_PRIMARY', true)
+      // console.log('primary')
     }
   }
 }

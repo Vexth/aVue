@@ -2,7 +2,7 @@
   <el-form :model="ruleForm2" status-icon label-width="100px" class="demo-ruleForm">
     <el-form-item label="图片：">
       <div class="v-li-uploadList" @click="uploadList('img')">
-        <img :src="ruleForm2.imageUrl" alt="" :class="bool ? '' : 'img'" srcset="">
+        <img :src="imageUrl" alt="" :class="bool ? '' : 'img'" srcset="">
         <span v-if="bool">添加图片</span>
       </div>
     </el-form-item>
@@ -15,36 +15,13 @@
         width="390"
         trigger="hover">
         <div class="path">
-          <ul>
-            <li class="li">常用功能</li>
-            <li @click="path('home')" type="home">主页</li>
-            <li @click="path('shop-cart')" type="shop-cart">购物车</li>
-            <li @click="path('user')" type="user">个人中心</li>
-            <li @click="path('addcar')" type="addcar">车型选择</li>
-            <li @click="path('address-add')" type="address-add">添加地址</li>
-            <li @click="path('select-address')" type="select-address">地址选择</li>
-            <li @click="path('bindcar')" type="bindcar">绑定车型</li>
-            <li @click="path('card-detail')" type="card-detail">会员卡详情</li>
-            <li @click="path('company-introduction')" type="company-introduction">闲约科技介绍</li>
-          </ul>
-          
-          <ul>
-            <li class="li">商品相关</li>
-            <li @click="path('detail')" type="detail">商品详情</li>
-            <li @click="path('group')" type="group">产品分类</li>
-            <li @click="path('order')" type="order">我的订单</li>
-            <li @click="path('order-details')" type="order-details">订单详情</li>
-            <li @click="path('productlist')" type="productlist">产品列表</li>
-          </ul>
 
-          <ul>
-            <li class="li">营销工具</li>
-            <li @click="path('shopRecord')" type="shopRecord">会员卡消费记录</li>
-            <li @click="path('to-pay-order')" type="to-pay-order">订单支付页面</li>
-            <li @click="path('vipcard')" type="vipcard">会员卡页面</li>
+          <ul v-for="(item, i) in typeList" :key="i">
+            <li class="li">{{item.title}}</li>
+            <li v-for="(v, index) in item.items" :key="index" @click="path(v.type, v.name)" :type="v.name">{{v.name}}</li>
           </ul>
         </div>
-        <el-button class="reference" slot="reference">设置链接到的产品或分类</el-button>
+        <el-button class="reference" slot="reference">{{setCategory}}</el-button>
       </el-popover>
     </el-form-item>
     <div class="delete" @click="deleteClick">×</div>
@@ -52,14 +29,19 @@
 </template>
 
 <script>
+import { li } from '../test.js'
+
 const plugins = ['detail', 'group']
 export default {
   data() {
     return {
       val: {},
       bool: true,
+      typeList: li,
+      setCategory: '设置链接到的产品或分类',
+      imageUrl: '/static/img/icon-add.png',
       ruleForm2: {
-        imageUrl: '/static/img/icon-add.png',
+        imageUrl: '',
         title: '',
         navigateTo: {
           navigateName: '',
@@ -80,31 +62,58 @@ export default {
       handler(newVal, oldVal) {
         this.val = JSON.parse(newVal)
         if (this.val['ruleForm2']['imageUrl'] !== '') {
+          this.bool = false
+          this.imageUrl = this.val['ruleForm2']['imageUrl']
           this.ruleForm2 = this.val['ruleForm2']
+
+          let l = []
+          let type = this.ruleForm2['navigateTo']['navigateName']
+          li.map(res => l = [...l, ...res['items']])
+          let d = l.filter(res => res['type'] === type)
+          if (d.length === 1 && d[0].type !== '') {
+            this.setCategory = d[0]['name']
+          }
         }
       }
     }
   },
   methods: {
     uploadList(item) {
-      console.log(this.name)
       this.$emit('uploadListBool', item, this.name)
     },
     boolPage(item) {
-      this.bool = false
-      this.ruleForm2.imageUrl = item
+      const type = Object.prototype.toString.call(item)
+      // console.log(type)
+      if (type === '[object String]') {
+        this.bool = false
+        this.ruleForm2.imageUrl = item
+        this.imageUrl = item
+      } else if (type === '[object Object]') {
+        if (item['product'] !== undefined) {
+          this.ruleForm2.navigateTo.navigateParam = item['product']['id']
+        } else {
+          this.ruleForm2.navigateTo.navigateParam = item['groupId']
+        }
+      }
       this.val['ruleForm2'] = this.ruleForm2
       return this.val
     },
     deleteClick() {
       this.$emit('deleteClick', this.val['component'])
     },
-    path(item) {
+    path(item, name) {
+      if (item === '') {
+        this.ruleForm2.navigateTo.navigateName = ''
+        this.ruleForm2.navigateTo.navigateParam = ''
+        this.setCategory = '设置链接到的产品或分类'
+        return
+      }
       this.ruleForm2.navigateTo.navigateName = item
       this.val['ruleForm2'] = this.ruleForm2
       if (plugins.indexOf(item) > -1) {
         this.uploadList(item)
       }
+      this.setCategory = name
     }
   }
 }

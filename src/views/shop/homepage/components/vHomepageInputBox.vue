@@ -47,6 +47,10 @@ export default {
           componentId: newVal.componentId,
           data: []
         }
+        if (newVal['data'] !== undefined) {
+          data = newVal['data']
+          this.announcementList = data['data'].map(res => JSON.stringify(res))
+        }
         this.$store.dispatch('addHomePageList', data)
       }
     }
@@ -73,7 +77,9 @@ export default {
       return this.$store.dispatch('announcementList', list)
     },
     primary() {
-      console.log('primary')
+      this.sub()
+      this.$store.commit('IS_PRIMARY', true)
+      // console.log('primary')
     }
   }
 }

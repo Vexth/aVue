@@ -1,7 +1,7 @@
 <template>
   <ul>
     <li v-for="(img, i) in tpList" :key="i" class="v-li-uploadList">
-      <img :src="img.url">
+      <img :src="img.imageUrl">
       <div class="cha" @click="cha(tpList, i)">×</div>
     </li>
   </ul>

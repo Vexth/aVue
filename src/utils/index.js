@@ -265,3 +265,12 @@ export function deepClone(source) {
 export function uniqueArr(arr) {
   return Array.from(new Set(arr))
 }
+
+export function uniqueObj(arr, name) {
+  var hash = {}
+  let list = arr.reduce((item, next) => {
+    hash[next[name]] ? '' : hash[next[name]] = true && item.push(next)
+    return item
+  }, [])
+  return list
+}

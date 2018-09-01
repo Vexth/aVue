@@ -9,10 +9,42 @@
 <script>
 import ImageAdComponent from '@/views/shop/homepage/components/component/ImageAdComponent.vue'
 import FormPlus from '@/views/shop/homepage/components/component/formPlus.vue'
+
+import { shopPageUpdatepage } from '@/views/shop/server'
 export default {
   components: {
     ImageAdComponent,
     FormPlus
+  },
+  props: {
+    componentId: {
+      type: Object,
+      default: {}
+    }
+  },
+  watch: {
+    componentId: {
+      immediate: true,
+      handler(newVal, oldVal) {
+        if (oldVal !== undefined) {
+          this.sub()
+        }
+        this.type = newVal.difference
+        this.bannerList = []
+        let data = {
+          type: newVal.difference,
+          componentId: newVal.componentId,
+          data: this.bannerList
+        }
+        if (newVal['data'] !== undefined) {
+          data = newVal['data']
+          const len = data['data'].length
+          this.index = data['data'][len-1]['component'] + 1
+          this.bannerList = data['data'].map(res => JSON.stringify(res))
+        }
+        this.$store.dispatch('addHomePageList', data)
+      }
+    }
   },
   data() {
     return {
@@ -33,30 +65,7 @@ export default {
         }
       },
       bool: true,
-    }
-  },
-  props: {
-    componentId: {
-      type: Object,
-      default: {}
-    }
-  },
-  watch: {
-    componentId: {
-      immediate:true,
-      handler(newVal, oldVal) {
-        if (oldVal !== undefined) {
-          this.sub()
-        }
-        this.type = newVal.difference
-        this.bannerList = []
-        let data = {
-          type: newVal.difference,
-          componentId: newVal.componentId,
-          data: []
-        }
-        this.$store.dispatch('addHomePageList', data)
-      }
+      id: null,
     }
   },
   beforeDestroy() {
@@ -66,7 +75,15 @@ export default {
   },
   methods: {
     uploadListBool(item, val) {
-      this.name = JSON.stringify(val)
+      this.name = val
+      if (item === 'detail') {
+        this.$emit('uploadListBool', '')
+        return
+      }
+      if (item === 'group') {
+        this.$emit('uploadListBool', 1)
+        return
+      }
       this.$emit('uploadListBool', true)
     },
     boolPage(item) {
@@ -95,7 +112,8 @@ export default {
       return this.$store.dispatch('modifyHomePageList', data)
     },
     primary() {
-      console.log('primary')
+      this.sub()
+      this.$store.commit('IS_PRIMARY', true)
     }
   }
 }
@@ -108,5 +126,3 @@ export default {
   font-size: 12px;
 }
 </style>
-
-

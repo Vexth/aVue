@@ -1,4 +1,4 @@
-export const list1 = {
+const list1 = {
   title: '基础组件库',
   items: [
     {
@@ -81,7 +81,7 @@ export const list1 = {
   ]
 }
 
-export const list2 = {
+const list2 = {
   title: '图片',
   items: [
     {
@@ -108,7 +108,7 @@ export const list2 = {
   ]
 }
 
-export const list3 = {
+const list3 = {
   title: '商品',
   items: [
     {
@@ -134,3 +134,96 @@ export const list3 = {
     },
   ]
 }
+
+export const list = [list1, list2, list3]
+
+export const li = [
+  {
+    title: '常用功能',
+    items: [
+      {
+        type: 'home',
+        name: '主页'
+      },
+      {
+        type: 'shop-cart',
+        name: '购物车'
+      },
+      {
+        type: 'user',
+        name: '个人中心'
+      },
+      {
+        type: 'addcar',
+        name: '车型选择'
+      },
+      {
+        type: 'address-add',
+        name: '添加地址'
+      },
+      {
+        type: 'select-address',
+        name: '地址选择'
+      },
+      {
+        type: 'bindcar',
+        name: '绑定车型'
+      },
+      {
+        type: 'card-detail',
+        name: '会员卡详情'
+      },
+      {
+        type: 'company-introduction',
+        name: '闲约科技介绍'
+      },
+      {
+        type: '',
+        name: '置空'
+      }
+    ]
+  },
+  {
+    title: '商品相关',
+    items: [
+      {
+        type: 'detail',
+        name: '商品详情'
+      },
+      {
+        type: 'group',
+        name: '产品分类'
+      },
+      {
+        type: 'order',
+        name: '我的订单'
+      },
+      {
+        type: 'order-details',
+        name: '订单详情'
+      },
+      {
+        type: 'productlist',
+        name: '产品列表'
+      },
+    ]
+  },
+  {
+    title: '营销工具',
+    items: [
+      {
+        type: 'shopRecord',
+        name: '会员卡消费记录'
+      },
+      {
+        type: 'to-pay-order',
+        name: '订单支付页面'
+      },
+      {
+        type: 'vipcard',
+        name: '会员卡页面'
+      },
+    ]
+  }
+]
+

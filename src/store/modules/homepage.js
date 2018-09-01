@@ -1,13 +1,33 @@
+import { uniqueObj } from '@/utils'
+
 const homepage = {
   state: {
     homePageList: [],
-    pageId: null
+    pageId: null,
+    attachList: [],
+    delete_module: null,
+    isPrimary: false,
+    selected: null,
+    clickSelected: null,
   },
   mutations: {
+    CLICK_SELECTED: (state, item) => {
+      state.clickSelected = item
+    },
+    IS_PRIMARY: (state, item) => {
+      state.isPrimary = item
+    },
+    SELECTED: (state, item) => {
+      state.selected = item
+    },
     ADD_PAGE_ID: (state, item) => {
       state.pageId = item
     },
     ADD_HOME_PAGE_LIST: (state, item) => {
+      const list = sessionStorage.getItem('homePageList')
+      if (list !== null && list.length !== 0) {
+        state.homePageList = JSON.parse(list)
+      }
       state.homePageList.push(item)
     },
     MODIFY_HOME_PAGE_LIST: (state, item) => {
@@ -32,10 +52,17 @@ const homepage = {
       let type = item['type']
       sessionHomePageList(state.homePageList, type, item)
     },
-    COMMODITY_LIST:(state, item) => {
+    COMMODITY_LIST: (state, item) => {
       let type = item['type']
       let data = item.data
       sessionHomePageList(state.homePageList, type, data)
+    },
+    ATTACH_LIST: (state, item) => {
+      state.attachList = [...state.homePageList, item]
+      sessionStorage.setItem('attach', JSON.stringify(state.attachList))
+    },
+    DELETE_MODULE: (state, item) => {
+      state.delete_module = item
     },
   },
   actions: {
@@ -63,6 +90,9 @@ const homepage = {
     commodityList({ commit }, item) {
       commit('COMMODITY_LIST', item)
     },
+    attachList({ commit }, item) {
+      commit('ATTACH_LIST', item)
+    },
   }
 }
 
@@ -73,7 +103,8 @@ function sessionHomePageList(item, type, data) {
     }
     return res
   })
-  sessionStorage.setItem('homePageList', JSON.stringify(item))
+  const list = uniqueObj(item, 'type')
+  sessionStorage.setItem('homePageList', JSON.stringify(list))
 }
 
 export default homepage
