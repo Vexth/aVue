@@ -53,6 +53,8 @@ import vHomepageTitle from '@/views/shop/homepage/components/vHomepageTitle.vue'
 import vHomepageImg from '@/views/shop/homepage/components/vHomepageImg.vue'
 import vHomepageCommodity from '@/views/shop/homepage/components/vHomepageCommodity.vue'
 import vHomepageCategory from '@/views/shop/homepage/components/vHomepageCategory.vue'
+import vHomepageMap from '@/views/shop/homepage/components/vHomepageMap.vue'
+import vHomepageTab from '@/views/shop/homepage/components/vHomepageTab.vue'
 
 import vImg from '@/views/shop/showcase/zujian/img.vue'
 import CommodityAdComponent from '@/views/shop/homepage/components/component/CommodityAdComponent.vue'
@@ -88,6 +90,8 @@ export default {
     'in-commodity': vHomepageCommodity,
     'small-commodity': vHomepageCommodity,
     'category': vHomepageCategory,
+    'usermap': vHomepageMap,
+    'imgtab': vHomepageTab
   },
   data() {
     return {
