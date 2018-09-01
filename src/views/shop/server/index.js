@@ -133,6 +133,11 @@ export const couponEditRequest = data => post(`${urlList.couponEditRequest}?coup
 export const couponCreate = data => post(urlList.couponCreate, data)
 export const couponStopSend = data => post(`${urlList.couponStopSend}?couponId=${data}`)
 
+
+export const shopPagePageList = data => get(urlList.shopPagePageList, { params: data })
+export const shopPageUpdatepage = data => post(urlList.shopPageUpdatepage, data)
+export const shopPagePageInfo = data => post(urlList.shopPagePageInfo, data)
+
 // 指标数据
 // GET /api/v1//shop/main/indicators 主页指标
 export const mainIndicators = data => get(urlList.mainIndicators, { params: data })

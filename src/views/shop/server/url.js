@@ -111,16 +111,24 @@ export const urlList = {
   deleteVideo: `api/v1/shop/video/delete`,
 
   // 优惠券
-  // GET /api/v1/shop/coupon/select/parmas 商户查询优惠券
-  couponSelectParmas: `api/v1/shop/coupon/select/parmas`,
-  // GET /api/v1/shop/coupon/edit/response 编辑
-  couponEditResponse: `api/v1/shop/coupon/edit/response`,
-  // POST /api/v1/shop/coupon/edit/request 修改存入数据库
-  couponEditRequest: `api/v1/shop/coupon/edit/request`,
-  // POST /api/v1/shop/coupon/create 创建优惠券
-  couponCreate: `api/v1/shop/coupon/create`,
-  // POST /api/v1/shop/coupon/stop/send 停止发放
-  couponStopSend: `api/v1/shop/coupon/stop/send`,
+
+  // GET /api/v1/admin/coupon/select/parmas 商户查询优惠券
+  couponSelectParmas: `api/v1/admin/coupon/select/parmas`,
+  // GET /api/v1/admin/coupon/edit/response 编辑
+  couponEditResponse: `api/v1/admin/coupon/edit/response`,
+  // POST /api/v1/admin/coupon/edit/request 修改存入数据库
+  couponEditRequest: `api/v1/admin/coupon/edit/request`,
+  // POST /api/v1/admin/coupon/create 创建优惠券
+  couponCreate: `api/v1/admin/coupon/create`,
+  // POST /api/v1/admin/coupon/stop/send 停止发放
+  couponStopSend: `api/v1/admin/coupon/stop/send`,
+
+  // GET /shop/page/pagelist
+  shopPagePageList: `api/v1/shop/page/pagelist`,
+  // POST /api/v1/shop/page/updatepage
+  shopPageUpdatepage: `api/v1/shop/page/updatepage`,
+  // POST /api/v1/shop/page/pageinfo
+  shopPagePageInfo: `api/v1/shop/page/pageinfo`,
 
   // 指标数据
   // GET /api/v1//shop/main/indicators 主页指标
@@ -132,4 +140,5 @@ export const urlList = {
   // GET /api/v1/shop/order/not/send 主页代发货列表
   mainNeedSendIndicators: `api/v1/shop/order/not/send`
 }
+
 

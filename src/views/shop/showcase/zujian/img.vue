@@ -38,7 +38,7 @@ export default {
       selected: [],
       selectedImgList: [],
       pagination: {
-        total: 100,
+        total: 0,
         size: 21,
         page: 1,
         sizes: [21, 63, 126]

@@ -7,16 +7,16 @@
     <p class="p">管理优惠券</p>
     <el-form :inline="true" :model="formInline" class="demo-form-inline">
       <el-form-item label="优惠券名称：">
-        <el-input v-model="formInline.couponName" placeholder="优惠券名称"></el-input>
+        <el-input v-model="formInline.couponName" placeholder="优惠券名称" clearable></el-input>
       </el-form-item>
       <el-form-item label="优惠券状态：">
-        <el-select v-model="formInline.statusCode" placeholder="优惠券状态">
+        <el-select v-model="formInline.statusCode" placeholder="优惠券状态" clearable>
           <el-option label="已结束" value="0"></el-option>
           <el-option label="进行中" value="1"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="优惠券类别：">
-        <el-select v-model="formInline.couponConditionType" placeholder="优惠券类别">
+        <el-select v-model="formInline.couponConditionType" placeholder="优惠券类别" clearable>
           <el-option label="现金券" value="1"></el-option>
           <el-option label="满减券" value="2"></el-option>
           <el-option label="折扣券" value="3"></el-option>
