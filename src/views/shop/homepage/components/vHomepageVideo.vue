@@ -33,7 +33,6 @@ export default {
         posterUrl: '',
         videoUrl: ''
       },
-      bool: true,
     }
   },
   props: {
@@ -64,9 +63,7 @@ export default {
     }
   },
   beforeDestroy() {
-    if (this.bool) {
-      this.sub()
-    }
+    this.sub()
   },
   methods: {
     uploadList() {
@@ -77,7 +74,6 @@ export default {
       this.videoList.posterUrl = item
     },
     sub() {
-      this.bool = false
       return this.$store.dispatch('videoList', this.videoList)
     },
     primary() {

@@ -10,7 +10,6 @@
 import ImageAdComponent from '@/views/shop/homepage/components/component/ImageAdComponent.vue'
 import FormPlus from '@/views/shop/homepage/components/component/formPlus.vue'
 
-import { shopPageUpdatepage } from '@/views/shop/server'
 export default {
   components: {
     ImageAdComponent,
@@ -26,23 +25,22 @@ export default {
     componentId: {
       immediate: true,
       handler(newVal, oldVal) {
-        if (oldVal !== undefined) {
-          this.sub()
-        }
-        this.type = newVal.difference
         this.bannerList = []
+        this.type = newVal.difference
+        this.ComponentId = newVal.componentId
         let data = {
           type: newVal.difference,
           componentId: newVal.componentId,
           data: this.bannerList
         }
-        if (newVal['data'] !== undefined) {
+        if (newVal['data'] !== undefined && newVal['data'].length !== 0) {
           data = newVal['data']
           const len = data['data'].length
           this.index = data['data'][len-1]['component'] + 1
           this.bannerList = data['data'].map(res => JSON.stringify(res))
         }
         this.$store.dispatch('addHomePageList', data)
+        this.sub()
       }
     }
   },
@@ -53,6 +51,7 @@ export default {
       index: 0,
       bannerList: [],
       type: null,
+      ComponentId: null,
       banner: {
         component: null,
         ruleForm2: {
@@ -64,14 +63,11 @@ export default {
           }
         }
       },
-      bool: true,
       id: null,
     }
   },
   beforeDestroy() {
-    if (this.bool) {
-      this.sub()
-    }
+    this.sub()
   },
   methods: {
     uploadListBool(item, val) {
@@ -109,20 +105,12 @@ export default {
         type: this.type,
         data: this.bannerList
       }
+      this.$store.commit('CLICK_SELECTED', { ...data, componentId: this.ComponentId })
       return this.$store.dispatch('modifyHomePageList', data)
     },
     primary() {
-      this.sub().then(res => {
-        let data = sessionStorage.getItem('homePageList')
-        let list = {
-          pageId: this.$store.getters.pageId,
-          config: data,
-          attach: data
-        }
-        // console.log(this.$store.getters.pageId)
-        shopPageUpdatepage(list).then(res => console.log(res)).catch(err => console.log(err))
-        // console.log(sessionStorage.getItem('homePageList'))
-      })
+      this.sub()
+      this.$store.commit('IS_PRIMARY', true)
     }
   }
 }

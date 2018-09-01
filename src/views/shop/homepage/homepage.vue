@@ -110,7 +110,8 @@ export default {
       listData: list,
       pageId: null,
       index: 0,
-      shopPagePageInfoList: []
+      shopPagePageInfoList: [],
+      delete_data: '',
     }
   },
   mounted() {
@@ -136,37 +137,43 @@ export default {
   },
   watch: {
     clickSelected(item) {
-      this.items.map(res => {
+      // console.log(item)
+      this.items = this.items.map(res => {
         const list = JSON.parse(res)
         if (list['difference'] === item['type']) {
-          list['data'] = item['data']
+          list['data'] = item['data'].map(res => JSON.parse(res))
+          console.log(list)
         }
         return JSON.stringify(list)
       })
-      console.log(this.items)
-      console.log(item)
+      // console.log(this.items)
     },
     deleteModule(item) {
-      console.log(item)
       if (this.items.length !== 0) {
+        const homePageList = sessionStorage.getItem('homePageList')
+        const list = JSON.parse(homePageList)
         this.items = this.items.filter(res => {
           const list = JSON.parse(res)
           if (list['difference'] !== item['difference']) {
             return JSON.stringify(res)
           }
         })
+        const s = list.filter(res => res['type'] !== item['difference'])
+        sessionStorage.setItem('homePageList', JSON.stringify(s))
+        this.isComponent = ''
+        this.delete_data = JSON.stringify(s)
       }
     },
     isPrimary(item) {
       if (item) {
-        const homePageList = sessionStorage.getItem('homePageList')
-        const list = JSON.parse(homePageList)
-        const data = uniqueObj(list, 'type')
-        const config = JSON.stringify(data)
+        let homePageList = sessionStorage.getItem('homePageList')
+        if (this.delete_data !== '') {
+          homePageList = this.delete_data
+        }
         const listData = {
           pageId: this.pageId,
-          config,
-          attach: config,
+          config: homePageList,
+          attach: homePageList,
         }
         shopPageUpdatepage(listData).then(res => {
           this.shopPagePageInfo(this.pageId)
@@ -176,6 +183,7 @@ export default {
     },
     selected(item) {
       const list = JSON.parse(item)
+      // console.log('------', list)
       if (this.shopPagePageInfoList.length === 0) {
         this.shopPagePageInfoList = JSON.parse(sessionStorage.getItem('homePageList'))
       }
@@ -272,7 +280,9 @@ export default {
     primary() {
       if (this.isComponent !== '') {
         this.$refs.component.primary()
+        return
       }
+      this.$store.commit('IS_PRIMARY', true)
     },
     sortStart(item) {
       this.items.map(res => {
@@ -284,8 +294,8 @@ export default {
       })
     },
     input(item) {
-      this.items = item
       // console.log(item)
+      this.items = item
     },
     sub() {
       this.tpDialogVisible = false

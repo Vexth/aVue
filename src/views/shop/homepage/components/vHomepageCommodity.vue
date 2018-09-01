@@ -12,7 +12,6 @@
 <script>
 import ImageLi from '@/views/shop/homepage/components/component/ImageLi.vue'
 
-import { shopPageUpdatepage } from '@/views/shop/server'
 export default {
   components: {
     ImageLi
@@ -21,9 +20,9 @@ export default {
     return {
       tpList: [],
       type: null,
+      ComponentId: null,
       homePageList: [],
       index: 0,
-      bool: true,
     }
   },
   props: {
@@ -36,28 +35,25 @@ export default {
     componentId: {
       immediate:true,
       handler(newVal, oldVal) {
-        if (oldVal !== undefined) {
-          this.sub()
-        }
         this.type = newVal.difference
+        this.ComponentId = newVal.componentId
         this.tpList = []
         let data = {
           type: newVal.difference,
           componentId: newVal.componentId,
           data: []
         }
-        if (newVal['data'] !== undefined) {
+        if (newVal['data'] !== undefined && newVal['data'].length !== 0) {
           data = newVal['data']
           this.tpList = data['data']
         }
         this.$store.dispatch('addHomePageList', data)
+        this.sub()
       }
     }
   },
   beforeDestroy() {
-    if (this.bool) {
-      this.sub()
-    }
+    this.sub()
   },
   methods: {
     uploadList() {
@@ -85,12 +81,11 @@ export default {
       this.tpList = item
     },
     sub() {
-      this.bool = false
-      
       const tpList = {
         type: this.type,
         data: this.tpList
       }
+      this.$store.commit('CLICK_SELECTED', { ...tpList, componentId: this.ComponentId })
       return this.$store.dispatch('commodityList', tpList)
     },
     primary() {

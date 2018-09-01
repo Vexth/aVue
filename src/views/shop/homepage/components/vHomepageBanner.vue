@@ -25,9 +25,6 @@ export default {
     componentId: {
       immediate: true,
       handler(newVal, oldVal) {
-        if (oldVal !== undefined) {
-          this.sub()
-        }
         this.bannerList = []
         this.type = newVal.difference
         this.ComponentId = newVal.componentId
@@ -36,15 +33,17 @@ export default {
           componentId: newVal.componentId,
           data: this.bannerList
         }
-        if (newVal['data'] !== undefined) {
+        if (newVal['data'] !== undefined && newVal['data'].length !== 0) {
           data = newVal['data']
           const len = data['data'].length
           this.index = data['data'][len-1]['component'] + 1
           this.bannerList = data['data'].map(res => JSON.stringify(res))
         }
         this.$store.dispatch('addHomePageList', data)
+        this.sub()
       }
-    }
+    },
+    
   },
   data() {
     return {
@@ -65,14 +64,11 @@ export default {
           }
         }
       },
-      bool: true,
       id: null,
     }
   },
   beforeDestroy() {
-    if (this.bool) {
-      this.sub()
-    }
+    this.sub()
   },
   methods: {
     uploadListBool(item, val) {
