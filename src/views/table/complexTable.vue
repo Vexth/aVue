@@ -254,7 +254,7 @@ export default {
         type: ''
       }
     },
-    handleCreate() {
+    handleCreatePromotion() {
       this.resetTemp()
       this.dialogStatus = 'create'
       this.dialogFormVisible = true
@@ -313,7 +313,7 @@ export default {
         }
       })
     },
-    handleDelete(row) {
+    handleDeletePromotion(row) {
       this.$notify({
         title: '成功',
         message: '删除成功',

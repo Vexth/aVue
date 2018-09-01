@@ -16,12 +16,12 @@
             <el-date-picker
               type="datetimerange"
               size="large"
-              align="right"
+              align="center"
               unlink-panels
-              range-separator="-"
+              range-separator="至"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
-              value-format="yyyy-MM-dd hh:mm:ss"
+              value-format="yyyy-MM-dd HH:mm:ss"
               v-model="pickerDateRange"
               :picker-options="pickerOptions">
             </el-date-picker>
@@ -78,7 +78,9 @@
 
         <el-form-item>
           <!--<el-button type="primary" @click="submitForm('dynamicValidateForm')">提交</el-button>-->
-          <el-button v-if="this.form.fullReductionRules.length < 5" type="primary" size="mini" @click="addRule">+ 新增满减规则</el-button>
+          <el-button v-if="this.form.fullReductionRules.length < 5" type="primary" size="mini" @click="addRule">+
+            新增满减规则
+          </el-button>
           <!--<el-button @click="resetForm('form')">重置</el-button>-->
         </el-form-item>
         <el-form-item label="活动备注">
@@ -90,7 +92,7 @@
             <el-radio-group v-model="form.productRange" @change="productRangeChange">
               <el-radio label="0" border>所有商品参加</el-radio>
               <el-radio label="1" border>部分商品参加</el-radio>
-              <el-radio label="2" border>部分商品不参加</el-radio>
+              <!--<el-radio label="2" border>部分商品不参加</el-radio>-->
             </el-radio-group>
           </el-col>
           <!--<el-col v-if="showAddProductButton">-->
@@ -100,11 +102,14 @@
 
         <!--选择商品的弹窗-->
         <el-form-item label="商品列表:" v-if="showAddProductButton">
-          <el-button type="primary" size="mini" @click="dialogTableVisible = true">+ 添加商品</el-button>
+          <el-button type="primary" size="mini" @click="dialogTableVisible = true">选择商品</el-button>
           <span>(已添加商品数：{{form.tableData.length}})</span>
+
+          <!--产品选择框-->
           <product-table-select-dialog
             :visible.sync="dialogTableVisible"
             :tableData="form.tableData"
+            :promotionId="form.promotionId"
             @onProductSelectChange="tableDataChange"
           ></product-table-select-dialog>
 
@@ -126,13 +131,14 @@
 </template>
 
 <script>
-  import {promotionCreate, promotionModify} from '@/api/promotion'
-  import {shopProductLoad} from '@/views/shop/server'
+  import { promotionCreate, promotionModify } from '@/api/promotion'
+  // import { shopProductLoad } from '@/views/shop/server'
+  import { RULE_TYPE_FULL_REDUCTION } from '@/views/promotionCenter/constant'
   import ProductTableSelectDialog from '@/views/promotionCenter/components/ProductTableSelectDialog'
 
   export default {
     name: 'fullReductionCreate',
-    components: {ProductTableSelectDialog},
+    components: { ProductTableSelectDialog },
     props: {
       data: {
         type: Object,
@@ -150,6 +156,7 @@
     //   }
     // },
     mounted() {
+      // 挂载后加载商品类别
       if (this.data) {
         console.log('mounted')
         console.log(this.data)
@@ -167,27 +174,39 @@
         this.form.fullReductionRules = this.data.ruleStrategy
         // }
 
-        if (this.data.productIdList) {
-          this.form.tableData = this.data.productIdList.map(id => {
-            const product = {}
-            product.productId = id
-            product.productName = ''
-            shopProductLoad(id).then(response => {
-              console.log(response)
-              if (response.code === 200 && response.data) {
-                product.productName = response.data.product.title
-                product.productPrice = response.data.product.priceUnderline
-                // response.data.tbody
-                product.productStock = response.data.tbody.map(row => row.stockAmount).reduce((pre, cur, index, array) => {
-                  return pre + cur
-                }, 0)
-                product.isShow = false
-              }
-            }).catch(err => console.log(err))
+        if (this.data.productList) {
+          this.form.tableData = this.data.productList.map(product => {
+            // product.canAddInPage = false // 编辑页面可以动态添加
             return product
           })
         }
-        console.log(this.form.tableData)
+        // if (this.data.productIdList) {
+        //   this.form.tableData = this.data.productIdList.map(id => {
+        //     const product = {}
+        //     product.productId = id
+        //     product.productName = ''
+        //     promotionProductBrief({ ruleType: RULE_TYPE_FULL_REDUCTION, productId: id }).then(response => {
+        //       console.log(response)
+        //       if (response.code === 200 && response.data) {
+        //         product.productName = response.data.productName
+        //         product.productImageUrl = response.data.productImageUrl
+        //         product.productPrice = response.data.productPrice
+        //         product.productStock = response.data.productStock
+        //         product.canSelected = response.data.canSelected
+        //         // product.productName = response.data.product.title
+        //         // product.productImageUrl = response.data.product.imgPrimaryList[0].url
+        //         // product.productPrice = response.data.product.priceUnderline
+        //         // // response.data.tbody
+        //         // product.productStock = response.data.tbody.map(row => row.stockAmount).reduce((pre, cur, index, array) => {
+        //         //   return pre + cur
+        //         // }, 0)
+        //         // product.canSelected = false // 是否可以选择
+        //       }
+        //     }).catch(err => console.log(err))
+        //     return product
+        //   })
+        // }
+        // console.log(this.form.tableData)
         this.pickerDateRange = [this.data.beginTime, this.data.endTime]
       }
     },
@@ -211,28 +230,37 @@
       //     callback()
       //   }
       // }
-      // const validateDataTime = (rule, value, callback) => {
-      //   console.log(value)
-      //   // if (!isvalidUsername(value)) {
-      //   if (!value) {
-      //     callback(new Error('不能为空！'))
-      //   } else {
-      //     callback()
-      //   }
-      // }
+      const validateDataTime = (rule, value, callback) => {
+        console.log(value)
+        console.log(new Date(this.pickerDateRange[0]))
+        console.log(new Date())
+
+        if (new Date(this.pickerDateRange[0]) < new Date()) {
+          callback(new Error('开始时间不能设置为已过期的！'))
+        } else {
+          callback()
+        }
+
+        // if (!isvalidUsername(value)) {
+        // if (!value) {
+        //   callback(new Error('不能为空！'))
+        // } else {
+        //   callback()
+        // }
+      }
       return {
         formRules: {
           name: [{ required: true, trigger: 'blur', validator: validateName }],
           // tag: [{required: true, trigger: 'blur', validator: validateNotNull}]
-          fullReductionRules: [{ required: true, trigger: 'blur' }],
-          // pickerDateRange: [{ required: true, trigger: 'blur' }]
+          fullReductionRules: [{ required: true, trigger: 'blur' }]
+          // pickerDateRange: [{ required: true, trigger: 'change', validator:validateDataTime }]
 
         },
         showAddProductButton: false,
         dialogTableVisible: false,
         // 以下是表单数据
         form: {
-          promotionId: '',
+          promotionId: -1,
           vendorId: '',
           name: '',
           tag: '',
@@ -248,31 +276,35 @@
         },
         pickerDateRange: [],
         pickerOptions: {
+          firstDayOfWeek: 1,
           disabledDate: (time) => {
             return time.getTime() < Date.now()
           },
           shortcuts: [{
             text: '最近一周',
             onClick(picker) {
-              const end = new Date()
               const start = new Date()
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+              const end = new Date()
+              start.setTime(start.getTime() + 60 * 5 * 1000)
+              end.setTime(start.getTime() + 3600 * 1000 * 24 * 7)
               picker.$emit('pick', [start, end])
             }
           }, {
             text: '最近一个月',
             onClick(picker) {
-              const end = new Date()
               const start = new Date()
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
+              const end = new Date()
+              start.setTime(start.getTime() + 60 * 5 * 1000)
+              end.setTime(start.getTime() + 3600 * 1000 * 24 * 30)
               picker.$emit('pick', [start, end])
             }
           }, {
             text: '最近三个月',
             onClick(picker) {
-              const end = new Date()
               const start = new Date()
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
+              const end = new Date()
+              start.setTime(start.getTime() + 60 * 5 * 1000)
+              end.setTime(start.getTime() + 3600 * 1000 * 24 * 90)
               picker.$emit('pick', [start, end])
             }
           }]
@@ -281,8 +313,20 @@
     },
     methods: {
       // 表格组件回传变化数据
-      tableDataChange(val) {
-        console.log(val)
+      tableDataChange(data) {
+        console.log('表格组件回传变化数据')
+        console.log(data)
+        this.form.tableData = data
+        // this.form.tableData = Array.from(new Set([...this.form.tableData, ...data]))
+        // const result = []
+        // const a = this.form.tableData
+        // const b = data
+        // a.forEach(x => {
+        // })
+        // const c = data.filter((x) => this.form.tableData.filter((a) => x.productId !== a.productId))
+        // console.log(c)
+        // this.form.tableData = a.concat(b.filter((v) => { return !(a.indexOf(v) > -1) }))
+        // this.form.tableData = this.form.tableData.concat(data.filter((x) => this.form.tableData.filter((a) => x.productId !== a.productId).length === 1))
       },
       // 产品参加范围变更
       productRangeChange(val) {
@@ -310,7 +354,7 @@
               return
             }
 
-            // 去除一个属性 不修改原始
+            // 去除一个key属性 不修改原始
             const rules = this.form.fullReductionRules.map(rule => {
               return {
                 full: rule.full,
@@ -325,6 +369,16 @@
               })
               return
             }
+            // 不是所有商品都参与的话。必须有商品
+            if (this.form.productRange !== '0' && this.form.tableData.length === 0) {
+              this.$message.error({
+                title: '商品列表设置错误',
+                message: '商品列表中必须至少设置一个商品！',
+                type: 'error'
+              })
+              return
+            }
+
             const data = {
               promotionId: this.form.promotionId,
               vendorId: this.form.vendorId,
@@ -337,12 +391,12 @@
               // channel: this.form.channel,
               userRange: this.form.userRange,
               vendorRemark: this.form.vendorRemark,
-              ruleType: '1',
+              ruleType: RULE_TYPE_FULL_REDUCTION,
               ruleStrategy: '' + JSON.stringify(rules),
               productRange: this.form.productRange,
               productIdList: this.form.tableData.map(e => e.productId)
             }
-            console.log('编辑数据发送=  ' + JSON.stringify(data))
+            console.log('活动数据打包 =  ' + JSON.stringify(data))
             if (this.editType === '创建活动') {
               promotionCreate(data).then(response => {
                 console.log(response)
@@ -360,7 +414,6 @@
                 }
               }).catch(err => console.log(err))
             }
-
           }
         })
       },
