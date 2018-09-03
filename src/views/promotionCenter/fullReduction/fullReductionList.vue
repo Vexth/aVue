@@ -65,15 +65,15 @@
 
         <el-table-column
           label="活动详情"
-          width="180">
+          width="210">
           <template slot-scope="scope">
-            <el-popover trigger="hover" placement="top">
+            <el-popover trigger="click" placement="top">
               <!--<i class="el-icon-time"></i>-->
-              <p v-for="strategy in scope.row.ruleStrategy">满: {{ strategy.full }} 减: {{ strategy.reduction }}</p>
+              <p v-for="strategy in scope.row.ruleStrategy">满: {{ strategy.full | priceFormat }}元, 减: {{ strategy.reduction | priceFormat }}元</p>
               <div slot="reference" class="name-wrapper">
                 <!--<el-tag size="medium">{{ scope.row.ruleStrategy[0] }}</el-tag>-->
-                <el-tag size="medium" v-if="scope.row.ruleStrategy.length !== 0">满: {{ scope.row.ruleStrategy[0].full }}
-                  减: {{ scope.row.ruleStrategy[0].reduction }}
+                <el-tag size="medium" v-if="scope.row.ruleStrategy.length !== 0">满: {{ scope.row.ruleStrategy[0].full | priceFormat }}元,
+                  减: {{ scope.row.ruleStrategy[0].reduction | priceFormat }}元
                 </el-tag>
               </div>
             </el-popover>
@@ -90,14 +90,16 @@
           width="120">
           <template slot-scope="scope">
             <!--<i class="el-icon-time"></i>-->
-            <span>{{ scope.row.promotionId }}</span>
+            <!--<span>{{ scope.row.promotionId }}</span>-->
+            <span>-</span>
           </template>
         </el-table-column>
         <el-table-column
           label="已付款用户数"
           width="120">
           <template slot-scope="scope">
-            <span>{{ scope.row.promotionId }}</span>
+            <!--<span>{{  scope.row.promotionId }}</span>-->
+            <span>-</span>
           </template>
         </el-table-column>
 

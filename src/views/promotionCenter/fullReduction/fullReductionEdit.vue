@@ -5,7 +5,7 @@
         <el-form-item prop="name" label="活动名称:">
           <el-input v-model="form.name"></el-input>
         </el-form-item>
-        <el-form-item prop="tag" label="活动标签:" v-if="false">
+        <el-form-item prop="tag" label="活动标签:">
           <el-input v-model="form.tag"></el-input>
         </el-form-item>
 
@@ -22,6 +22,7 @@
               start-placeholder="开始日期"
               end-placeholder="结束日期"
               value-format="yyyy-MM-dd HH:mm:ss"
+              :default-time="[new Date().toLocaleTimeString(), new Date().toLocaleTimeString()]"
               v-model="pickerDateRange"
               :picker-options="pickerOptions">
             </el-date-picker>
@@ -64,12 +65,13 @@
           :key="rule.key"
         >
           <el-col :span="4">
-            <el-input-number v-model="rule.full" :precision="2" :step="100" :min="0"></el-input-number>
+            <el-input-number size="medium" v-model="rule.full" :precision="2" :step="100" :min="0"></el-input-number>
           </el-col>
-          <el-col :span="1">&nbsp;&nbsp;&nbsp;减:</el-col>
+          <el-col :span="1">元&nbsp;&nbsp;&nbsp;&nbsp;减:</el-col>
           <el-col :span="4">
-            <el-input-number v-model="rule.reduction" :precision="2" :step="10" :min="0"></el-input-number>
+            <el-input-number size="medium" v-model="rule.reduction" :precision="2" :step="10" :min="0"></el-input-number>
           </el-col>
+          <el-col :span="1">元&nbsp;</el-col>
           <el-col :span="4">
             <el-button type="danger" size="mini" icon="el-icon-delete" @click.prevent="removeRule(rule)"
                        circle></el-button>
@@ -118,7 +120,7 @@
 
         <!--<span slot="footer" class="dialog-footer">-->
         <el-form-item>
-          <el-button type="success" size="big" @click="onSubmit" round>{{editType}}</el-button>
+          <el-button type="success" size="big" @click="onSubmit" :loading="submitLoading" round>{{editType}}</el-button>
           <!--<el-button size="big" >取消</el-button>-->
         </el-form-item>
         <!--</span>-->
@@ -135,6 +137,7 @@
   // import { shopProductLoad } from '@/views/shop/server'
   import { RULE_TYPE_FULL_REDUCTION } from '@/views/promotionCenter/constant'
   import ProductTableSelectDialog from '@/views/promotionCenter/components/ProductTableSelectDialog'
+  import { pickerOptionsFromNowOn } from '@/utils'
 
   export default {
     name: 'fullReductionCreate',
@@ -235,7 +238,7 @@
         console.log(new Date(this.pickerDateRange[0]))
         console.log(new Date())
 
-        if (new Date(this.pickerDateRange[0]) < new Date()) {
+        if (new Date(this.pickerDateRange[0]).getTime() < new Date().getTime() - 3600 * 1000) {
           callback(new Error('开始时间不能设置为已过期的！'))
         } else {
           callback()
@@ -252,12 +255,13 @@
         formRules: {
           name: [{ required: true, trigger: 'blur', validator: validateName }],
           // tag: [{required: true, trigger: 'blur', validator: validateNotNull}]
-          fullReductionRules: [{ required: true, trigger: 'blur' }]
-          // pickerDateRange: [{ required: true, trigger: 'change', validator:validateDataTime }]
+          fullReductionRules: [{ required: true, trigger: 'blur' }],
+          pickerDateRange: [{ required: true, trigger: 'change', validator: validateDataTime }]
 
         },
         showAddProductButton: false,
         dialogTableVisible: false,
+        submitLoading: false,
         // 以下是表单数据
         form: {
           promotionId: -1,
@@ -275,39 +279,41 @@
           tableData: [] // 选择的表单数据
         },
         pickerDateRange: [],
+        // pickerDateDefaultTime: [new Date().toLocaleTimeString(), new Date().toLocaleTimeString()], // 可以直接写入 :default-time
         pickerOptions: {
           firstDayOfWeek: 1,
           disabledDate: (time) => {
-            return time.getTime() < Date.now()
+            return time.getTime() + 3600 * 24 * 1000 < Date.now()
           },
-          shortcuts: [{
-            text: '最近一周',
-            onClick(picker) {
-              const start = new Date()
-              const end = new Date()
-              start.setTime(start.getTime() + 60 * 5 * 1000)
-              end.setTime(start.getTime() + 3600 * 1000 * 24 * 7)
-              picker.$emit('pick', [start, end])
-            }
-          }, {
-            text: '最近一个月',
-            onClick(picker) {
-              const start = new Date()
-              const end = new Date()
-              start.setTime(start.getTime() + 60 * 5 * 1000)
-              end.setTime(start.getTime() + 3600 * 1000 * 24 * 30)
-              picker.$emit('pick', [start, end])
-            }
-          }, {
-            text: '最近三个月',
-            onClick(picker) {
-              const start = new Date()
-              const end = new Date()
-              start.setTime(start.getTime() + 60 * 5 * 1000)
-              end.setTime(start.getTime() + 3600 * 1000 * 24 * 90)
-              picker.$emit('pick', [start, end])
-            }
-          }]
+          shortcuts: pickerOptionsFromNowOn
+          // [{
+          //       text: '最近一周',
+          //       onClick(picker) {
+          //         const start = new Date()
+          //         const end = new Date()
+          //         start.setTime(start.getTime() + 60 * 1000) // 一分钟后
+          //         end.setTime(start.getTime() + 3600 * 1000 * 24 * 7)
+          //         picker.$emit('pick', [start, end])
+          //       }
+          //     }, {
+          //       text: '最近一个月',
+          //       onClick(picker) {
+          //         const start = new Date()
+          //         const end = new Date()
+          //         start.setTime(start.getTime() + 60 * 1000)
+          //         end.setTime(start.getTime() + 3600 * 1000 * 24 * 30)
+          //         picker.$emit('pick', [start, end])
+          //       }
+          //     }, {
+          //       text: '最近三个月',
+          //       onClick(picker) {
+          //         const start = new Date()
+          //         const end = new Date()
+          //         start.setTime(start.getTime() + 60 * 1000)
+          //         end.setTime(start.getTime() + 3600 * 1000 * 24 * 90)
+          //         picker.$emit('pick', [start, end])
+          //       }
+          //     }]
         }
       }
     },
@@ -344,7 +350,11 @@
             // console.log('submit!')
             // console.log('date = ' + this.pickerDateRange)
             // console.log(this.form)
-            console.log(this.pickerDateRange)
+            // console.log(this.pickerDateRange)
+            this.submitLoading = true
+            setTimeout(() => {
+              this.submitLoading = false
+            }, 1500)
             if (this.pickerDateRange.length !== 2) {
               this.$message.error({
                 title: '时间设置错误',
@@ -399,16 +409,16 @@
             console.log('活动数据打包 =  ' + JSON.stringify(data))
             if (this.editType === '创建活动') {
               promotionCreate(data).then(response => {
-                console.log(response)
-                if (response.code === 200) {
+                // console.log(response)
+                if (response && response.code === 200) {
                   this.$message.success(response.msg)
                   this.$emit('editSuccess', this.editType)
                 }
               }).catch(err => console.log(err))
             } else if (this.editType === '更新活动') {
               promotionModify(data).then(response => {
-                console.log(response)
-                if (response.code === 200) {
+                // console.log(response)
+                if (response && response.code === 200) {
                   this.$message.success(response.msg)
                   this.$emit('editSuccess', this.editType)
                 }
