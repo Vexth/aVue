@@ -65,9 +65,9 @@
 
         <el-table-column
           label="活动详情"
-          width="180">
+          width="210">
           <template slot-scope="scope">
-            <el-popover trigger="hover" placement="top">
+            <el-popover trigger="click" placement="top">
               <!--<i class="el-icon-time"></i>-->
               <p v-for="strategy in scope.row.ruleStrategy">满: {{ strategy.full | priceFormat }}元, 减: {{ strategy.reduction | priceFormat }}元</p>
               <div slot="reference" class="name-wrapper">
