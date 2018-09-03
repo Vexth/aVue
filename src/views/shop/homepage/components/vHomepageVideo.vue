@@ -45,20 +45,21 @@ export default {
     componentId: {
       immediate:true,
       handler(newVal, oldVal) {
-        if (oldVal !== undefined) {
-          this.sub()
-        }
-        this.videoList = {
-          type: newVal.difference,
-          posterUrl: '',
-          videoUrl: ''
-        }
-        let data = {
-          type: newVal.difference,
-          componentId: newVal.componentId,
-          data: {}
-        }
-        this.$store.dispatch('addHomePageList', data)
+        console.log(newVal)
+        // if (oldVal !== undefined) {
+        //   this.sub()
+        // }
+        // this.videoList = {
+        //   type: newVal.difference,
+        //   posterUrl: '',
+        //   videoUrl: ''
+        // }
+        // let data = {
+        //   type: newVal.difference,
+        //   componentId: newVal.componentId,
+        //   data: {}
+        // }
+        // this.$store.dispatch('addHomePageList', data)
       }
     }
   },
@@ -74,12 +75,12 @@ export default {
       this.videoList.posterUrl = item
     },
     sub() {
-      return this.$store.dispatch('videoList', this.videoList)
+      // return this.$store.dispatch('videoList', this.videoList)
     },
-    primary() {
-      this.sub()
-      this.$store.commit('IS_PRIMARY', true)
-    }
+    // primary() {
+    //   this.sub()
+    //   this.$store.commit('IS_PRIMARY', true)
+    // }
   }
 }
 </script>

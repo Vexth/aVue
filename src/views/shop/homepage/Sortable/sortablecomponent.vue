@@ -1,5 +1,5 @@
 <template>
-  <li :class="isSelected ? 'list-item' : ''" :type="list.componentId" :data-item="item" @click.stop>
+  <div :class="isSelected ? 'list-item' : ''" @click="selectedelEment">
     <img :src="list.imgurl" alt="" srcset="">
     <el-popover
       placement="left"
@@ -12,18 +12,15 @@
       </div>
       <el-button class="button" size="mini" slot="reference">×</el-button>
     </el-popover>
-  </li>
+  </div>
 </template>
 
 <script>
-import { ElementMixin } from 'vue-slicksort'
 export default {
-  name: 'SortableItem',
-  mixins: [ElementMixin],
   props: {
     item: {
       type: String,
-      default: ''
+      default: {}
     }
   },
   watch: {
@@ -42,12 +39,15 @@ export default {
     }
   },
   methods: {
+    selectedelEment() {
+      this.$emit('selectedelEment', this.item)
+    },
     selected(item) {
       this.isSelected = item
     },
     sub() {
-      this.$store.commit('DELETE_MODULE', this.list)
-      this.$store.commit('MODIFY_DATA_LIST', this.list)
+      // this.$store.commit('DELETE_MODULE', this.list)
+      // this.$store.commit('MODIFY_DATA_LIST', this.list)
       this.visible2 = false
     }
   }
@@ -55,7 +55,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-li {
+div {
   margin: 0;
   padding: 0;
   list-style-type: none;
@@ -84,4 +84,3 @@ li {
   border-color: #f96132;
 }
 </style>
-

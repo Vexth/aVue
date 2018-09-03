@@ -23,23 +23,23 @@ export default {
           type: newVal.difference,
           componentId: newVal.componentId,
         }
-        this.$store.dispatch('addHomePageList', data)
-        this.sub()
+        // this.$store.dispatch('addHomePageList', data)
+        // this.sub()
       }
     }
   },
-  beforeDestroy() {
-    this.sub()
-  },
+  // beforeDestroy() {
+  //   this.sub()
+  // },
   methods: {
     sub() {
-      return this.$store.dispatch('Search')
+      // return this.$store.dispatch('Search')
     },
-    primary() {
-      this.sub()
-      this.$store.commit('IS_PRIMARY', true)
-      // console.log('primary')
-    }
+    // primary() {
+    //   this.sub()
+    //   this.$store.commit('IS_PRIMARY', true)
+    //   // console.log('primary')
+    // }
   }
 }
 </script>

@@ -20,7 +20,7 @@ export default {
   },
   data() {
     return {
-      homePageList: [],
+      l: null,
       index: 0,
       announcementList: [],
       type: null,
@@ -36,24 +36,23 @@ export default {
     componentId: {
       immediate:true,
       handler(newVal, oldVal) {
+        const l = this.$store.getters.data_list
+        const ld = l[newVal.difference]
+
         this.announcementList = []
         this.type = newVal.difference
-        let data = {
+        
+        if (ld !== undefined) {
+          this.announcementList = ld['data']
+        }
+        this.l = {
           type: newVal.difference,
           componentId: newVal.componentId,
-          data: []
+          data: this.announcementList
         }
-        if (newVal['data'] !== undefined) {
-          data = newVal['data']
-          this.announcementList = data['data'].map(res => JSON.stringify(res))
-        }
-        this.$store.dispatch('addHomePageList', data)
-        this.sub()
+        this.$store.dispatch('AddDataList', this.l)
       }
     }
-  },
-  beforeDestroy() {
-    this.sub()
   },
   methods: {
     plusList() {
@@ -64,17 +63,9 @@ export default {
       this.announcementList.splice(item, 1)
     },
     sub() {
-      let list = {
-        type: this.type,
-        data: this.announcementList
-      }
-      return this.$store.dispatch('announcementList', list)
+      this.l['data'] = this.announcementList
+      this.$store.dispatch('AddDataList', this.l)
     },
-    primary() {
-      this.sub()
-      this.$store.commit('IS_PRIMARY', true)
-      // console.log('primary')
-    }
   }
 }
 </script>
