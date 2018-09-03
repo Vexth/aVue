@@ -147,9 +147,9 @@ export default {
           if (res.code === 200) {
 
             if (res.data != undefined && res.data["mapIndicators"] !== undefined){
-              var mapTop = res.data["mapIndicators"] 
+              var mapTop = res.data["mapIndicators"]
               if (mapTop["1"] !== undefined) {
-                
+
                 var temp = {}
                 temp["name"] = "七天产品销售排行(凌晨两点更新)"
                 temp["list"] = mapTop["1"]
@@ -185,7 +185,7 @@ export default {
                 this.lineIndicators.orderCount.indicatorsData.indicators.push(0)
                 this.lineIndicators.playmentSum.indicatorsData.indicators.push(0)
               }
-              if (i == 6) {        
+              if (i == 6) {
                 this.currentIndicators = indicatorsInfo
                 this.currentIndicators["playmentSum"] = (this.currentIndicators["playmentSum"])
                 // this.currentIndicators["playmentSum"] = 9901
@@ -197,7 +197,7 @@ export default {
           }
         }).catch(err => console.log(err))
     },
-   
+
     // 日期，在原有日期基础上，增加days天数，默认增加1天
     addDate(date, days) {
         // if (days == undefined || days == '') {
@@ -215,7 +215,7 @@ export default {
     // 日期月份/天的显示，如果是1位数，则在前面加上'0'
     getFormatDate(arg) {
         if (arg == undefined || arg == '') {
-            return '';
+            return ''
         }
 
         var re = arg + '';

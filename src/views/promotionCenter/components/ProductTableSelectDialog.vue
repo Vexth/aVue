@@ -37,7 +37,8 @@
         <el-form-item>
           <el-button type="danger" @click="resetForm">重置</el-button>
         </el-form-item>
-        <!--<el-button type="success" @click="handleAddAllProduct()">选择当前页全部可选商品</el-button>-->
+
+        <el-button type="success" @click="handleAddProductConfirm()">确定选择</el-button>
       </el-form>
 
       <el-table ref="multipleTable"
@@ -227,7 +228,7 @@
         tableDataTempDelete: [], // 临时准备的删除表
         pagination: {
           total: 100,
-          size: 20,
+          size: 10,
           page: 1,
           sizes: [10, 20, 50, 100]
         },
@@ -476,8 +477,8 @@
 </script>
 <style scoped>
   .productImage {
-    width: 80%;
-    height: 56px;
+    width: 65%;
+    height: 46px;
   }
 
   .column_center {
