@@ -64,6 +64,10 @@ const homepage = {
     DELETE_MODULE: (state, item) => {
       state.delete_module = item
     },
+    MAP_DATA: (state, item) => {
+      let type = item['type']
+      sessionHomePageList(state.homePageList, type, item)
+    }
   },
   actions: {
     addPageId({ commit }, item) {
@@ -93,6 +97,9 @@ const homepage = {
     attachList({ commit }, item) {
       commit('ATTACH_LIST', item)
     },
+    mapData({ commit }, item) {
+      commit('MAP_DATA', item)
+    }
   }
 }
 

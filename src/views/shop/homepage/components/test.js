@@ -38,7 +38,7 @@ const list1 = {
     },
     {
       title: '地图导航',
-      url: 'map',
+      url: 'usermap',
       src: '/static/img/地图导航.png',
       imgurl: '/static/img/地图.png',
       componentId: 13

@@ -23,7 +23,6 @@ export default {
       homePageList: [],
       index: 0,
       announcementList: [],
-      bool: true,
       type: null,
     }
   },
@@ -37,9 +36,6 @@ export default {
     componentId: {
       immediate:true,
       handler(newVal, oldVal) {
-        if (oldVal !== undefined) {
-          this.sub()
-        }
         this.announcementList = []
         this.type = newVal.difference
         let data = {
@@ -52,13 +48,12 @@ export default {
           this.announcementList = data['data'].map(res => JSON.stringify(res))
         }
         this.$store.dispatch('addHomePageList', data)
+        this.sub()
       }
     }
   },
   beforeDestroy() {
-    if (this.bool) {
-      this.sub()
-    }
+    this.sub()
   },
   methods: {
     plusList() {
@@ -69,7 +64,6 @@ export default {
       this.announcementList.splice(item, 1)
     },
     sub() {
-      this.bool = false
       let list = {
         type: this.type,
         data: this.announcementList

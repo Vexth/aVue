@@ -35,7 +35,6 @@ export default {
           navigateParam:  '',
         }
       },
-      bool: true,
     }
   },
   props: {
@@ -75,9 +74,7 @@ export default {
     }
   },
   beforeDestroy() {
-    if (this.bool) {
-      this.sub()
-    }
+    this.sub()
   },
   methods: {
     uploadList() {
@@ -89,7 +86,6 @@ export default {
       this.title.iconUrl = item
     },
     sub() {
-      this.bool = false
       return this.$store.dispatch('Title', this.title)
     },
     primary() {
