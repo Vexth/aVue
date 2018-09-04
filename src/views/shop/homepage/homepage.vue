@@ -137,6 +137,7 @@ export default {
         return JSON.stringify(l)
       })
       
+      this.rigth = l
       this.isComponent = l.url
       this.componentId = {
         componentId: l.componentId,
@@ -187,27 +188,29 @@ export default {
             list = JSON.parse(res.data.config)
             this.shopPagePageInfoList = list
             const len = list.length
-            this.index = list[len - 1]['type'] + 1
+            if (len !== 0) {
+              this.index = list[len - 1]['type'] + 1
 
-            let list_data = []
-            this.listData.map(res => list_data = [...list_data, ...res['items']])
-            
-            list.map(res => list_data.map(item => {
-              if (item['componentId'] === res['componentId']) {
-                item['difference'] = res['type']
-                this.items.push(JSON.stringify(item))
-              }
-            }))
+              let list_data = []
+              this.listData.map(res => list_data = [...list_data, ...res['items']])
+              
+              list.map(res => list_data.map(item => {
+                if (item['componentId'] === res['componentId']) {
+                  item['difference'] = res['type']
+                  this.items.push(JSON.stringify(item))
+                }
+              }))
 
-            l = list.reduce((pre, cur) => {
-              pre[cur['type']] = cur
-              return pre
-            }, {})
-            this.$store.commit('DATA_LIST', l)
-            sessionStorage.setItem('data_list', JSON.stringify(l))
+              l = list.reduce((pre, cur) => {
+                pre[cur['type']] = cur
+                return pre
+              }, {})
+              this.$store.commit('DATA_LIST', l)
+              sessionStorage.setItem('data_list', JSON.stringify(l))
+            }
           }
           
-          sessionStorage.setItem('homePageList', JSON.stringify(list))
+          // sessionStorage.setItem('homePageList', JSON.stringify(list))
         } else {
           this.$message.error(res.msg)
         }
@@ -265,10 +268,17 @@ export default {
       const listData = {
         pageId: this.pageId,
         config,
-        attach: config,
       }
       shopPageUpdatepage(listData).then(res => {
-        this.shopPagePageInfo(this.pageId)
+        if (res.code === 200) {
+          this.shopPagePageInfo(this.pageId)
+          this.$message({
+            message: '提交成功',
+            type: 'success'
+          })
+        } else {
+          console.log(res)
+        }
       }).catch(err => console.log(err))
     },
     sub() {

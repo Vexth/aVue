@@ -35,13 +35,10 @@ window.addEventListener('message', function(event) {
     // 接收位置信息，用户选择确认位置点后选点组件会触发该事件，回传用户的位置信息
     this.loc = event.data;
     if (this.loc && this.loc.module == 'locationPicker') {//防止其他应用也会向该页面post信息，需判断module是否为'locationPicker'
-        console.log('location', this.loc);
+      console.log('location', this.loc);
     }
 }, false);
 export default {
-//   components: {
-//     TelnetMap
-//   },
   props: {
     componentId: Number
   },
@@ -57,7 +54,6 @@ export default {
         worktime: [],
         worktimeStr: '',
         posterUrl: '/static/img/icon-add.png'
-        // videoUrl: ''
       },
       bool: true,
     }
@@ -79,7 +75,6 @@ export default {
           type: newVal.difference,
           name: '',
           address: '',
-          // worktime: [],
           worktimeStr: '',
           posterUrl: '/static/img/icon-add.png'
         }
@@ -88,24 +83,17 @@ export default {
           componentId: newVal.componentId,
           data: {}
         }
-        this.$store.dispatch('addHomePageList', data)
       }
-    }
-  },
-  beforeDestroy() {
-    if (this.bool) {
-      this.sub()
     }
   },
   methods: {
     changeTime() {
       console.log(this.mapData.worktime)
-      if (this.mapData.worktime==null || this.mapData.worktime.length != 2) {
-        this.mapData.worktimeStr=''
-      }
-      else {
-        var startTime = ((Array(2).join(0) + this.mapData.worktime[0].getHours()).slice(-2))+":"+((Array(2).join(0) + this.mapData.worktime[0].getMinutes()).slice(-2))
-        var endTime = ((Array(2).join(0) + this.mapData.worktime[1].getHours()).slice(-2))+":"+((Array(2).join(0) + this.mapData.worktime[1].getMinutes()).slice(-2))
+      if (this.mapData.worktime === null || this.mapData.worktime.length !== 2) {
+        this.mapData.worktimeStr = ''
+      } else {
+        var startTime = ((Array(2).join(0) + this.mapData.worktime[0].getHours()).slice(-2)) + ":" + ((Array(2).join(0) + this.mapData.worktime[0].getMinutes()).slice(-2))
+        var endTime = ((Array(2).join(0) + this.mapData.worktime[1].getHours()).slice(-2)) + ":" + ((Array(2).join(0) + this.mapData.worktime[1].getMinutes()).slice(-2))
         console.log(startTime+"-"+endTime)
       }
     },
@@ -118,10 +106,7 @@ export default {
     },
     sub() {
       this.bool = false
-      return this.$store.dispatch('mapData', this.mapData)
-    },
-    primary() {
-      console.log('usermap')
+      console.log('11111')
     }
   }
 }
@@ -153,8 +138,8 @@ export default {
 }
 
 .telnet-map {
-    width: 350px;
-    height: 400px
+  width: 350px;
+  height: 400px
 }
 
 .el-range-editor--small.el-input__inner{
