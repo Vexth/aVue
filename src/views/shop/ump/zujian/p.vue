@@ -12,7 +12,7 @@
 <script>
 export default {
   props: ['row'],
-  methods: {     
+  methods: {
     show(v) {
       this.$emit('show', v)
     },

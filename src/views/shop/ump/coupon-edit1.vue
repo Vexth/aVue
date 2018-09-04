@@ -158,7 +158,7 @@ export default {
       couponId: null,
       label: {
         name1: '选择商品',
-        name2: '已择商品',
+        name2: '已择商品'
       },
       form1: {
         couponName: '',
@@ -190,28 +190,28 @@ export default {
           {
             text: '最近一周',
             onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-              picker.$emit('pick', [start, end]);
+              const end = new Date()
+              const start = new Date()
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+              picker.$emit('pick', [start, end])
             }
           },
           {
             text: '最近一个月',
             onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-              picker.$emit('pick', [start, end]);
+              const end = new Date()
+              const start = new Date()
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
+              picker.$emit('pick', [start, end])
             }
           },
           {
             text: '最近三个月',
             onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-              picker.$emit('pick', [start, end]);
+              const end = new Date()
+              const start = new Date()
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
+              picker.$emit('pick', [start, end])
             }
           }
         ]
@@ -220,13 +220,13 @@ export default {
   },
   mounted() {
     this.couponId = localStorage.getItem('couponId')
-    this.couponEditResponse({couponId: this.couponId})
+    this.couponEditResponse({ couponId: this.couponId })
   },
   methods: {
     couponEditResponse(v) {
       couponEditResponse(v).then(res => {
         if (res.code === 200) {
-          let list = res.data
+          const list = res.data
           this.form1.couponName = list.couponName
           this.form1.couponNum = list.couponNum
           this.form1.couponConditionType = `${list.couponConditionType}`
@@ -261,9 +261,9 @@ export default {
           this.form.forUser = `${list.forUser}`
           this.form.isLimitNum = `${list.isLimitNum}`
           this.form.limitNum = list.limitNum
-          this.form.isShare = list.isShare === 1 ? true : false
-          this.form.isProductOriginal = list.isProductOriginal === 1 ? true : false
-          this.form.isRemind = list.isRemind === 1 ? true : false
+          this.form.isShare = list.isShare === 1
+          this.form.isProductOriginal = list.isProductOriginal === 1
+          this.form.isRemind = list.isRemind === 1
           this.form.decription = list.decription
         } else {
           console.log(res)
@@ -282,7 +282,7 @@ export default {
       return Object.prototype.toString.call(v) === '[object Date]'
     },
     onSubmit() {
-      let list = {}
+      const list = {}
 
       if (this.form.validTimeType === null) {
         this.$message.error('请选择使用时间！')

@@ -113,15 +113,15 @@ export const urlList = {
   // 优惠券
 
   // GET /api/v1/admin/coupon/select/parmas 商户查询优惠券
-  couponSelectParmas: `api/v1/admin/coupon/select/parmas`,
+  couponSelectParmas: `api/v1/shop/coupon/select/parmas`,
   // GET /api/v1/admin/coupon/edit/response 编辑
-  couponEditResponse: `api/v1/admin/coupon/edit/response`,
+  couponEditResponse: `api/v1/shop/coupon/edit/response`,
   // POST /api/v1/admin/coupon/edit/request 修改存入数据库
-  couponEditRequest: `api/v1/admin/coupon/edit/request`,
+  couponEditRequest: `api/v1/shop/coupon/edit/request`,
   // POST /api/v1/admin/coupon/create 创建优惠券
-  couponCreate: `api/v1/admin/coupon/create`,
+  couponCreate: `api/v1/shop/coupon/create`,
   // POST /api/v1/admin/coupon/stop/send 停止发放
-  couponStopSend: `api/v1/admin/coupon/stop/send`,
+  couponStopSend: `api/v1/shop/coupon/stop/send`,
 
   // GET /shop/page/pagelist
   shopPagePageList: `api/v1/shop/page/pagelist`,
