@@ -25,28 +25,38 @@ export default {
     componentId: {
       immediate: true,
       handler(newVal, oldVal) {
+        const l = this.$store.getters.data_list
+        const ld = l[newVal.difference]
+        let ldd = []
+
         this.bannerList = []
         this.type = newVal.difference
         this.ComponentId = newVal.componentId
-        let data = {
+
+        if (ld !== undefined) {
+          if (ld['data'].length === 0) {
+            return
+          }
+          const len = ld['data'].length
+          this.index = ld['data'][len-1]['component'] + 1
+          this.bannerList = ld['data'].map(res => JSON.stringify(res))
+          ldd = ld['data']
+        }
+
+        this.l = {
           type: newVal.difference,
           componentId: newVal.componentId,
-          data: this.bannerList
+          data: ldd
         }
-        if (newVal['data'] !== undefined && newVal['data'].length !== 0) {
-          data = newVal['data']
-          const len = data['data'].length
-          this.index = data['data'][len-1]['component'] + 1
-          this.bannerList = data['data'].map(res => JSON.stringify(res))
-        }
-        this.$store.dispatch('addHomePageList', data)
-        this.sub()
+
+        this.$store.dispatch('AddDataList', this.l)
       }
     },
     
   },
   data() {
     return {
+      l: null,
       homePageList: [],
       name: '',
       index: 0,
@@ -66,9 +76,6 @@ export default {
       },
       id: null,
     }
-  },
-  beforeDestroy() {
-    this.sub()
   },
   methods: {
     uploadListBool(item, val) {
@@ -102,17 +109,9 @@ export default {
       this.bannerList = this.bannerList.filter(res => item !== JSON.parse(res)['component'])
     },
     sub() {
-      let data = {
-        type: this.type,
-        data: this.bannerList
-      }
-      this.$store.commit('CLICK_SELECTED', { ...data, componentId: this.ComponentId })
-      return this.$store.dispatch('modifyHomePageList', data)
+      this.l['data'] = this.bannerList.length === 0 ? this.bannerList : this.bannerList.map(res => JSON.parse(res))
+      this.$store.commit('ADD_DATA_LIST', this.l)
     },
-    primary() {
-      this.sub()
-      this.$store.commit('IS_PRIMARY', true)
-    }
   }
 }
 </script>

@@ -18,6 +18,7 @@ export default {
   },
   data() {
     return {
+      l: null,
       tpList: [],
       type: null,
       ComponentId: null,
@@ -35,32 +36,27 @@ export default {
     componentId: {
       immediate:true,
       handler(newVal, oldVal) {
+        const l = this.$store.getters.data_list
         this.type = newVal.difference
         this.ComponentId = newVal.componentId
         this.tpList = []
-        let data = {
+        if (l[newVal.difference] !== undefined) {
+          this.tpList = l[newVal.difference]['data']
+        }
+        this.l = {
           type: newVal.difference,
           componentId: newVal.componentId,
-          data: []
+          data: this.tpList
         }
-        if (newVal['data'] !== undefined && newVal['data'].length !== 0) {
-          data = newVal['data']
-          this.tpList = data['data']
-        }
-        this.$store.dispatch('addHomePageList', data)
-        this.sub()
+        this.$store.dispatch('AddDataList', this.l)
       }
     }
-  },
-  beforeDestroy() {
-    this.sub()
   },
   methods: {
     uploadList() {
       this.$emit('uploadListBool', {})
     },
     boolPage(item) {
-      // console.log(item)
       let data = []
       item.map(res => {
         const id = res['product']['id']
@@ -76,22 +72,16 @@ export default {
         data.push(list)
       })
       this.tpList = [...this.tpList, ...data]
+      this.l['data'] = this.tpList
+      this.$store.commit('ADD_DATA_LIST', this.l)
     },
     cha(item) {
       this.tpList = item
     },
     sub() {
-      const tpList = {
-        type: this.type,
-        data: this.tpList
-      }
-      this.$store.commit('CLICK_SELECTED', { ...tpList, componentId: this.ComponentId })
-      return this.$store.dispatch('commodityList', tpList)
+      this.l['data'] = this.tpList
+      this.$store.dispatch('AddDataList', this.l)
     },
-    primary() {
-      this.sub()
-      this.$store.commit('IS_PRIMARY', true)
-    }
   }
 }
 </script>

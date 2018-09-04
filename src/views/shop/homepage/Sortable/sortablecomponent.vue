@@ -1,5 +1,5 @@
 <template>
-  <li :class="isSelected ? 'list-item' : ''" :type="list.componentId" :data-item="item" @click.stop>
+  <div :class="isSelected ? 'list-item' : ''" @click="selectedelEment">
     <img :src="list.imgurl" alt="" srcset="">
     <el-popover
       placement="left"
@@ -8,22 +8,19 @@
       <p>这个模块您确定要删除吗？</p>
       <div style="text-align: right; margin: 0">
         <el-button size="mini" type="text" @click="visible2 = false">取消</el-button>
-        <el-button type="primary" size="mini" @click="sub(list)">确定</el-button>
+        <el-button type="primary" size="mini" @click="del_sub(list)">确定</el-button>
       </div>
       <el-button class="button" size="mini" slot="reference">×</el-button>
     </el-popover>
-  </li>
+  </div>
 </template>
 
 <script>
-import { ElementMixin } from 'vue-slicksort'
 export default {
-  name: 'SortableItem',
-  mixins: [ElementMixin],
   props: {
     item: {
       type: String,
-      default: ''
+      default: {}
     }
   },
   watch: {
@@ -31,6 +28,7 @@ export default {
       immediate:true,
       handler(newVal, oldVal) {
         this.list = JSON.parse(newVal)
+        this.isSelected = this.list.selectedel
       }
     }
   },
@@ -42,12 +40,14 @@ export default {
     }
   },
   methods: {
+    selectedelEment() {
+      this.$emit('selectedelEment', this.item)
+    },
     selected(item) {
       this.isSelected = item
     },
-    sub() {
-      this.$store.commit('DELETE_MODULE', this.list)
-      this.$store.commit('MODIFY_DATA_LIST', this.list)
+    del_sub(item) {
+      this.$emit('del_sub', item)
       this.visible2 = false
     }
   }
@@ -55,7 +55,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-li {
+div {
   margin: 0;
   padding: 0;
   list-style-type: none;
@@ -72,6 +72,7 @@ li {
     top: 0;
     width: 25px;
     height: 25px;
+    line-height: 25px;
     font-size: 20px;
     border: 0;
     border-radius: 50%;
@@ -84,4 +85,3 @@ li {
   border-color: #f96132;
 }
 </style>
-

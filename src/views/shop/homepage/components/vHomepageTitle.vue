@@ -5,9 +5,8 @@
         <el-input v-model="title.title" placeholder="请输入内容"></el-input>
       </el-form-item>
       <el-form-item label="图标：">
-        <div class="v-li-uploadList" @click="uploadList">
-          <img :src="iconUrl" alt="" :class="isbool ? '' : 'img'" srcset="">
-          <span v-if="isbool">添加图片</span>
+        <div>
+          <img v-for="index in 13" :key="index" :class="index === isbool ? 'img' : ''" :ref="index" @click="sel(index, 13)" :src="`https://business-1253650513.cos.ap-guangzhou.myqcloud.com/${index+4}.png`" alt="" srcset="">
         </div>
       </el-form-item>
     </el-form>
@@ -15,16 +14,11 @@
 </template>
 
 <script>
-import ImagePlus from '@/views/shop/homepage/components/component/ImagePlus.vue'
 export default {
-  components: {
-    ImagePlus
-  },
   data() {
     return {
-      homePageList: [],
-      isbool: true,
-      iconUrl:  '/static/img/icon-add.png',
+      l: null,
+      isbool: null,
       title: {
         type: null,
         title:  '',
@@ -47,52 +41,50 @@ export default {
     componentId: {
       immediate:true,
       handler(newVal, oldVal) {
-        if (oldVal !== undefined) {
-          this.sub()
-        }
+        const l = this.$store.getters.data_list
+        const ld = l[newVal.difference]
+
         this.title = {
-          type: newVal.difference,
-          title:  '',
-          iconUrl:  '',
+          title: '',
+          iconUrl: '',
           navigateTo:{
-            navigateTitle:  '',
-            navigateTo:  '',
-            navigateParam:  '',
+            navigateTitle: '',
+            navigateTo: '',
+            navigateParam: '',
           }
         }
-        let data = {
+        if (ld !== undefined) {
+          this.title = ld['data']
+          const a = ld['data'].iconUrl.split('/')
+          const len = a.length - 1
+          const a0 = a[len].split('.')[0]
+          this.isbool = a0 - 4
+        }
+
+        this.title.type = newVal.difference
+        
+        this.l = {
           type: newVal.difference,
           componentId: newVal.componentId,
-          data: {}
+          data: this.title
         }
-        if (newVal['data'] !== undefined) {
-          data = newVal['data']
-          // this.bannerList = data['data'].map(res => JSON.stringify(res))
-        }
-        this.$store.dispatch('addHomePageList', data)
+
+        this.$store.dispatch('AddDataList', this.l)
       }
     }
   },
-  beforeDestroy() {
-    this.sub()
-  },
   methods: {
-    uploadList() {
-      this.$emit('uploadListBool', this.name)
-    },
-    boolPage(item) {
-      this.isbool = false
-      this.iconUrl = item
-      this.title.iconUrl = item
+    sel(item, items) {
+      for (let index = 1; index < items+1; index++) {
+        this.$refs[index][0].className = ''
+      }
+      this.title.iconUrl = this.$refs[item][0].src
+      this.$refs[item][0].className = 'img'
     },
     sub() {
-      return this.$store.dispatch('Title', this.title)
+      this.l['data'] = this.title
+      this.$store.dispatch('AddDataList', this.l)
     },
-    primary() {
-      this.sub()
-      this.$store.commit('IS_PRIMARY', true)
-      // console.log('title')
-    }
   }
 }
 </script>
@@ -104,21 +96,18 @@ export default {
   font-size: 12px;
 }
 
-.v-li-uploadList {
-  cursor: pointer;
-  width: 100px;
-  height: 50px;
-  line-height: 50px;
-  text-align: center;
-  background: #fff;
-  border: 1px solid #e5e5e5;
+.demo-ruleForm {
   img {
     vertical-align: middle;
     margin-top: -3px;
+    width: 29px;
+    height: 40px;
+    cursor: pointer;
+    margin: 5px;
+    border: 1px solid transparent;
   }
   .img {
-    width: 100%;
-    height: 100%;
+    border-color: #000;
   }
 }
 </style>

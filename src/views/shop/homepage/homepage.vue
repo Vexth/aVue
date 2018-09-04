@@ -11,9 +11,9 @@
     <div class="con">
       <div class="m-phone">
         <div class="m-phone-con">
-          <SortableList lockAxis="y" v-model="items" @input="input" @sortStart="sortStart">
-            <SortableItem v-for="(item, index) in items" :index="index" :key="index" :item="item" :ref="item" />
-          </SortableList>
+          <draggable v-model="items" :options="{group:'people'}" @start="drag=true" @end="drag=false" :move="getdata" @update="datadragEnd">
+            <sortablecomponent v-for="(element, index) in items" :key="index" :item="element" @del_sub="del_sub" @selectedelEment="selectedelEment"></sortablecomponent>
+          </draggable>
         </div>
       </div>
     </div>
@@ -41,8 +41,8 @@
 
 
 <script>
-import SortableList from '@/views/shop/homepage/Sortable/SortableList.vue'
-import SortableItem from '@/views/shop/homepage/Sortable/SortableItem.vue'
+import draggable from 'vuedraggable'
+import sortablecomponent from '@/views/shop/homepage/Sortable/sortablecomponent.vue'
 
 import vHomepageLeft from '@/views/shop/homepage/components/vHomepageLeft.vue'
 import vHomepageBanner from '@/views/shop/homepage/components/vHomepageBanner.vue'
@@ -71,8 +71,8 @@ import { shopPagePageList, shopPagePageInfo, tree, shopPageUpdatepage } from '@/
 
 export default {
   components: {
-    SortableItem,
-    SortableList,
+    draggable,
+    sortablecomponent,
     vHomepageLeft,
     TreeGrid,
     'CurrentRow': highlightCurrentRow,
@@ -125,88 +125,47 @@ export default {
   beforeDestroy() {
     // alert('11111')
   },
-  computed: {
-    deleteModule() {
-      return this.$store.getters.deleteModule
-    },
-    isPrimary() {
-      return this.$store.getters.isPrimary
-    },
-    selected() {
-      return this.$store.getters.selected
-    },
-    clickSelected() {
-      return this.$store.getters.clickSelected
-    }
-  },
-  watch: {
-    clickSelected(item) {
-      this.items = this.items.map(res => {
-        const list = JSON.parse(res)
-        if (list['difference'] === item['type']) {
-          list['data'] = item['data'].map(res => {
-            if (Object.prototype.toString.call(res) === '[object String]') {
-              res = JSON.parse(res)
-            }
-            return res
-          })
-        }
-        return JSON.stringify(list)
-      })
-    },
-    deleteModule(item) {
-      if (this.items.length !== 0) {
-        const homePageList = sessionStorage.getItem('homePageList')
-        const list = JSON.parse(homePageList)
-        this.items = this.items.filter(res => {
-          const list = JSON.parse(res)
-          if (list['difference'] !== item['difference']) {
-            return JSON.stringify(res)
-          }
-        })
-        const s = list.filter(res => res['type'] !== item['difference'])
-        sessionStorage.setItem('homePageList', JSON.stringify(s))
-        this.isComponent = ''
-        this.delete_data = JSON.stringify(s)
-      }
-    },
-    isPrimary(item) {
-      if (item) {
-        let homePageList = sessionStorage.getItem('homePageList')
-        if (this.delete_data !== '') {
-          homePageList = this.delete_data
-        }
-        const listData = {
-          pageId: this.pageId,
-          config: homePageList,
-          attach: homePageList,
-        }
-        shopPageUpdatepage(listData).then(res => {
-          this.shopPagePageInfo(this.pageId)
-          this.$store.commit('IS_PRIMARY', false)
-        }).catch(err => console.log(err))
-      }
-    },
-    selected(item) {
-      const list = JSON.parse(item)
-      // console.log('------', list)
-      if (this.shopPagePageInfoList.length === 0) {
-        this.shopPagePageInfoList = JSON.parse(sessionStorage.getItem('homePageList'))
-      }
-      this.shopPagePageInfoList.map(res => {
-        if (res['componentId'] === list['componentId']) {
-          this.componentId = {
-            componentId: res['componentId'],
-            difference: res['type'],
-            data: res
-          }
-        }
-      })
-      
-      this.isComponent = list.url
-    }
-  },
   methods: {
+    selectedelEment(item) {
+      const l = JSON.parse(item)
+      this.items = this.items.map(res => {
+        const l = JSON.parse(res)
+        l.selectedel = false
+        if (res === item) {
+          l.selectedel = true
+        }
+        return JSON.stringify(l)
+      })
+      if (this.isComponent !== '' && this.$refs.component.sub) {
+        this.$refs.component.sub()
+      }
+      this.rigth = l
+      this.isComponent = l.url
+      this.componentId = {
+        componentId: l.componentId,
+        difference: l.difference
+      }
+    },
+    del_sub(item) {
+      const l = this.$store.getters.data_list
+      delete l[item.difference]
+      // console.log(l)
+      this.$store.commit('MODIFY_DATA_LIST', l)
+
+      this.items = this.items.filter(res => {
+        const s = JSON.parse(res)
+        if (item.difference !== s.difference) {
+          return JSON.stringify(s)
+        }
+      })
+      this.isComponent = ''
+    },
+    getdata(item) {
+      // console.log(item)
+    },
+    datadragEnd(item) {
+      // console.log(this.items)
+    },
     tree() {
       tree().then(res => res.code === 200 ? this.dataSource = res.data : console.log(res)).catch(err => console.log(err))
     },
@@ -215,7 +174,6 @@ export default {
         if (res.code === 200) {
           const data = res.data[0]
           this.pageId = data.id
-          this.$store.dispatch('addPageId', data.id)
           this.shopPagePageInfo(data.id)
         } else {
           this.$message.error(res.msg)
@@ -226,24 +184,35 @@ export default {
       shopPagePageInfo({pageId: pageId}).then(res => {
         if (res.code === 200) {
           let list = []
+          let l = {}
           this.items = []
           if (res.data['config'] !== undefined) {
             list = JSON.parse(res.data.config)
             this.shopPagePageInfoList = list
             const len = list.length
-            this.index = list[len - 1]['type'] + 1
+            if (len !== 0) {
+              this.index = list[len - 1]['type'] + 1
 
-            let list_data = []
-            this.listData.map(res => list_data = [...list_data, ...res['items']])
-            
-            list.map(res => list_data.map(item => {
-              if (item['componentId'] === res['componentId']) {
-                item['difference'] = res['type']
-                this.items.push(JSON.stringify(item))
-              }
-            }))
+              let list_data = []
+              this.listData.map(res => list_data = [...list_data, ...res['items']])
+              
+              list.map(res => list_data.map(item => {
+                if (item['componentId'] === res['componentId']) {
+                  item['difference'] = res['type']
+                  this.items.push(JSON.stringify(item))
+                }
+              }))
+
+              l = list.reduce((pre, cur) => {
+                pre[cur['type']] = cur
+                return pre
+              }, {})
+              this.$store.commit('DATA_LIST', l)
+              sessionStorage.setItem('data_list', JSON.stringify(l))
+            }
           }
-          sessionStorage.setItem('homePageList', JSON.stringify(list))
+          
+          // sessionStorage.setItem('homePageList', JSON.stringify(list))
         } else {
           this.$message.error(res.msg)
         }
@@ -251,9 +220,13 @@ export default {
     },
     ModuleSwitching(item) {
       item['difference'] = this.index
+      item['selectedel'] = false
       this.isComponentList.push(item.url)
       this.rigth = item
       this.items.push(JSON.stringify(item))
+      if (this.isComponent !== '' && this.$refs.component.sub) {
+        this.$refs.component.sub()
+      }
       this.componentId = {
         componentId: item.componentId,
         difference: this.index
@@ -284,24 +257,31 @@ export default {
       this.tpDialogVisible = false
     },
     primary() {
-      if (this.isComponent !== '') {
-        this.$refs.component.primary()
-        return
+      if (this.isComponent !== '' && this.$refs.component.sub) {
+        this.$refs.component.sub()
       }
-      this.$store.commit('IS_PRIMARY', true)
-    },
-    sortStart(item) {
-      this.items.map(res => {
-        this.$refs[res][0].selected(false)
-        if (res === item.node.dataset.item) {
-          this.$refs[res][0].selected(true)
-          this.$store.commit('SELECTED', res)
-        }
+      const data_list = JSON.parse(sessionStorage.getItem('data_list'))
+      const l = this.items.map(res => {
+        const r = JSON.parse(res)
+        return data_list[r['difference']]
       })
-    },
-    input(item) {
-      // console.log(item)
-      this.items = item
+
+      const config = JSON.stringify(l)
+      const listData = {
+        pageId: this.pageId,
+        config,
+      }
+      shopPageUpdatepage(listData).then(res => {
+        if (res.code === 200) {
+          this.shopPagePageInfo(this.pageId)
+          this.$message({
+            message: '提交成功',
+            type: 'success'
+          })
+        } else {
+          console.log(res)
+        }
+      }).catch(err => console.log(err))
     },
     sub() {
       this.tpDialogVisible = false
