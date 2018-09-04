@@ -226,7 +226,7 @@ export default {
       this.bannerList = this.bannerList.filter(res => item !== JSON.parse(res)['component'])
     },
     sub() {
-      this.l['data'] = this.bannerList.map(res => JSON.parse(res))
+      this.l['data'] = this.bannerList.length === 0 ? this.bannerList : this.bannerList.map(res => JSON.parse(res))
       this.$store.commit('ADD_DATA_LIST', this.l)
     },
   }

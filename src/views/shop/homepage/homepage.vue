@@ -12,7 +12,7 @@
       <div class="m-phone">
         <div class="m-phone-con">
           <draggable v-model="items" :options="{group:'people'}" @start="drag=true" @end="drag=false" :move="getdata" @update="datadragEnd">
-            <sortablecomponent v-for="(element, index) in items" :key="index" :item="element" @selectedelEment="selectedelEment"></sortablecomponent>
+            <sortablecomponent v-for="(element, index) in items" :key="index" :item="element" @del_sub="del_sub" @selectedelEment="selectedelEment"></sortablecomponent>
           </draggable>
         </div>
       </div>
@@ -125,70 +125,42 @@ export default {
   beforeDestroy() {
     // alert('11111')
   },
-  computed: {
-    deleteModule() {
-      return this.$store.getters.deleteModule
-    },
-    isPrimary() {
-      return this.$store.getters.isPrimary
-    },
-    selected() {
-      return this.$store.getters.selected
-    },
-    clickSelected() {
-      return this.$store.getters.clickSelected
-    }
-  },
-  watch: {
-    clickSelected(item) {
+  methods: {
+    selectedelEment(item) {
+      const l = JSON.parse(item)
       this.items = this.items.map(res => {
-        const list = JSON.parse(res)
-        if (list['difference'] === item['type']) {
-          list['data'] = item['data'].map(res => {
-            if (Object.prototype.toString.call(res) === '[object String]') {
-              res = JSON.parse(res)
-            }
-            return res
-          })
+        const l = JSON.parse(res)
+        l.selectedel = false
+        if (res === item) {
+          l.selectedel = true
         }
-        return JSON.stringify(list)
-      })
-    },
-    deleteModule(item) {
-      console.log(item)
-    },
-    selected(item) {
-      const list = JSON.parse(item)
-      // console.log('------', list)
-      if (this.shopPagePageInfoList.length === 0) {
-        this.shopPagePageInfoList = JSON.parse(sessionStorage.getItem('homePageList'))
-      }
-      this.shopPagePageInfoList.map(res => {
-        if (res['componentId'] === list['componentId']) {
-          this.componentId = {
-            componentId: res['componentId'],
-            difference: res['type'],
-            data: res
-          }
-        }
+        return JSON.stringify(l)
       })
       
-      this.isComponent = list.url
-    }
-  },
-  methods: {
-    selectedelEment(evt) {
-      const l = JSON.parse(evt)
       this.isComponent = l.url
       this.componentId = {
         componentId: l.componentId,
         difference: l.difference
       }
     },
-    getdata(evt) {
-      console.log(evt)
+    del_sub(item) {
+      const l = this.$store.getters.data_list
+      delete l[item.difference]
+      console.log(l)
+      this.$store.commit('MODIFY_DATA_LIST', l)
+
+      this.items = this.items.filter(res => {
+        const s = JSON.parse(res)
+        if (item.difference !== s.difference) {
+          return JSON.stringify(s)
+        }
+      })
+      this.isComponent = ''
     },
-    datadragEnd(evt) {
+    getdata(item) {
+      console.log(item)
+    },
+    datadragEnd(item) {
       console.log(this.items)
     },
     tree() {
@@ -243,6 +215,7 @@ export default {
     },
     ModuleSwitching(item) {
       item['difference'] = this.index
+      item['selectedel'] = false
       this.isComponentList.push(item.url)
       this.rigth = item
       this.items.push(JSON.stringify(item))
@@ -279,6 +252,9 @@ export default {
       this.tpDialogVisible = false
     },
     primary() {
+      if (this.isComponent !== '' && this.$refs.component.sub) {
+        this.$refs.component.sub()
+      }
       const data_list = JSON.parse(sessionStorage.getItem('data_list'))
       const l = this.items.map(res => {
         const r = JSON.parse(res)
@@ -291,12 +267,9 @@ export default {
         config,
         attach: config,
       }
-      if (this.isComponent !== '' && this.$refs.component.sub) {
-        this.$refs.component.sub()
-      }
-      // shopPageUpdatepage(listData).then(res => {
-      //   this.shopPagePageInfo(this.pageId)
-      // }).catch(err => console.log(err))
+      shopPageUpdatepage(listData).then(res => {
+        this.shopPagePageInfo(this.pageId)
+      }).catch(err => console.log(err))
     },
     sub() {
       this.tpDialogVisible = false

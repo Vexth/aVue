@@ -49,18 +49,9 @@ export default {
           data: this.tpList
         }
         this.$store.dispatch('AddDataList', this.l)
-        // if (newVal['data'] !== undefined && newVal['data'].length !== 0) {
-        //   data = newVal['data']
-        //   this.tpList = data['data']
-        // }
-        // this.$store.dispatch('addHomePageList', data)
-        // this.sub()
       }
     }
   },
-  // beforeDestroy() {
-  //   this.sub()
-  // },
   methods: {
     uploadList() {
       this.$emit('uploadListBool', {})
@@ -87,18 +78,10 @@ export default {
     cha(item) {
       this.tpList = item
     },
-    // sub() {
-    //   const tpList = {
-    //     type: this.type,
-    //     data: this.tpList
-    //   }
-    //   this.$store.commit('CLICK_SELECTED', { ...tpList, componentId: this.ComponentId })
-    //   return this.$store.dispatch('commodityList', tpList)
-    // },
-    // primary() {
-    //   this.sub()
-    //   this.$store.commit('IS_PRIMARY', true)
-    // }
+    sub() {
+      this.l['data'] = this.tpList
+      this.$store.dispatch('AddDataList', this.l)
+    },
   }
 }
 </script>

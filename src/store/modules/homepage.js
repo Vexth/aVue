@@ -10,6 +10,10 @@ const homepage = {
       state.data_list[item['type']] = item
       sessionStorage.setItem('data_list', JSON.stringify(state.data_list))
     },
+    MODIFY_DATA_LIST: (state, item) => {
+      state.data_list = item
+      sessionStorage.setItem('data_list', JSON.stringify(state.data_list))
+    },
   },
   actions: {
     AddDataList({ commit }, item) {

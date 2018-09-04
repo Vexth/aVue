@@ -6,7 +6,7 @@
 export default {
   data() {
     return {
-      homePageList: [],
+      l: null
     }
   },
   props: {
@@ -19,28 +19,14 @@ export default {
     componentId: {
       immediate:true,
       handler(newVal, oldVal) {
-        let data = {
+        this.l = {
           type: newVal.difference,
           componentId: newVal.componentId,
         }
-        // this.$store.dispatch('addHomePageList', data)
-        // this.sub()
+        this.$store.commit('ADD_DATA_LIST', this.l)
       }
     }
   },
-  // beforeDestroy() {
-  //   this.sub()
-  // },
-  methods: {
-    sub() {
-      // return this.$store.dispatch('Search')
-    },
-    // primary() {
-    //   this.sub()
-    //   this.$store.commit('IS_PRIMARY', true)
-    //   // console.log('primary')
-    // }
-  }
 }
 </script>
 

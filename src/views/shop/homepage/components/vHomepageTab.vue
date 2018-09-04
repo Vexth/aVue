@@ -236,8 +236,8 @@ export default {
       this.tabList = this.tabList.filter(res => item !== JSON.parse(res)['component'])
     },
     sub() {
-      this.l['data'] = this.tabList.map(res => JSON.parse(res))
-      // this.$store.commit('ADD_DATA_LIST', this.l)
+      this.l['data'] = this.tabList.length === 0 ? this.tabList : this.tabList.map(res => JSON.parse(res))
+      this.$store.commit('ADD_DATA_LIST', this.l)
     },
   }
 }

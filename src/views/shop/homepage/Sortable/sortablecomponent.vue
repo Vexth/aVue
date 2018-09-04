@@ -8,7 +8,7 @@
       <p>这个模块您确定要删除吗？</p>
       <div style="text-align: right; margin: 0">
         <el-button size="mini" type="text" @click="visible2 = false">取消</el-button>
-        <el-button type="primary" size="mini" @click="sub(list)">确定</el-button>
+        <el-button type="primary" size="mini" @click="del_sub(list)">确定</el-button>
       </div>
       <el-button class="button" size="mini" slot="reference">×</el-button>
     </el-popover>
@@ -28,6 +28,7 @@ export default {
       immediate:true,
       handler(newVal, oldVal) {
         this.list = JSON.parse(newVal)
+        this.isSelected = this.list.selectedel
       }
     }
   },
@@ -45,9 +46,8 @@ export default {
     selected(item) {
       this.isSelected = item
     },
-    sub() {
-      // this.$store.commit('DELETE_MODULE', this.list)
-      // this.$store.commit('MODIFY_DATA_LIST', this.list)
+    del_sub(item) {
+      this.$emit('del_sub', item)
       this.visible2 = false
     }
   }
