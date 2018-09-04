@@ -3,7 +3,6 @@
     <div>（图片建议尺寸：宽640px）</div>
     <image-ad-component v-for="(item, i) in bannerList" :key="i" :ref="item" :name="item" @uploadListBool="uploadListBool" @deleteClick="deleteClick"></image-ad-component>
     <form-plus :name="'添加一个广告'" @plusList="plusList"></form-plus>
-    <!-- <el-button @click="sub" type="primary">主要按钮</el-button> -->
   </div>
 </template>
 
@@ -11,7 +10,6 @@
 import ImageAdComponent from '@/views/shop/homepage/components/component/ImageAdComponent.vue'
 import FormPlus from '@/views/shop/homepage/components/component/formPlus.vue'
 
-import { shopPageUpdatepage } from '@/views/shop/server'
 export default {
   components: {
     ImageAdComponent,
@@ -27,28 +25,44 @@ export default {
     componentId: {
       immediate: true,
       handler(newVal, oldVal) {
-        if (oldVal !== undefined) {
-          this.sub()
-        }
-        this.type = newVal.difference
+        const l = this.$store.getters.data_list
+        const ld = l[newVal.difference]
+        let ldd = []
+
         this.bannerList = []
-        let data = {
+        this.type = newVal.difference
+        this.ComponentId = newVal.componentId
+
+        if (ld !== undefined) {
+          if (ld['data'].length === 0) {
+            return
+          }
+          const len = ld['data'].length
+          this.index = ld['data'][len-1]['component'] + 1
+          this.bannerList = ld['data'].map(res => JSON.stringify(res))
+          ldd = ld['data']
+        }
+
+        this.l = {
           type: newVal.difference,
           componentId: newVal.componentId,
-          data: []
+          data: ldd
         }
-        this.$store.dispatch('addHomePageList', data)
+
+        this.$store.dispatch('AddDataList', this.l)
       }
-    }
+    },
+    
   },
   data() {
     return {
+      l: null,
       homePageList: [],
       name: '',
       index: 0,
       bannerList: [],
-      bannerList1: [],
       type: null,
+      ComponentId: null,
       banner: {
         component: null,
         ruleForm2: {
@@ -60,31 +74,25 @@ export default {
           }
         }
       },
-      bool: true,
       id: null,
-    }
-  },
-  beforeDestroy() {
-    if (this.bool) {
-      this.sub()
     }
   },
   methods: {
     uploadListBool(item, val) {
       this.name = val
       if (item === 'detail') {
-        this.$emit('uploadListBool', {})
+        this.$emit('uploadListBool', '')
         return
       }
       if (item === 'group') {
-        this.$emit('uploadListBool', {})
+        this.$emit('uploadListBool', 1)
         return
       }
       this.$emit('uploadListBool', true)
     },
     boolPage(item) {
       let list = this.$refs[this.name][0].boolPage(item)
-      this.bannerList1 = this.bannerList.map(res => {
+      this.bannerList = this.bannerList.map(res => {
         let data = JSON.parse(res)
         if (list['component'] === data['component']) {
           data['ruleForm2'] = list['ruleForm2']
@@ -101,25 +109,9 @@ export default {
       this.bannerList = this.bannerList.filter(res => item !== JSON.parse(res)['component'])
     },
     sub() {
-      let data = {
-        type: this.type,
-        data: this.bannerList
-      }
-      return this.$store.dispatch('modifyHomePageList', data)
+      this.l['data'] = this.bannerList.length === 0 ? this.bannerList : this.bannerList.map(res => JSON.parse(res))
+      this.$store.commit('ADD_DATA_LIST', this.l)
     },
-    primary() {
-      this.sub().then(res => {
-        let data = sessionStorage.getItem('homePageList')
-        let list = {
-          pageId: this.$store.getters.pageId,
-          config: data,
-          attach: data
-        }
-        // console.log(this.$store.getters.pageId)
-        shopPageUpdatepage(list).then(res => console.log(res)).catch(err => console.log(err))
-        // console.log(sessionStorage.getItem('homePageList'))
-      })
-    }
   }
 }
 </script>

@@ -260,7 +260,7 @@
         this.form.payMchId = ''
         this.form.payKey = ''
       },
-      handleEdit(index, row) {
+      handleEditPromotion(index, row) {
         console.log(row)
         this.dialogFormVisible = true
         this.title = '修改商户'
@@ -278,7 +278,7 @@
         this.form.payMchId = row.payMchId
         this.form.payKey = row.payKey
       },
-      handleDelete(index, row) {
+      handleDeletePromotion(index, row) {
         console.log(row)
         vendorDelete(row).then(response => {
           if (response.code === 200) {

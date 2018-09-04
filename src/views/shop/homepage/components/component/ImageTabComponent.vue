@@ -1,13 +1,16 @@
 <template>
   <el-form :model="ruleForm2" status-icon label-width="100px" class="demo-ruleForm">
-    <el-form-item label="图片：">
-      <div class="v-li-uploadList" @click="uploadList('img')">
-        <img :src="imageUrl" alt="" :class="bool ? '' : 'img'" srcset="">
-        <span v-if="bool">添加图片</span>
+    <el-form-item label="大图片：">
+      <div class="v-li-uploadList" @click="uploadList('bigPicUrl')">
+        <img :src="bigPicUrl" alt="" :class="'/static/img/icon-add.png' === bigPicUrl ? '' : 'img'" srcset="">
+        <span v-if="'/static/img/icon-add.png' === bigPicUrl">添加图片</span>
       </div>
     </el-form-item>
-    <el-form-item label="标题：">
-      <el-input v-model="ruleForm2.title" placeholder="请输入内容"></el-input>
+    <el-form-item label="小图片：">
+      <div class="v-li-uploadList-small" @click="uploadList('smallPicUrl')">
+        <img :src="smallPicUrl" alt="" :class="'/static/img/icon-add.png' === smallPicUrl ? '' : 'img'" srcset="">
+        <span v-if="'/static/img/icon-add.png' === smallPicUrl">添加图片</span>
+      </div>
     </el-form-item>
     <el-form-item label="链接：">
       <el-popover
@@ -35,13 +38,15 @@ const plugins = ['detail', 'group']
 export default {
   data() {
     return {
-      val: {},
-      bool: true,
       typeList: li,
       setCategory: '设置链接到的产品或分类',
-      imageUrl: '/static/img/icon-add.png',
+      val: {},
+      s: '',
+      bigPicUrl: '/static/img/icon-add.png',
+      smallPicUrl: '/static/img/icon-add.png',
       ruleForm2: {
-        imageUrl: '',
+        bigPicUrl: '',
+        smallPicUrl: '',
         title: '',
         navigateTo: {
           navigateName: '',
@@ -61,9 +66,11 @@ export default {
       immediate:true,
       handler(newVal, oldVal) {
         this.val = JSON.parse(newVal)
-        if (this.val['ruleForm2']['imageUrl'] !== '') {
-          this.bool = false
-          this.imageUrl = this.val['ruleForm2']['imageUrl']
+        const smallPicUrl = this.val['ruleForm2']['smallPicUrl']
+        const bigPicUrl = this.val['ruleForm2']['bigPicUrl']
+        if (bigPicUrl !== '' || smallPicUrl !== '') {
+          this.bigPicUrl = bigPicUrl === '' ? '/static/img/icon-add.png' : bigPicUrl
+          this.smallPicUrl = smallPicUrl === '' ? '/static/img/icon-add.png' : smallPicUrl
           this.ruleForm2 = this.val['ruleForm2']
 
           let l = []
@@ -79,15 +86,15 @@ export default {
   },
   methods: {
     uploadList(item) {
+      this.s = item
       this.$emit('uploadListBool', item, this.name)
     },
     boolPage(item) {
       const type = Object.prototype.toString.call(item)
       // console.log(type)
       if (type === '[object String]') {
-        this.bool = false
-        this.ruleForm2.imageUrl = item
-        this.imageUrl = item
+        this.ruleForm2[this.s] = item
+        this[this.s] = item
       } else if (type === '[object Object]') {
         if (item['product'] !== undefined) {
           this.ruleForm2.navigateTo.navigateParam = item['product']['id']
@@ -166,6 +173,19 @@ export default {
   .img {
     width: 100%;
     height: 100%;
+  }
+}
+.v-li-uploadList-small {
+  width: 80px;
+  height: 80px;
+//   font-size: 8px;
+  line-height: 80px;
+  border: 1px solid #e5e5e5;
+  border-radius: 50%;
+  .img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
   }
 }
 span {

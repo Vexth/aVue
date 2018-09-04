@@ -1,12 +1,20 @@
 <template>
   <div class="div">
     <el-form ref="ruleForm2" v-model="videoList" label-width="100px" class="demo-ruleForm">
-      <el-form-item label="视频地址：">
-        <el-input v-model="videoList.videoUrl" placeholder="请输入内容"></el-input>
+      <el-form-item label="视频名称：">
+        <el-select v-model="videoList.videoUrl" placeholder="请选择">
+          <el-option
+            v-for="item in options"
+            :key="item.id"
+            :label="item.title"
+            :value="item.url">
+          </el-option>
+        </el-select>
+        <!-- <el-input v-model="videoList.videoUrl" placeholder="请输入内容"></el-input> -->
       </el-form-item>
       <el-form-item label="封面：">
         <div class="v-li-uploadList" @click="uploadList">
-          <img :src="videoList.posterUrl" alt="" :class="isbool ? '' : 'img'" srcset="">
+          <img :src="posterUrl" alt="" :class="isbool ? '' : 'img'" srcset="">
           <span v-if="isbool">添加图片</span>
         </div>
       </el-form-item>
@@ -16,6 +24,8 @@
 
 <script>
 import ImagePlus from '@/views/shop/homepage/components/component/ImagePlus.vue'
+
+import { getVideoList } from '@/views/shop/server'
 export default {
   components: {
     ImagePlus
@@ -25,14 +35,15 @@ export default {
   },
   data() {
     return {
-      homePageList: [],
+      l: null,
+      options: [],
       isbool: true,
+      posterUrl: '/static/img/icon-add.png',
       videoList: {
         type: null,
-        posterUrl: '/static/img/icon-add.png',
+        posterUrl: '',
         videoUrl: ''
       },
-      bool: true,
     }
   },
   props: {
@@ -45,27 +56,33 @@ export default {
     componentId: {
       immediate:true,
       handler(newVal, oldVal) {
-        if (oldVal !== undefined) {
-          this.sub()
-        }
+        const l = this.$store.getters.data_list
+        const ld = l[newVal.difference]
+
         this.videoList = {
           type: newVal.difference,
-          posterUrl: '/static/img/icon-add.png',
+          posterUrl: '',
           videoUrl: ''
         }
-        let data = {
+        if (ld !== undefined) {
+          this.videoList = ld['data']
+        }
+        this.l = {
           type: newVal.difference,
           componentId: newVal.componentId,
-          data: {}
+          data: this.videoList
         }
-        this.$store.dispatch('addHomePageList', data)
+        this.$store.commit('ADD_DATA_LIST', this.l)
       }
     }
   },
-  beforeDestroy() {
-    if (this.bool) {
-      this.sub()
-    }
+  mounted() {
+    getVideoList().then(res => {
+      if (res.code === 200) {
+        this.options = res.data
+        console.log(this.options)
+      }
+    })
   },
   methods: {
     uploadList() {
@@ -76,12 +93,9 @@ export default {
       this.videoList.posterUrl = item
     },
     sub() {
-      this.bool = false
-      return this.$store.dispatch('videoList', this.videoList)
+      this.l['data'] = this.videoList
+      this.$store.commit('ADD_DATA_LIST', this.l)
     },
-    primary() {
-      console.log('video')
-    }
   }
 }
 </script>

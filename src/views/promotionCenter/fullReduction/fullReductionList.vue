@@ -9,21 +9,22 @@
     <!--<full-reduction-create v-if="showCreateCompoent" @createSuccess="onCreateSuccess">-->
     <!--</full-reduction-create>-->
 
-    <full-reduction-edit v-if="showEditCompoent" :data="selectRow" :editType="editType" @editSuccess="onEditSuccess">
-    </full-reduction-edit>
+    <full-reduction-create v-if="showEditCompoent" :data="selectRow" :editType="editType" @editSuccess="onEditSuccess">
+    </full-reduction-create>
     <!--<component :is="componentId" v-if="showCreateCompoent"></component>-->
     <div v-if="!showEditCompoent">
-      <el-button @click="handleCreate">创建促销活动</el-button>
+      <el-button @click="handleCreatePromotion">创建促销活动</el-button>
       <el-table
         :data="tableData"
         style="width: 100%">
         <el-table-column
+          align="center"
           prop="id"
           label="ID"
           width="60">
           <template slot-scope="scope">
             <!--<i class="el-icon-time"></i>-->
-            <span style="margin-left: 10px">{{ scope.row.promotionId }}</span>
+            <span>{{ scope.row.promotionId }}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -31,21 +32,21 @@
           width="180">
           <template slot-scope="scope">
             <!--<i class="el-icon-time"></i>-->
-            <span style="margin-left: 10px">{{ scope.row.name }}</span>
+            <span>{{ scope.row.name }}</span>
           </template>
         </el-table-column>
         <!--<el-table-column-->
-          <!--label="活动名称"-->
-          <!--width="180">-->
-          <!--<template slot-scope="scope">-->
-            <!--<el-popover trigger="hover" placement="top">-->
-              <!--<p>活动名称: {{ scope.row.name }}</p>-->
-              <!--<p>活动标签: {{ scope.row.tag }}</p>-->
-              <!--<div slot="reference" class="name-wrapper">-->
-                <!--<el-tag size="medium">{{ scope.row.name }}</el-tag>-->
-              <!--</div>-->
-            <!--</el-popover>-->
-          <!--</template>-->
+        <!--label="活动名称"-->
+        <!--width="180">-->
+        <!--<template slot-scope="scope">-->
+        <!--<el-popover trigger="hover" placement="top">-->
+        <!--<p>活动名称: {{ scope.row.name }}</p>-->
+        <!--<p>活动标签: {{ scope.row.tag }}</p>-->
+        <!--<div slot="reference" class="name-wrapper">-->
+        <!--<el-tag size="medium">{{ scope.row.name }}</el-tag>-->
+        <!--</div>-->
+        <!--</el-popover>-->
+        <!--</template>-->
         <!--</el-table-column>-->
         <el-table-column
           label="开始时间"
@@ -64,16 +65,14 @@
 
         <el-table-column
           label="活动详情"
-          width="180">
+          width="210">
           <template slot-scope="scope">
-            <el-popover trigger="hover" placement="top">
+            <el-popover trigger="click" placement="top">
               <!--<i class="el-icon-time"></i>-->
-              <p v-for="strategy in scope.row.ruleStrategy">满: {{ strategy.full }} 减: {{ strategy.reduction }}</p>
+              <p v-for="(strategy, index) in scope.row.ruleStrategyDescription">{{index+1}}级： {{strategy}}</p>
               <div slot="reference" class="name-wrapper">
                 <!--<el-tag size="medium">{{ scope.row.ruleStrategy[0] }}</el-tag>-->
-                <el-tag size="medium" v-if="scope.row.ruleStrategy.length !== 0">满: {{ scope.row.ruleStrategy[0].full }}
-                  减: {{ scope.row.ruleStrategy[0].reduction }}
-                </el-tag>
+                <el-tag size="medium" v-if="scope.row.ruleStrategy.length !== 0"> {{ scope.row.ruleStrategyDescription[0] }}</el-tag>
               </div>
             </el-popover>
             <!--<i class="el-icon-time"></i>-->
@@ -89,14 +88,16 @@
           width="120">
           <template slot-scope="scope">
             <!--<i class="el-icon-time"></i>-->
-            <span>{{ scope.row.promotionId }}</span>
+            <!--<span>{{ scope.row.promotionId }}</span>-->
+            <span>-</span>
           </template>
         </el-table-column>
         <el-table-column
           label="已付款用户数"
           width="120">
           <template slot-scope="scope">
-            <span>{{ scope.row.promotionId }}</span>
+            <!--<span>{{  scope.row.promotionId }}</span>-->
+            <span>-</span>
           </template>
         </el-table-column>
 
@@ -104,7 +105,7 @@
           label="实际支付总额"
           width="120">
           <template slot-scope="scope">
-            <span>{{ scope.row.promotionId }}</span>
+            <span>{{ scope.row.promotionId | priceFormat }}</span>
           </template>
         </el-table-column>
 
@@ -112,7 +113,7 @@
           label="平均单笔价"
           width="120">
           <template slot-scope="scope">
-            <span>{{ scope.row.promotionId }}</span>
+            <span>{{ scope.row.promotionId | priceFormat }}</span>
           </template>
         </el-table-column>
 
@@ -121,7 +122,7 @@
           width="180">
           <template slot-scope="scope">
             <!--<i class="el-icon-time"></i>-->
-            <span>{{ scope.row.status === 0 ? '已结束': '正在进行' }}</span>
+            <span>{{ scope.row.status}}</span>
           </template>
         </el-table-column>
 
@@ -130,18 +131,18 @@
             <el-button
               size="mini"
               type="primary"
-              @click="handleEdit(scope.$index, scope.row)">编辑
+              @click="handleEditPromotion(scope.$index, scope.row)">编辑
             </el-button>
-            <el-button v-if="scope.row.status === 1"
+            <el-button
               size="mini"
               type="danger"
-              @click="handlePromotionStatus(scope.$index, scope.row, 0)">结束活动
+              @click="handleDeletePromotion(scope.$index, scope.row, 0)">删除活动
             </el-button>
-            <el-button v-if="scope.row.status === 0"
-                       size="mini"
-                       type="success"
-                       @click="handlePromotionStatus(scope.$index, scope.row, 1)">开启活动
-            </el-button>
+            <!--<el-button v-if="scope.row.status === 0"-->
+            <!--size="mini"-->
+            <!--type="success"-->
+            <!--@click="handlePromotionStatus(scope.$index, scope.row, 1)">开启活动-->
+            <!--</el-button>-->
           </template>
         </el-table-column>
       </el-table>
@@ -163,15 +164,15 @@
 </template>
 
 <script>
-  import { promotionList,promotionStatus } from '@/api/promotion'
-  // import fullReductionCreate from '@/views/promotionCenter/fullReduction/fullReductionCreate'
-  import fullReductionEdit from '@/views/promotionCenter/fullReduction/fullReductionEdit'
+  import { RULE_TYPE_FULL_REDUCTION } from '@/views/promotionCenter/constant'
+  import { promotionList, promotionStatus, promotionDelete } from '@/api/promotion'
+  import fullReductionCreate from '@/views/promotionCenter/fullReduction/fullReductionCreate'
+  import { priceFormat, priceFormatNormal } from '@/filters'
 
   export default {
     name: 'fullReductionList',
     components: {
-      // fullReductionCreate,
-      fullReductionEdit
+      fullReductionCreate
     },
     data() {
       return {
@@ -188,14 +189,16 @@
           promotionId: '',
           name: '',
           tag: '',
+          status: '',
           beginTime: '',
           endTime: '',
           limitProductAmount: '',
           limitUserAmount: '',
           userRange: '',
           vendorRemark: '',
-          ruleType: '',
+          ruleType: RULE_TYPE_FULL_REDUCTION,
           ruleStrategy: [],
+          ruleStrategyDescription: [],
           productRange: '',
           productIdList: ''
         }],
@@ -219,7 +222,7 @@
       },
 
       queryList(param) {
-        param.ruleType = 1
+        param.ruleType = RULE_TYPE_FULL_REDUCTION
         param.pageNum = this.pagination.page
         param.pageSize = this.pagination.size
         promotionList(param).then(response => {
@@ -228,8 +231,26 @@
             this.pagination.total = response.total
             this.tableData = response.data.sort((a, b) => a.promotionId - b.promotionId)
             this.tableData.forEach(e => {
-              if (e.ruleStrategy && typeof e.ruleStrategy === 'string') { // 规则是字符串必须转换成数组
+              if (e.ruleStrategy && typeof e.ruleStrategy === 'string') { // 规则是字符串必须转换成json数组
                 e.ruleStrategy = JSON.parse(e.ruleStrategy)
+                e.ruleStrategyDescription = e.ruleStrategy.map(strategy => {
+                  if (strategy.type === 'discount') {
+                    return `满${priceFormat(strategy.full)}元，打${priceFormat(strategy[strategy.type], 1, ' ')} 折。`
+                  } else if (strategy.type === 'reduction') {
+                    return `满${priceFormat(strategy.full)}元，减${priceFormat(strategy[strategy.type], 2)} 元。`
+                  } else {
+                    return ''
+                  }
+                })
+              }
+              const now = new Date()
+              // console.log(now)
+              if (now < new Date(e.beginTime)) {
+                e.status = '未开始'
+              } else if (new Date(e.beginTime) < now && now < new Date(e.endTime)) {
+                e.status = '进行中'
+              } else if (new Date(e.endTime) < now) {
+                e.status = '结束'
               }
             })
             // this.tableData = this.tableData.map(a => {
@@ -243,26 +264,34 @@
         this.showEditCompoent = false
         this.queryList({})
       },
-      handleCreate() {
+      handleCreatePromotion() {
+        if (this.pagination.total > 5) {
+          this.$message.error('只能是5个, 请删除一些活动！')
+          return
+        }
         this.editType = '创建活动'
         this.selectRow = null
         this.showEditCompoent = true
       },
-      handleEdit(index, row) {
+      handleEditPromotion(index, row) {
         console.log(row)
         this.editType = '更新活动'
         this.selectRow = row
         this.showEditCompoent = true
       },
-      // onCreateSuccess() {
-      //   this.showCreateCompoent = false
-      //   this.queryList({})
-      // },
-      onEditSuccess(editType) {
-        console.log(editType)
-        this.showEditCompoent = false
-        this.queryList({})
+      handleDeletePromotion(index, row) {
+        console.log(row)
+        const params = {}
+        params.vendorId = row.vendorId
+        params.promotionId = row.promotionId
+        promotionDelete(params).then(response => {
+          if (response.code === 200) {
+            this.$message.success(response.msg)
+            this.queryList({})
+          }
+        }).catch(err => console.log(err))
       },
+
       handlePromotionStatus(index, row, status) {
         // console.log(row)
         const params = {}
@@ -276,6 +305,12 @@
             this.queryList({})
           }
         }).catch(err => console.log(err))
+      },
+      // $emit
+      onEditSuccess(editType) {
+        console.log(editType)
+        this.showEditCompoent = false
+        this.queryList({})
       }
     }
   }

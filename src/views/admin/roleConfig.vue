@@ -193,7 +193,7 @@
         this.form.roleId = ''
         this.form.roleName = ''
       },
-      handleEdit(index, row) {
+      handleEditPromotion(index, row) {
         this.dialogVisible = true
         this.title = '修改角色'
         this.form.roleId = row.roleId
@@ -213,7 +213,7 @@
         // this.$refs.tree.setCheckedKeys(row.rolePermissIdList)
         // console.log(index, row)
       },
-      handleDelete(index, row) {
+      handleDeletePromotion(index, row) {
         console.log(index, row)
         console.log(row.roleId)
         const roleId = row.roleId

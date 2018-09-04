@@ -6,17 +6,14 @@
     </div>
     <div class="public left">
       <span>组件库</span>
-      <v-homepage-left :pageleft="list1" @ModuleSwitching="ModuleSwitching"></v-homepage-left>
-      <v-homepage-left :pageleft="list2" @ModuleSwitching="ModuleSwitching"></v-homepage-left>
-      <v-homepage-left :pageleft="list3" @ModuleSwitching="ModuleSwitching"></v-homepage-left>
+      <v-homepage-left v-for="(item, i) in listData" :key="i" :pageleft="item" @ModuleSwitching="ModuleSwitching"></v-homepage-left>
     </div>
     <div class="con">
       <div class="m-phone">
         <div class="m-phone-con">
-          <SortableList lockAxis="y" v-model="items" @input="input" @sortStart="sortStart">
-            <SortableItem v-for="(item, index) in items" :index="index" :key="index" :item="item" :ref="item" />
-          </SortableList>
-          <!-- <div v-for="(item, i) in con" :key="i">{{item['title']}}{{i+1}}</div> -->
+          <draggable v-model="items" :options="{group:'people'}" @start="drag=true" @end="drag=false" :move="getdata" @update="datadragEnd">
+            <sortablecomponent v-for="(element, index) in items" :key="index" :item="element" @del_sub="del_sub" @selectedelEment="selectedelEment"></sortablecomponent>
+          </draggable>
         </div>
       </div>
     </div>
@@ -32,6 +29,7 @@
       width="50%"
       :before-close="handleClose"
       center>
+      <tree-grid v-if="isTreeGrid" ref="isTreeGrid" :columns="columns" :tree-structure="true" tree-type="" :data-source="dataSource"></tree-grid>
       <component :is="isImg" ref="Img"></component>
       <span slot="footer" class="dialog-footer">
         <el-button @click="handleClose">取 消</el-button>
@@ -41,9 +39,10 @@
   </div>
 </template>
 
+
 <script>
-import SortableList from '@/views/shop/homepage/Sortable/SortableList.vue'
-import SortableItem from '@/views/shop/homepage/Sortable/SortableItem.vue'
+import draggable from 'vuedraggable'
+import sortablecomponent from '@/views/shop/homepage/Sortable/sortablecomponent.vue'
 
 import vHomepageLeft from '@/views/shop/homepage/components/vHomepageLeft.vue'
 import vHomepageBanner from '@/views/shop/homepage/components/vHomepageBanner.vue'
@@ -54,19 +53,29 @@ import vHomepageTitle from '@/views/shop/homepage/components/vHomepageTitle.vue'
 import vHomepageImg from '@/views/shop/homepage/components/vHomepageImg.vue'
 import vHomepageCommodity from '@/views/shop/homepage/components/vHomepageCommodity.vue'
 import vHomepageCategory from '@/views/shop/homepage/components/vHomepageCategory.vue'
+import vHomepageMap from '@/views/shop/homepage/components/vHomepageMap.vue'
+import vHomepageTab from '@/views/shop/homepage/components/vHomepageTab.vue'
 
 import vImg from '@/views/shop/showcase/zujian/img.vue'
 import CommodityAdComponent from '@/views/shop/homepage/components/component/CommodityAdComponent.vue'
+import highlightCurrentRow from '@/views/shop/homepage/components/component/highlightCurrentRow.vue'
 
-import { list1, list2, list3 } from './components/test.js'
+import TreeGrid from '@/views/shop/homepage/TreeGrid/TreeGrid.vue'
 
-import { shopPagePageList, shopPagePageInfo } from '@/views/shop/server'
+import { list } from './components/test.js'
+
+import { uniqueObj } from '@/utils'
+
+import { shopPagePageList, shopPagePageInfo, tree, shopPageUpdatepage } from '@/views/shop/server'
+
 
 export default {
   components: {
-    SortableItem,
-    SortableList,
+    draggable,
+    sortablecomponent,
     vHomepageLeft,
+    TreeGrid,
+    'CurrentRow': highlightCurrentRow,
     'vimg': vImg,
     'commodity': CommodityAdComponent,
     'banner': vHomepageBanner,
@@ -81,9 +90,19 @@ export default {
     'in-commodity': vHomepageCommodity,
     'small-commodity': vHomepageCommodity,
     'category': vHomepageCategory,
+    'usermap': vHomepageMap,
+    'imgtab': vHomepageTab
   },
   data() {
     return {
+      columns: [
+        {
+          text: '名称',
+          dataIndex: 'name'
+        }
+      ],
+      dataSource: [],
+      isTreeGrid: false,
       items: [],
       title: '',
       tpDialogVisible: false,
@@ -92,33 +111,69 @@ export default {
       isComponentList: [],
       isImg: '',
       componentId: null,
-      list1: list1,
-      list2: list2,
-      list3: list3,
+      listData: list,
       pageId: null,
-      index: 0
+      index: 0,
+      shopPagePageInfoList: [],
+      delete_data: '',
     }
   },
   mounted() {
     this.shopPagePageList()
-    let list = []
-    sessionStorage.setItem('homePageList', JSON.stringify(list))
+    this.tree()
   },
   beforeDestroy() {
     // alert('11111')
   },
-  watch: {
-    items(val) {
-      // console.log(val)
-    }
-  },
   methods: {
+    selectedelEment(item) {
+      const l = JSON.parse(item)
+      this.items = this.items.map(res => {
+        const l = JSON.parse(res)
+        l.selectedel = false
+        if (res === item) {
+          l.selectedel = true
+        }
+        return JSON.stringify(l)
+      })
+      if (this.isComponent !== '' && this.$refs.component.sub) {
+        this.$refs.component.sub()
+      }
+      this.rigth = l
+      this.isComponent = l.url
+      this.componentId = {
+        componentId: l.componentId,
+        difference: l.difference
+      }
+    },
+    del_sub(item) {
+      const l = this.$store.getters.data_list
+      delete l[item.difference]
+      // console.log(l)
+      this.$store.commit('MODIFY_DATA_LIST', l)
+
+      this.items = this.items.filter(res => {
+        const s = JSON.parse(res)
+        if (item.difference !== s.difference) {
+          return JSON.stringify(s)
+        }
+      })
+      this.isComponent = ''
+    },
+    getdata(item) {
+      // console.log(item)
+    },
+    datadragEnd(item) {
+      // console.log(this.items)
+    },
+    tree() {
+      tree().then(res => res.code === 200 ? this.dataSource = res.data : console.log(res)).catch(err => console.log(err))
+    },
     shopPagePageList() {
       shopPagePageList().then(res => {
         if (res.code === 200) {
           const data = res.data[0]
           this.pageId = data.id
-          this.$store.dispatch('addPageId', data.id)
           this.shopPagePageInfo(data.id)
         } else {
           this.$message.error(res.msg)
@@ -128,7 +183,36 @@ export default {
     shopPagePageInfo(pageId) {
       shopPagePageInfo({pageId: pageId}).then(res => {
         if (res.code === 200) {
-          console.log(res)
+          let list = []
+          let l = {}
+          this.items = []
+          if (res.data['config'] !== undefined) {
+            list = JSON.parse(res.data.config)
+            this.shopPagePageInfoList = list
+            const len = list.length
+            if (len !== 0) {
+              this.index = list[len - 1]['type'] + 1
+
+              let list_data = []
+              this.listData.map(res => list_data = [...list_data, ...res['items']])
+              
+              list.map(res => list_data.map(item => {
+                if (item['componentId'] === res['componentId']) {
+                  item['difference'] = res['type']
+                  this.items.push(JSON.stringify(item))
+                }
+              }))
+
+              l = list.reduce((pre, cur) => {
+                pre[cur['type']] = cur
+                return pre
+              }, {})
+              this.$store.commit('DATA_LIST', l)
+              sessionStorage.setItem('data_list', JSON.stringify(l))
+            }
+          }
+          
+          // sessionStorage.setItem('homePageList', JSON.stringify(list))
         } else {
           this.$message.error(res.msg)
         }
@@ -136,9 +220,13 @@ export default {
     },
     ModuleSwitching(item) {
       item['difference'] = this.index
+      item['selectedel'] = false
       this.isComponentList.push(item.url)
       this.rigth = item
       this.items.push(JSON.stringify(item))
+      if (this.isComponent !== '' && this.$refs.component.sub) {
+        this.$refs.component.sub()
+      }
       this.componentId = {
         componentId: item.componentId,
         difference: this.index
@@ -147,9 +235,18 @@ export default {
       this.index++
     },
     uploadListBool(item) {
-      if (Object.prototype.toString.call(item) === '[object Boolean]') {
+      const type = Object.prototype.toString.call(item)
+      this.isTreeGrid = false
+      if (type === '[object Boolean]') {
         this.isImg = 'vimg'
         this.title = '我的图片'
+      } else if (type === '[object String]') {
+        this.isImg = 'CurrentRow'
+        this.title = '我的商品'
+      } else if (type === '[object Number]') {
+        this.isTreeGrid = true
+        this.title = '我的商品分类'
+        this.isImg = ''
       } else {
         this.isImg = 'commodity'
         this.title = '我的商品'
@@ -160,23 +257,39 @@ export default {
       this.tpDialogVisible = false
     },
     primary() {
-      if (this.isComponent !== '') {
-        this.$refs.component.primary()
+      if (this.isComponent !== '' && this.$refs.component.sub) {
+        this.$refs.component.sub()
       }
-    },
-    sortStart(item) {
-      this.items.map(res => {
-        this.$refs[res][0].selected(false)
-        if (res === item.node.dataset.item) {
-          this.$refs[res][0].selected(true)
-        }
+      const data_list = JSON.parse(sessionStorage.getItem('data_list'))
+      const l = this.items.map(res => {
+        const r = JSON.parse(res)
+        return data_list[r['difference']]
       })
-    },
-    input(item) {
-      this.items = item
-      // console.log(item)
+
+      const config = JSON.stringify(l)
+      const listData = {
+        pageId: this.pageId,
+        config,
+      }
+      shopPageUpdatepage(listData).then(res => {
+        if (res.code === 200) {
+          this.shopPagePageInfo(this.pageId)
+          this.$message({
+            message: '提交成功',
+            type: 'success'
+          })
+        } else {
+          console.log(res)
+        }
+      }).catch(err => console.log(err))
     },
     sub() {
+      this.tpDialogVisible = false
+      if (this.isTreeGrid) {
+        let list = this.$refs.isTreeGrid.handleCurrent()
+        this.$refs.component.boolPage(list)
+        return
+      }
       const list = this.$refs.Img.sub()
       if (this.isImg === 'vimg') {
         if (list.length > 1) {
@@ -188,7 +301,9 @@ export default {
       } else {
         this.$refs.component.boolPage(list)
       }
-      this.tpDialogVisible = false
+      if (this.isImg === 'commodity') {
+        this.$refs.Img.clearSelection()
+      }
     },
   }
 }
@@ -292,5 +407,4 @@ export default {
     }
   }
 }
-
 </style>

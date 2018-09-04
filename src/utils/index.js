@@ -83,7 +83,9 @@ export function getByteLen(val) {
   for (let i = 0; i < val.length; i++) {
     if (val[i].match(/[^\x00-\xff]/ig) != null) {
       len += 1
-    } else { len += 0.5 }
+    } else {
+      len += 0.5
+    }
   }
   return Math.floor(len)
 }
@@ -103,7 +105,7 @@ export function param(json) {
   return cleanArray(Object.keys(json).map(key => {
     if (json[key] === undefined) return ''
     return encodeURIComponent(key) + '=' +
-            encodeURIComponent(json[key])
+      encodeURIComponent(json[key])
   })).join('&')
 }
 
@@ -203,6 +205,34 @@ export const pickerOptions = [
     }
   }]
 
+// 从现在开始向后推算
+export const pickerOptionsFromNowOn = [
+  {
+    text: '最近一周',
+    onClick(picker) {
+      const start = new Date()
+      const end = new Date()
+      end.setTime(start.getTime() + 3600 * 1000 * 24 * 7)
+      picker.$emit('pick', [start, end])
+    }
+  }, {
+    text: '最近一个月',
+    onClick(picker) {
+      const start = new Date()
+      const end = new Date()
+      end.setTime(start.getTime() + 3600 * 1000 * 24 * 30)
+      picker.$emit('pick', [start, end])
+    }
+  }, {
+    text: '最近三个月',
+    onClick(picker) {
+      const start = new Date()
+      const end = new Date()
+      end.setTime(start.getTime() + 3600 * 1000 * 24 * 90)
+      picker.$emit('pick', [start, end])
+    }
+  }]
+
 export function getTime(type) {
   if (type === 'start') {
     return new Date().getTime() - 3600 * 1000 * 24 * 90
@@ -214,7 +244,7 @@ export function getTime(type) {
 export function debounce(func, wait, immediate) {
   let timeout, args, context, timestamp, result
 
-  const later = function() {
+  const later = function () {
     // 据上一次触发时间间隔
     const last = +new Date() - timestamp
 
@@ -231,7 +261,7 @@ export function debounce(func, wait, immediate) {
     }
   }
 
-  return function(...args) {
+  return function (...args) {
     context = this
     timestamp = +new Date()
     const callNow = immediate && !timeout
@@ -264,4 +294,13 @@ export function deepClone(source) {
 
 export function uniqueArr(arr) {
   return Array.from(new Set(arr))
+}
+
+export function uniqueObj(arr, name) {
+  var hash = {}
+  let list = arr.reduce((item, next) => {
+    hash[next[name]] ? '' : hash[next[name]] = true && item.push(next)
+    return item
+  }, [])
+  return list
 }

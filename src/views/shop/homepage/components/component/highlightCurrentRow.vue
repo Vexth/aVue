@@ -18,8 +18,7 @@
         <el-button type="primary" @click="onSubmit">查询</el-button>
       </el-form-item>
     </el-form>
-    <el-table :data="list" ref="multipleTable" border fit style="width: 100%" tooltip-effect="dark" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="45"></el-table-column>
+    <el-table :data="list" border highlight-current-row style="width: 100%" tooltip-effect="dark" @current-change="handleSelectionChange">
 
       <el-table-column align="center" label="图片" width="80">
         <template slot-scope="scope">
@@ -111,9 +110,6 @@ export default {
     },
     sub() {
       return this.SelectionChange
-    },
-    clearSelection() {
-      this.$refs.multipleTable.clearSelection()
     },
     handleSizeChange(val) {
       this.pagination.size = val

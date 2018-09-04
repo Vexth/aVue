@@ -11,17 +11,19 @@
 
 <script>
 import ImageLi from '@/views/shop/homepage/components/component/ImageLi.vue'
+
 export default {
   components: {
     ImageLi
   },
   data() {
     return {
+      l: null,
       tpList: [],
       type: null,
+      ComponentId: null,
       homePageList: [],
       index: 0,
-      bool: true,
     }
   },
   props: {
@@ -34,23 +36,20 @@ export default {
     componentId: {
       immediate:true,
       handler(newVal, oldVal) {
-        if (oldVal !== undefined) {
-          this.sub()
-        }
+        const l = this.$store.getters.data_list
         this.type = newVal.difference
+        this.ComponentId = newVal.componentId
         this.tpList = []
-        let data = {
+        if (l[newVal.difference] !== undefined) {
+          this.tpList = l[newVal.difference]['data']
+        }
+        this.l = {
           type: newVal.difference,
           componentId: newVal.componentId,
-          data: []
+          data: this.tpList
         }
-        this.$store.dispatch('addHomePageList', data)
+        this.$store.dispatch('AddDataList', this.l)
       }
-    }
-  },
-  beforeDestroy() {
-    if (this.bool) {
-      this.sub()
     }
   },
   methods: {
@@ -58,27 +57,31 @@ export default {
       this.$emit('uploadListBool', {})
     },
     boolPage(item) {
-      this.tpList = item.map(res => {
-        res['url'] = res.product.imgDescList[0].url
-        return res
+      let data = []
+      item.map(res => {
+        const id = res['product']['id']
+        const list = {
+          imageUrl: res['product']['imgDescList'][0]['url'],
+          shopTitle: res['product']['title'],
+          shopPrice: res['price'],
+          navigateTo:  {
+            navigateName: 'detail',
+            navigateParam: id
+          }
+        }
+        data.push(list)
       })
+      this.tpList = [...this.tpList, ...data]
+      this.l['data'] = this.tpList
+      this.$store.commit('ADD_DATA_LIST', this.l)
     },
     cha(item) {
       this.tpList = item
     },
     sub() {
-      this.bool = false
-      let data = {
-        type: this.type,
-        data: this.tpList
-      }
-      return this.$store.dispatch('commodityList', data)
+      this.l['data'] = this.tpList
+      this.$store.dispatch('AddDataList', this.l)
     },
-    primary() {
-      console.log('primary')
-      // this.homePageList.push(data)
-      // sessionStorage.setItem('homePageList', JSON.stringify(this.homePageList))
-    }
   }
 }
 </script>
