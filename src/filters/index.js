@@ -32,8 +32,9 @@ export function priceFormatNormal(s, n) {
   return t.split('').reverse().join('') + '.' + r
 }
 // 格式化金额 人民币
-export function priceFormat(s, n) {
-  return '￥' + priceFormatNormal(s, n)
+export function priceFormat(s, n, prefix) {
+  prefix = prefix || '￥' // 默认值￥
+  return prefix + priceFormatNormal(s, n)
 }
 
 /* 数字 格式化*/

@@ -3,10 +3,10 @@
     <div style="width:80%">
       <el-form ref="formRules" :rules="formRules" :model="form" label-width="100px" class="demo-form-inline">
         <el-form-item prop="name" label="活动名称:">
-          <el-input v-model="form.name"></el-input>
+          <el-input v-model="form.name" placeholder="商家设定的活动名字。如：中秋满减活动"></el-input>
         </el-form-item>
         <el-form-item prop="tag" label="活动标签:">
-          <el-input v-model="form.tag"></el-input>
+          <el-input v-model="form.tag" placeholder="展示在微信小程序上的标签名字。 如：满减活动"></el-input>
         </el-form-item>
 
         <el-form-item prop="pickerDateRange" label="活动时间:">
@@ -58,6 +58,7 @@
         <!--</el-form-item>-->
 
         <el-form-item prop="fullReductionRules" label="满减规则:">
+          <el-button v-if="this.form.fullReductionRules.length < 5" type="primary" size="mini" @click="addRule" round>+ 新增满减规则</el-button>
         </el-form-item>
         <!--满减活动规则-->
         <el-form-item
@@ -87,7 +88,7 @@
           <div v-if="rule.type === 'discount'">
             <!--<el-col :span="1">打:</el-col>-->
             <el-col :span="4">
-              <el-input-number size="medium" v-model="rule.discount" :precision="1" :step="1.0" :min="1"></el-input-number>
+              <el-input-number size="medium" v-model="rule.discount" :precision="1" :step="1.0" :min="1" :max="9.9"> </el-input-number>
             </el-col>
             <el-col :span="1">折&nbsp;</el-col>
 
@@ -100,11 +101,11 @@
           </el-col>
         </el-form-item>
 
-        <el-form-item>
+        <!--<el-form-item>-->
           <!--<el-button type="primary" @click="submitForm('dynamicValidateForm')">提交</el-button>-->
-          <el-button v-if="this.form.fullReductionRules.length < 5" type="primary" size="mini" @click="addRule" round>+ 新增满减规则</el-button>
+          <!--<el-button v-if="this.form.fullReductionRules.length < 5" type="primary" size="mini" @click="addRule" round>+ 新增满减规则</el-button>-->
           <!--<el-button @click="resetForm('form')">重置</el-button>-->
-        </el-form-item>
+        <!--</el-form-item>-->
 
         <el-form-item label="活动备注">
           <el-input type="textarea" v-model="form.vendorRemark"></el-input>
@@ -154,12 +155,11 @@
 </template>
 
 <script>
-  import { priceFormatNormal } from '@/filters'
   import { promotionCreate, promotionModify } from '@/api/promotion'
   // import { shopProductLoad } from '@/views/shop/server'
   import { RULE_TYPE_FULL_REDUCTION } from '@/views/promotionCenter/constant'
   import ProductTableSelectDialog from '@/views/promotionCenter/components/ProductTableSelectDialog'
-  import { pickerOptionsFromNowOn } from '@/utils'
+  import { parseTime, pickerOptionsFromNowOn } from '@/utils'
 
   export default {
     name: 'fullReductionCreate',
@@ -243,10 +243,11 @@
     data() {
       const validateName = (rule, value, callback) => {
         // if (!isvalidUsername(value)) {
+        const strLengthLimit = 50
         if (!value) {
           callback(new Error('不能为空！'))
-        } else if (value.length > 20) {
-          callback(new Error('活动名称过长，请保持在20个字以内！'))
+        } else if (value.length > strLengthLimit) {
+          callback(new Error(`活动名称过长，请保持在${strLengthLimit}个字以内！`))
         } else {
           callback()
         }
@@ -293,8 +294,8 @@
         form: {
           promotionId: -1,
           vendorId: '',
-          name: '',
-          tag: '',
+          name: '闲约科技满减活动专场 (' + parseTime(Date()) + ')',
+          tag: '满减活动',
           limitProductAmount: '', // 限制商品库存数量
           limitUserAmount: '', // 限制用户使用数量 每个用户1次
           channel: ['1'],
@@ -357,20 +358,20 @@
             if (this.pickerDateRange.length !== 2) {
               this.$message.error({
                 title: '时间设置错误',
-                message: '必须制定时间区间',
+                message: '必须设定活动的时间范围！',
                 type: 'error'
               })
               return
             }
 
             // 去除一个key属性 不修改原始 服务端祛除
-            const rules = this.form.fullReductionRules
-            //   .map(rule => {
-            //   return {
-            //     full: rule.full,
-            //     reduction: rule.reduction
-            //   }
-            // })
+            const rules = this.form.fullReductionRules.map(rule => {
+              const r = {}
+              r.full = rule.full
+              r.type = rule.type // 打折discount 减额reduction
+              r[r.type] = rule[r.type]
+              return r
+            })
             if (rules.length === 0) {
               this.$message.error({
                 title: '满减规则设置错误',
@@ -435,11 +436,12 @@
         }
       },
       addRule() {
+        const index = this.form.fullReductionRules.length + 1
         if (this.form.fullReductionRules.length < 5) {
           this.form.fullReductionRules.push({
-            full: 100,
-            reduction: 10,
-            discount: 9.9,
+            full: 100 * index,
+            reduction: 10 * index,
+            discount: 10 - 0.5 * index,
             type: 'reduction', // 减
             key: Date.now()
           })
