@@ -136,7 +136,9 @@ export default {
         }
         return JSON.stringify(l)
       })
-      
+      if (this.isComponent !== '' && this.$refs.component.sub) {
+        this.$refs.component.sub()
+      }
       this.rigth = l
       this.isComponent = l.url
       this.componentId = {
@@ -147,7 +149,7 @@ export default {
     del_sub(item) {
       const l = this.$store.getters.data_list
       delete l[item.difference]
-      console.log(l)
+      // console.log(l)
       this.$store.commit('MODIFY_DATA_LIST', l)
 
       this.items = this.items.filter(res => {
@@ -159,10 +161,10 @@ export default {
       this.isComponent = ''
     },
     getdata(item) {
-      console.log(item)
+      // console.log(item)
     },
     datadragEnd(item) {
-      console.log(this.items)
+      // console.log(this.items)
     },
     tree() {
       tree().then(res => res.code === 200 ? this.dataSource = res.data : console.log(res)).catch(err => console.log(err))

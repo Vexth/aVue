@@ -71,7 +71,6 @@ export default {
       handler(newVal, oldVal) {
         const l = this.$store.getters.data_list
         const ld = l[newVal.difference]
-        console.log(ld)
         this.mapData = {
           type: newVal.difference,
           shopName: '',
@@ -80,6 +79,10 @@ export default {
           longitude: null,
           latitude: null,
         }
+        if (ld !== undefined) {
+          this.mapData = ld['data']
+        }
+        
         this.l = {
           type: newVal.difference,
           componentId: newVal.componentId,
@@ -101,13 +104,13 @@ export default {
       }
     },
     sub() {
-      if (Object.prototype.toString.call(loc) === '[object String]') {
+      if (loc === undefined || Object.prototype.toString.call(loc) === '[object String]') {
         this.$message.error('请选择位置')
         return
       }
       
-      this.mapData.longitude = loc['latlng']['lng']
-      this.mapData.latitude = loc['latlng']['lat']
+      this.mapData.longitude = loc['latlng'] === undefined ? this.mapData.longitude : loc['latlng']['lng']
+      this.mapData.latitude = loc['latlng'] === undefined ? this.mapData.latitude : loc['latlng']['lat']
 
       this.l['data'] = this.mapData
       this.$store.commit('ADD_DATA_LIST', this.l)
