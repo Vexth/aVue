@@ -177,13 +177,9 @@ export default {
               desc: '客户付款后引导参与营销互动'
             },
             {
-<<<<<<< HEAD
+
               url: '/ump/gift',
               img: '../../../../static/img/fd5ba6b19e0724bee3c7b4e8c1b8629a.png',
-=======
-              url: '/ump/activity',
-              img: '/static/img/fd5ba6b19e0724bee3c7b4e8c1b8629a.png',
->>>>>>> 809d61e7265f266f62f8dcaa3fa18703a43793cc
               name: '赠品',
               desc: '设置赠品，回馈客户'
             },
