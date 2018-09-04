@@ -45,24 +45,24 @@ const list1 = {
     },
     {
       title: '购物车',
-      url: 'banner',
+      url: 'shopcar',
       src: '/static/img/购物车.png',
-      imgurl: '',
-      componentId: null
+      imgurl: '/static/img/购物车1.png',
+      componentId: 16
     },
     {
       title: '客服',
-      url: 'banner',
+      url: 'contact',
       src: '/static/img/客服.png',
-      imgurl: '',
-      componentId: null
+      imgurl: '/static/img/客服1.png',
+      componentId: 15
     },
     {
       title: '电话',
-      url: 'banner',
+      url: 'telphone',
       src: '/static/img/电话.png',
-      imgurl: '',
-      componentId: null
+      imgurl: '/static/img/电话1.png',
+      componentId: 14
     },
     {
       title: '分类',

@@ -80,7 +80,6 @@ export default {
     getVideoList().then(res => {
       if (res.code === 200) {
         this.options = res.data
-        console.log(this.options)
       }
     })
   },

@@ -14,6 +14,9 @@
           <draggable v-model="items" :options="{group:'people'}" @start="drag=true" @end="drag=false" :move="getdata" @update="datadragEnd">
             <sortablecomponent v-for="(element, index) in items" :key="index" :item="element" @del_sub="del_sub" @selectedelEment="selectedelEment"></sortablecomponent>
           </draggable>
+          <div class="shop_contact">
+            <sortablecomponent v-for="(element, index) in shop_contact" :key="index" :item="element" @del_sub="del_sub" @selectedelEment="selectedelEment"></sortablecomponent>
+          </div>
         </div>
       </div>
     </div>
@@ -55,6 +58,7 @@ import vHomepageCommodity from '@/views/shop/homepage/components/vHomepageCommod
 import vHomepageCategory from '@/views/shop/homepage/components/vHomepageCategory.vue'
 import vHomepageMap from '@/views/shop/homepage/components/vHomepageMap.vue'
 import vHomepageTab from '@/views/shop/homepage/components/vHomepageTab.vue'
+import vHomepagePhone from '@/views/shop/homepage/components/vHomepagePhone.vue'
 
 import vImg from '@/views/shop/showcase/zujian/img.vue'
 import CommodityAdComponent from '@/views/shop/homepage/components/component/CommodityAdComponent.vue'
@@ -91,7 +95,8 @@ export default {
     'small-commodity': vHomepageCommodity,
     'category': vHomepageCategory,
     'usermap': vHomepageMap,
-    'imgtab': vHomepageTab
+    'imgtab': vHomepageTab,
+    'telphone': vHomepagePhone,
   },
   data() {
     return {
@@ -116,6 +121,7 @@ export default {
       index: 0,
       shopPagePageInfoList: [],
       delete_data: '',
+      shop_contact: [],
     }
   },
   mounted() {
@@ -128,36 +134,63 @@ export default {
   methods: {
     selectedelEment(item) {
       const l = JSON.parse(item)
-      this.items = this.items.map(res => {
-        const l = JSON.parse(res)
-        l.selectedel = false
-        if (res === item) {
-          l.selectedel = true
-        }
-        return JSON.stringify(l)
-      })
       if (this.isComponent !== '' && this.$refs.component.sub) {
         this.$refs.component.sub()
       }
+      switch (l.componentId) {
+        case 14:
+          this.isComponent = l.url
+          break;
+        case 15:
+        case 16:
+          this.isComponent = ''
+          break;
+      
+        default:
+          this.items = this.items.map(res => {
+            const l = JSON.parse(res)
+            l.selectedel = false
+            if (res === item) {
+              l.selectedel = true
+            }
+            return JSON.stringify(l)
+          })
+          this.isComponent = l.url
+          break;
+      }
+
       this.rigth = l
-      this.isComponent = l.url
       this.componentId = {
         componentId: l.componentId,
         difference: l.difference
       }
     },
-    del_sub(item) {
-      const l = this.$store.getters.data_list
-      delete l[item.difference]
-      // console.log(l)
-      this.$store.commit('MODIFY_DATA_LIST', l)
-
-      this.items = this.items.filter(res => {
+    filterFn(item, value) {
+      const l = item.filter(res => {
         const s = JSON.parse(res)
-        if (item.difference !== s.difference) {
+        if (value['difference'] !== s['difference']) {
           return JSON.stringify(s)
         }
       })
+      return l
+    },
+    del_sub(item) {
+      const l = this.$store.getters.data_list
+      delete l[item.difference]
+      this.$store.commit('MODIFY_DATA_LIST', l)
+
+      switch (item.componentId) {
+        case 14:
+        case 15:
+        case 16:
+          this.shop_contact = this.filterFn(this.shop_contact, item)
+          break;
+      
+        default:
+          this.items = this.filterFn(this.items, item)
+          break;
+      }
+      
       this.isComponent = ''
     },
     getdata(item) {
@@ -207,12 +240,10 @@ export default {
                 pre[cur['type']] = cur
                 return pre
               }, {})
-              this.$store.commit('DATA_LIST', l)
-              sessionStorage.setItem('data_list', JSON.stringify(l))
             }
           }
-          
-          // sessionStorage.setItem('homePageList', JSON.stringify(list))
+          this.$store.commit('DATA_LIST', l)
+          sessionStorage.setItem('data_list', JSON.stringify(l))
         } else {
           this.$message.error(res.msg)
         }
@@ -223,7 +254,6 @@ export default {
       item['selectedel'] = false
       this.isComponentList.push(item.url)
       this.rigth = item
-      this.items.push(JSON.stringify(item))
       if (this.isComponent !== '' && this.$refs.component.sub) {
         this.$refs.component.sub()
       }
@@ -231,7 +261,30 @@ export default {
         componentId: item.componentId,
         difference: this.index
       }
-      this.isComponent = item.url
+      switch (item.componentId) {
+        case 15:
+        case 16:
+          const l = {
+            type: this.index,
+            componentId: item.componentId
+          }
+          this.shop_contact.push(JSON.stringify(item))
+          this.isComponent = ''
+          this.$store.commit('ADD_DATA_LIST', l)
+          break
+
+        case 14:
+          this.shop_contact.push(JSON.stringify(item))
+          this.telphone = item.imgurl
+          this.isComponent = item.url
+          break
+
+        default:
+          this.items.push(JSON.stringify(item))
+          this.isComponent = item.url
+          break
+      }
+      
       this.index++
     },
     uploadListBool(item) {
@@ -404,6 +457,13 @@ export default {
       @extend %ws;
       height: 535px;
       overflow-y: auto;
+    }
+    .shop_contact {
+      position: absolute;
+      right: 20px;
+      bottom: 70px;
+      z-index: 9;
+      cursor: pointer;
     }
   }
 }

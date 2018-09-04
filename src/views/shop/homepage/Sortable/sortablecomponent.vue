@@ -1,5 +1,5 @@
 <template>
-  <div :class="isSelected ? 'list-item' : ''" @click="selectedelEment">
+  <div :class="isSelected ? 'list-item div' : 'div'" @click="selectedelEment">
     <img :src="list.imgurl" alt="" srcset="">
     <el-popover
       placement="left"
@@ -55,7 +55,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-div {
+.div {
   margin: 0;
   padding: 0;
   list-style-type: none;
@@ -67,6 +67,7 @@ div {
     width: 100%;
   }
   .button {
+    display: none;
     position: absolute;
     right: 0;
     top: 0;
@@ -79,6 +80,9 @@ div {
     padding: 0;
     background: rgba(0,0,0,0.5);
     color: #fff;
+  }
+  &:hover .button {
+    display: block;
   }
 }
 .list-item {
