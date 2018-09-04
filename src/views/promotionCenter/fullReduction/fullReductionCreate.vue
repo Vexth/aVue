@@ -3,10 +3,10 @@
     <div style="width:80%">
       <el-form ref="formRules" :rules="formRules" :model="form" label-width="100px" class="demo-form-inline">
         <el-form-item prop="name" label="活动名称:">
-          <el-input v-model="form.name"></el-input>
+          <el-input v-model="form.name" placeholder="商家设定的活动名字。如：中秋满减活动"></el-input>
         </el-form-item>
         <el-form-item prop="tag" label="活动标签:">
-          <el-input v-model="form.tag"></el-input>
+          <el-input v-model="form.tag" placeholder="展示在微信小程序上的标签名字。 如：满减活动"></el-input>
         </el-form-item>
 
         <el-form-item prop="pickerDateRange" label="活动时间:">
@@ -48,6 +48,7 @@
           </el-radio-group>
         </el-form-item>
 
+
         <!--<el-form-item  label="库存限制:">-->
         <!--<el-input-number size="mini" v-model="form.limitProductAmount" :precision="0" :step="10" ></el-input-number>-->
         <!--</el-form-item>-->
@@ -57,41 +58,62 @@
         <!--</el-form-item>-->
 
         <el-form-item prop="fullReductionRules" label="满减规则:">
+          <el-button v-if="this.form.fullReductionRules.length < 5" type="primary" size="mini" @click="addRule" round>+ 新增满减规则</el-button>
         </el-form-item>
         <!--满减活动规则-->
         <el-form-item
           v-for="(rule, index) in form.fullReductionRules"
           :label="(index+1) + '级:'"
-          :key="rule.key"
-        >
+          :key="rule.key">
+
+          <el-col :span="1">满:</el-col>
           <el-col :span="4">
-            <el-input-number size="medium" v-model="rule.full" :precision="2" :step="100" :min="0"></el-input-number>
+            <el-input-number size="medium" v-model="rule.full" :precision="2" :step="100" :min="0" ></el-input-number>
           </el-col>
-          <el-col :span="1">元&nbsp;&nbsp;&nbsp;&nbsp;减:</el-col>
+          <el-col :span="1">元&nbsp;&nbsp;&nbsp;&nbsp;</el-col>
+          <el-col :span="2">
+            <el-radio-group v-model="rule.type" size="mini">
+              <el-radio-button label="reduction" >减</el-radio-button>
+              <el-radio-button label="discount" >打</el-radio-button>
+            </el-radio-group>
+          </el-col>
+          <div v-if="rule.type === 'reduction'">
+            <!--<el-col :span="1">减:</el-col>-->
           <el-col :span="4">
-            <el-input-number size="medium" v-model="rule.reduction" :precision="2" :step="10" :min="0"></el-input-number>
+            <el-input-number size="medium" v-model="rule.reduction" :precision="2" :step="10.0" :min="0"></el-input-number>
           </el-col>
           <el-col :span="1">元&nbsp;</el-col>
+          </div>
+
+          <div v-if="rule.type === 'discount'">
+            <!--<el-col :span="1">打:</el-col>-->
+            <el-col :span="4">
+              <el-input-number size="medium" v-model="rule.discount" :precision="1" :step="1.0" :min="1" :max="9.9"> </el-input-number>
+            </el-col>
+            <el-col :span="1">折&nbsp;</el-col>
+
+          </div>
+
+          <!--删除按钮-->
           <el-col :span="4">
             <el-button type="danger" size="mini" icon="el-icon-delete" @click.prevent="removeRule(rule)"
                        circle></el-button>
           </el-col>
         </el-form-item>
 
-        <el-form-item>
+        <!--<el-form-item>-->
           <!--<el-button type="primary" @click="submitForm('dynamicValidateForm')">提交</el-button>-->
-          <el-button v-if="this.form.fullReductionRules.length < 5" type="primary" size="mini" @click="addRule">+
-            新增满减规则
-          </el-button>
+          <!--<el-button v-if="this.form.fullReductionRules.length < 5" type="primary" size="mini" @click="addRule" round>+ 新增满减规则</el-button>-->
           <!--<el-button @click="resetForm('form')">重置</el-button>-->
-        </el-form-item>
+        <!--</el-form-item>-->
+
         <el-form-item label="活动备注">
           <el-input type="textarea" v-model="form.vendorRemark"></el-input>
         </el-form-item>
 
         <el-form-item label="商品范围:">
           <el-col>
-            <el-radio-group v-model="form.productRange" @change="productRangeChange">
+            <el-radio-group v-model="form.productRange" @change="productRangeChange" size="small">
               <el-radio label="0" border>所有商品参加</el-radio>
               <el-radio label="1" border>部分商品参加</el-radio>
               <!--<el-radio label="2" border>部分商品不参加</el-radio>-->
@@ -120,7 +142,7 @@
 
         <!--<span slot="footer" class="dialog-footer">-->
         <el-form-item>
-          <el-button type="success" size="big" @click="onSubmit" :loading="submitLoading" round>{{editType}}</el-button>
+          <el-button type="success" size="big" @click="onSubmit" :loading="submitLoading">{{editType}}</el-button>
           <!--<el-button size="big" >取消</el-button>-->
         </el-form-item>
         <!--</span>-->
@@ -137,7 +159,7 @@
   // import { shopProductLoad } from '@/views/shop/server'
   import { RULE_TYPE_FULL_REDUCTION } from '@/views/promotionCenter/constant'
   import ProductTableSelectDialog from '@/views/promotionCenter/components/ProductTableSelectDialog'
-  import { pickerOptionsFromNowOn } from '@/utils'
+  import { parseTime, pickerOptionsFromNowOn } from '@/utils'
 
   export default {
     name: 'fullReductionCreate',
@@ -174,7 +196,12 @@
         this.productRangeChange(this.form.productRange)
 
         // if (this.data.ruleStrategy) {
-        this.form.fullReductionRules = this.data.ruleStrategy
+        // this.form.fullReductionRules = this.data.ruleStrategy
+        if (this.data.ruleStrategy) {
+          this.data.ruleStrategy.forEach((strategy, index, arr) => {
+            this.form.fullReductionRules[index] = strategy
+          })
+        }
         // }
 
         if (this.data.productList) {
@@ -216,10 +243,11 @@
     data() {
       const validateName = (rule, value, callback) => {
         // if (!isvalidUsername(value)) {
+        const strLengthLimit = 50
         if (!value) {
           callback(new Error('不能为空！'))
-        } else if (value.length > 20) {
-          callback(new Error('活动名称过长，请保持在20个字以内！'))
+        } else if (value.length > strLengthLimit) {
+          callback(new Error(`活动名称过长，请保持在${strLengthLimit}个字以内！`))
         } else {
           callback()
         }
@@ -266,8 +294,8 @@
         form: {
           promotionId: -1,
           vendorId: '',
-          name: '',
-          tag: '',
+          name: '闲约科技满减活动专场 (' + parseTime(Date()) + ')',
+          tag: '满减活动',
           limitProductAmount: '', // 限制商品库存数量
           limitUserAmount: '', // 限制用户使用数量 每个用户1次
           channel: ['1'],
@@ -285,35 +313,7 @@
           disabledDate: (time) => {
             return time.getTime() + 3600 * 24 * 1000 < Date.now()
           },
-          shortcuts: pickerOptionsFromNowOn
-          // [{
-          //       text: '最近一周',
-          //       onClick(picker) {
-          //         const start = new Date()
-          //         const end = new Date()
-          //         start.setTime(start.getTime() + 60 * 1000) // 一分钟后
-          //         end.setTime(start.getTime() + 3600 * 1000 * 24 * 7)
-          //         picker.$emit('pick', [start, end])
-          //       }
-          //     }, {
-          //       text: '最近一个月',
-          //       onClick(picker) {
-          //         const start = new Date()
-          //         const end = new Date()
-          //         start.setTime(start.getTime() + 60 * 1000)
-          //         end.setTime(start.getTime() + 3600 * 1000 * 24 * 30)
-          //         picker.$emit('pick', [start, end])
-          //       }
-          //     }, {
-          //       text: '最近三个月',
-          //       onClick(picker) {
-          //         const start = new Date()
-          //         const end = new Date()
-          //         start.setTime(start.getTime() + 60 * 1000)
-          //         end.setTime(start.getTime() + 3600 * 1000 * 24 * 90)
-          //         picker.$emit('pick', [start, end])
-          //       }
-          //     }]
+          shortcuts: pickerOptionsFromNowOn // 从现在开始向后推算
         }
       }
     },
@@ -358,18 +358,19 @@
             if (this.pickerDateRange.length !== 2) {
               this.$message.error({
                 title: '时间设置错误',
-                message: '必须制定时间区间',
+                message: '必须设定活动的时间范围！',
                 type: 'error'
               })
               return
             }
 
-            // 去除一个key属性 不修改原始
+            // 去除一个key属性 不修改原始 服务端祛除
             const rules = this.form.fullReductionRules.map(rule => {
-              return {
-                full: rule.full,
-                reduction: rule.reduction
-              }
+              const r = {}
+              r.full = rule.full
+              r.type = rule.type // 打折discount 减额reduction
+              r[r.type] = rule[r.type]
+              return r
             })
             if (rules.length === 0) {
               this.$message.error({
@@ -435,10 +436,13 @@
         }
       },
       addRule() {
+        const index = this.form.fullReductionRules.length + 1
         if (this.form.fullReductionRules.length < 5) {
           this.form.fullReductionRules.push({
-            full: '',
-            reduction: '',
+            full: 100 * index,
+            reduction: 10 * index,
+            discount: 10 - 0.5 * index,
+            type: 'reduction', // 减
             key: Date.now()
           })
         }

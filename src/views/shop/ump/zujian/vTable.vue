@@ -6,7 +6,7 @@
         <div v-if="v.p">
           <span>{{v.p[`${scope.row[v['name']]}`]}}</span>
         </div>
-        <component v-else-if="v.fn" :is="componentId" :row="scope.row" @response="response" @show="show"></component>
+        <component v-else-if="v.fn" :is="componentId" :row="scope.row" @response="response" @show="show(scope.row)"></component>
         <span v-else>{{scope.row[v['name']]}}</span>
       </template>
     </el-table-column>

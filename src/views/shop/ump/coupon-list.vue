@@ -47,55 +47,56 @@ export default {
       },
       row: [
         {
-          align: "center",
-          label: "优惠券名称",
-          width: "",
+          align: 'center',
+          label: '优惠券名称',
+          width: '',
           name: 'couponName'
         },
         {
-          align: "center",
-          label: "类型",
-          width: "200",
-          name: 'couponSendType',
+          align: 'center',
+          label: '类型',
+          width: '200',
+          name: 'couponType',
           p: {
-            '1': '全平台（店铺）优惠券',
-            '2': '商品优惠券'
+            '1': '现金券',
+            '2': '满减券',
+            '3': '折扣券'
           }
         },
         {
-          align: "center",
-          label: "优惠内容",
-          width: "",
+          align: 'center',
+          label: '优惠内容',
+          width: '',
           name: 'couponContent'
         },
         {
-          align: "center",
-          label: "已领取/剩余",
-          width: "180",
+          align: 'center',
+          label: '已领取/剩余',
+          width: '180',
           name: 'collectRemaining'
         },
         {
-          align: "center",
-          label: "已使用",
-          width: "110",
+          align: 'center',
+          label: '已使用',
+          width: '110',
           name: 'usedNum'
         },
         {
-          align: "center",
-          label: "支付金额",
-          width: "100",
+          align: 'center',
+          label: '支付金额',
+          width: '100',
           name: 'payAmount'
         },
         {
-          align: "center",
-          label: "客单价",
-          width: "100",
+          align: 'center',
+          label: '客单价',
+          width: '100',
           name: 'customerPrice'
         },
         {
-          align: "center",
-          label: "状态/操作",
-          width: "",
+          align: 'center',
+          label: '状态/操作',
+          width: '',
           fn: `fn`
         }
       ],
@@ -121,7 +122,7 @@ export default {
         pageSize: this.pagination.size,
         pageNum: this.pagination.page
       }
-      list = {...list, ...this.formInline}
+      list = { ...list, ...this.formInline }
       couponSelectParmas(list).then(res => {
         if (res.code === 200) {
           this.list = res.data
@@ -139,8 +140,8 @@ export default {
     },
     show(v) {
       this.$confirm('确认停止发放吗？').then(_ => {
-        couponStopSend(v.couponId).then(res => res.code === 200 ? this.couponSelectParmas(): console.log(res)).catch(err => console.log(err))
-        done()
+        couponStopSend(v.couponId).then(res => res.code === 200 ? this.couponSelectParmas() : console.log(res)).catch(err => console.log(err))
+        // done()
       }).catch(_ => {})
     },
     onSubmit() {

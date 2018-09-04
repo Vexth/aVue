@@ -9,8 +9,8 @@
     <!--<full-reduction-create v-if="showCreateCompoent" @createSuccess="onCreateSuccess">-->
     <!--</full-reduction-create>-->
 
-    <full-reduction-edit v-if="showEditCompoent" :data="selectRow" :editType="editType" @editSuccess="onEditSuccess">
-    </full-reduction-edit>
+    <full-reduction-create v-if="showEditCompoent" :data="selectRow" :editType="editType" @editSuccess="onEditSuccess">
+    </full-reduction-create>
     <!--<component :is="componentId" v-if="showCreateCompoent"></component>-->
     <div v-if="!showEditCompoent">
       <el-button @click="handleCreatePromotion">创建促销活动</el-button>
@@ -69,12 +69,10 @@
           <template slot-scope="scope">
             <el-popover trigger="click" placement="top">
               <!--<i class="el-icon-time"></i>-->
-              <p v-for="strategy in scope.row.ruleStrategy">满: {{ strategy.full | priceFormat }}元, 减: {{ strategy.reduction | priceFormat }}元</p>
+              <p v-for="(strategy, index) in scope.row.ruleStrategyDescription">{{index+1}}级： {{strategy}}</p>
               <div slot="reference" class="name-wrapper">
                 <!--<el-tag size="medium">{{ scope.row.ruleStrategy[0] }}</el-tag>-->
-                <el-tag size="medium" v-if="scope.row.ruleStrategy.length !== 0">满: {{ scope.row.ruleStrategy[0].full | priceFormat }}元,
-                  减: {{ scope.row.ruleStrategy[0].reduction | priceFormat }}元
-                </el-tag>
+                <el-tag size="medium" v-if="scope.row.ruleStrategy.length !== 0"> {{ scope.row.ruleStrategyDescription[0] }}</el-tag>
               </div>
             </el-popover>
             <!--<i class="el-icon-time"></i>-->
@@ -168,14 +166,13 @@
 <script>
   import { RULE_TYPE_FULL_REDUCTION } from '@/views/promotionCenter/constant'
   import { promotionList, promotionStatus, promotionDelete } from '@/api/promotion'
-  // import fullReductionCreate from '@/views/promotionCenter/fullReduction/fullReductionCreate'
-  import fullReductionEdit from '@/views/promotionCenter/fullReduction/fullReductionEdit'
+  import fullReductionCreate from '@/views/promotionCenter/fullReduction/fullReductionCreate'
+  import { priceFormat, priceFormatNormal } from '@/filters'
 
   export default {
     name: 'fullReductionList',
     components: {
-      // fullReductionCreate,
-      fullReductionEdit
+      fullReductionCreate
     },
     data() {
       return {
@@ -201,6 +198,7 @@
           vendorRemark: '',
           ruleType: RULE_TYPE_FULL_REDUCTION,
           ruleStrategy: [],
+          ruleStrategyDescription: [],
           productRange: '',
           productIdList: ''
         }],
@@ -235,6 +233,15 @@
             this.tableData.forEach(e => {
               if (e.ruleStrategy && typeof e.ruleStrategy === 'string') { // 规则是字符串必须转换成json数组
                 e.ruleStrategy = JSON.parse(e.ruleStrategy)
+                e.ruleStrategyDescription = e.ruleStrategy.map(strategy => {
+                  if (strategy.type === 'discount') {
+                    return `满${priceFormat(strategy.full)}元，打${priceFormat(strategy[strategy.type], 1, ' ')} 折。`
+                  } else if (strategy.type === 'reduction') {
+                    return `满${priceFormat(strategy.full)}元，减${priceFormat(strategy[strategy.type], 2)} 元。`
+                  } else {
+                    return ''
+                  }
+                })
               }
               const now = new Date()
               // console.log(now)

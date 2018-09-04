@@ -171,7 +171,7 @@ export default {
       dialogVisible: false,
       label: {
         name1: '选择商品',
-        name2: '已择商品',
+        name2: '已择商品'
       },
       form1: {
         couponName: '',
@@ -203,28 +203,28 @@ export default {
           {
             text: '最近一周',
             onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-              picker.$emit('pick', [start, end]);
+              const end = new Date()
+              const start = new Date()
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+              picker.$emit('pick', [start, end])
             }
           },
           {
             text: '最近一个月',
             onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-              picker.$emit('pick', [start, end]);
+              const end = new Date()
+              const start = new Date()
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
+              picker.$emit('pick', [start, end])
             }
           },
           {
             text: '最近三个月',
             onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-              picker.$emit('pick', [start, end]);
+              const end = new Date()
+              const start = new Date()
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
+              picker.$emit('pick', [start, end])
             }
           }
         ]
@@ -258,7 +258,7 @@ export default {
     },
     sub() {
       this.dialogVisible = false
-      let list = this.$refs.vTabs.TableList().map(res => res.product.id)
+      const list = this.$refs.vTabs.TableList().map(res => res.product.id)
       this.form1.productIdList = list
       console.log(list)
     },
@@ -269,7 +269,7 @@ export default {
       }
     },
     onSubmit() {
-      let list = {}
+      const list = {}
       list['productScope'] = this.form1.productScope
 
       this.isForm1Coupon('couponName', '请填写优惠券标题！', '')
@@ -277,14 +277,14 @@ export default {
 
       this.isForm1Coupon('couponNum', '请填写优惠券发放总量！', '')
       list['couponNum'] = this.form1.couponNum
-      
+
       this.isForm1Coupon('couponConditionType', '请选择券种选择！')
       list['couponConditionType'] = this.form1.couponConditionType
 
       if (this.form1.couponConditionType === '1') {
         this.isForm1Coupon('fullDiscount', '请选择优惠内容！')
         list['fullDiscount'] = this.form1.fullDiscount
-  
+
         if (this.form1.fullDiscount === '1') {
           this.isForm1Coupon('couponValue1', '请填写优惠内容！', '')
           list['couponValue'] = this.form1.couponValue1
@@ -348,7 +348,6 @@ export default {
       }
       list['sendStartTime'] = this.isDate(this.form.value2[0]) ? formatDate(this.form.value2[0]) : this.form.value2[0]
       list['sendEndTime'] = this.isDate(this.form.value2[1]) ? formatDate(this.form.value2[1]) : this.form.value2[1]
-      
 
       if (this.form.forUser === null) {
         this.$message.error('请选择领取人限制！')
