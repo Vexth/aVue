@@ -48,6 +48,7 @@
           </el-radio-group>
         </el-form-item>
 
+
         <!--<el-form-item  label="库存限制:">-->
         <!--<el-input-number size="mini" v-model="form.limitProductAmount" :precision="0" :step="10" ></el-input-number>-->
         <!--</el-form-item>-->
@@ -62,16 +63,37 @@
         <el-form-item
           v-for="(rule, index) in form.fullReductionRules"
           :label="(index+1) + '级:'"
-          :key="rule.key"
-        >
+          :key="rule.key">
+
+          <el-col :span="1">满:</el-col>
           <el-col :span="4">
-            <el-input-number size="medium" v-model="rule.full" :precision="2" :step="100" :min="0"></el-input-number>
+            <el-input-number size="medium" v-model="rule.full" :precision="2" :step="100" :min="0" ></el-input-number>
           </el-col>
-          <el-col :span="1">元&nbsp;&nbsp;&nbsp;&nbsp;减:</el-col>
+          <el-col :span="1">元&nbsp;&nbsp;&nbsp;&nbsp;</el-col>
+          <el-col :span="2">
+            <el-radio-group v-model="rule.type" size="mini">
+              <el-radio-button label="reduction" >减</el-radio-button>
+              <el-radio-button label="discount" >打</el-radio-button>
+            </el-radio-group>
+          </el-col>
+          <div v-if="rule.type === 'reduction'">
+            <!--<el-col :span="1">减:</el-col>-->
           <el-col :span="4">
-            <el-input-number size="medium" v-model="rule.reduction" :precision="2" :step="10" :min="0"></el-input-number>
+            <el-input-number size="medium" v-model="rule.reduction" :precision="2" :step="10.0" :min="0"></el-input-number>
           </el-col>
           <el-col :span="1">元&nbsp;</el-col>
+          </div>
+
+          <div v-if="rule.type === 'discount'">
+            <!--<el-col :span="1">打:</el-col>-->
+            <el-col :span="4">
+              <el-input-number size="medium" v-model="rule.discount" :precision="1" :step="1.0" :min="1"></el-input-number>
+            </el-col>
+            <el-col :span="1">折&nbsp;</el-col>
+
+          </div>
+
+          <!--删除按钮-->
           <el-col :span="4">
             <el-button type="danger" size="mini" icon="el-icon-delete" @click.prevent="removeRule(rule)"
                        circle></el-button>
@@ -80,18 +102,17 @@
 
         <el-form-item>
           <!--<el-button type="primary" @click="submitForm('dynamicValidateForm')">提交</el-button>-->
-          <el-button v-if="this.form.fullReductionRules.length < 5" type="primary" size="mini" @click="addRule">+
-            新增满减规则
-          </el-button>
+          <el-button v-if="this.form.fullReductionRules.length < 5" type="primary" size="mini" @click="addRule" round>+ 新增满减规则</el-button>
           <!--<el-button @click="resetForm('form')">重置</el-button>-->
         </el-form-item>
+
         <el-form-item label="活动备注">
           <el-input type="textarea" v-model="form.vendorRemark"></el-input>
         </el-form-item>
 
         <el-form-item label="商品范围:">
           <el-col>
-            <el-radio-group v-model="form.productRange" @change="productRangeChange">
+            <el-radio-group v-model="form.productRange" @change="productRangeChange" size="small">
               <el-radio label="0" border>所有商品参加</el-radio>
               <el-radio label="1" border>部分商品参加</el-radio>
               <!--<el-radio label="2" border>部分商品不参加</el-radio>-->
@@ -120,7 +141,7 @@
 
         <!--<span slot="footer" class="dialog-footer">-->
         <el-form-item>
-          <el-button type="success" size="big" @click="onSubmit" :loading="submitLoading" round>{{editType}}</el-button>
+          <el-button type="success" size="big" @click="onSubmit" :loading="submitLoading">{{editType}}</el-button>
           <!--<el-button size="big" >取消</el-button>-->
         </el-form-item>
         <!--</span>-->
@@ -133,6 +154,7 @@
 </template>
 
 <script>
+  import { priceFormatNormal } from '@/filters'
   import { promotionCreate, promotionModify } from '@/api/promotion'
   // import { shopProductLoad } from '@/views/shop/server'
   import { RULE_TYPE_FULL_REDUCTION } from '@/views/promotionCenter/constant'
@@ -174,7 +196,12 @@
         this.productRangeChange(this.form.productRange)
 
         // if (this.data.ruleStrategy) {
-        this.form.fullReductionRules = this.data.ruleStrategy
+        // this.form.fullReductionRules = this.data.ruleStrategy
+        if (this.data.ruleStrategy) {
+          this.data.ruleStrategy.forEach((strategy, index, arr) => {
+            this.form.fullReductionRules[index] = strategy
+          })
+        }
         // }
 
         if (this.data.productList) {
@@ -285,35 +312,7 @@
           disabledDate: (time) => {
             return time.getTime() + 3600 * 24 * 1000 < Date.now()
           },
-          shortcuts: pickerOptionsFromNowOn
-          // [{
-          //       text: '最近一周',
-          //       onClick(picker) {
-          //         const start = new Date()
-          //         const end = new Date()
-          //         start.setTime(start.getTime() + 60 * 1000) // 一分钟后
-          //         end.setTime(start.getTime() + 3600 * 1000 * 24 * 7)
-          //         picker.$emit('pick', [start, end])
-          //       }
-          //     }, {
-          //       text: '最近一个月',
-          //       onClick(picker) {
-          //         const start = new Date()
-          //         const end = new Date()
-          //         start.setTime(start.getTime() + 60 * 1000)
-          //         end.setTime(start.getTime() + 3600 * 1000 * 24 * 30)
-          //         picker.$emit('pick', [start, end])
-          //       }
-          //     }, {
-          //       text: '最近三个月',
-          //       onClick(picker) {
-          //         const start = new Date()
-          //         const end = new Date()
-          //         start.setTime(start.getTime() + 60 * 1000)
-          //         end.setTime(start.getTime() + 3600 * 1000 * 24 * 90)
-          //         picker.$emit('pick', [start, end])
-          //       }
-          //     }]
+          shortcuts: pickerOptionsFromNowOn // 从现在开始向后推算
         }
       }
     },
@@ -364,13 +363,14 @@
               return
             }
 
-            // 去除一个key属性 不修改原始
-            const rules = this.form.fullReductionRules.map(rule => {
-              return {
-                full: rule.full,
-                reduction: rule.reduction
-              }
-            })
+            // 去除一个key属性 不修改原始 服务端祛除
+            const rules = this.form.fullReductionRules
+            //   .map(rule => {
+            //   return {
+            //     full: rule.full,
+            //     reduction: rule.reduction
+            //   }
+            // })
             if (rules.length === 0) {
               this.$message.error({
                 title: '满减规则设置错误',
@@ -437,8 +437,10 @@
       addRule() {
         if (this.form.fullReductionRules.length < 5) {
           this.form.fullReductionRules.push({
-            full: '',
-            reduction: '',
+            full: 100,
+            reduction: 10,
+            discount: 9.9,
+            type: 'reduction', // 减
             key: Date.now()
           })
         }

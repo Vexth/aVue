@@ -9,8 +9,8 @@
     <!--<full-reduction-create v-if="showCreateCompoent" @createSuccess="onCreateSuccess">-->
     <!--</full-reduction-create>-->
 
-    <full-reduction-edit v-if="showEditCompoent" :data="selectRow" :editType="editType" @editSuccess="onEditSuccess">
-    </full-reduction-edit>
+    <full-reduction-create v-if="showEditCompoent" :data="selectRow" :editType="editType" @editSuccess="onEditSuccess">
+    </full-reduction-create>
     <!--<component :is="componentId" v-if="showCreateCompoent"></component>-->
     <div v-if="!showEditCompoent">
       <el-button @click="handleCreatePromotion">创建促销活动</el-button>
@@ -168,14 +168,12 @@
 <script>
   import { RULE_TYPE_FULL_REDUCTION } from '@/views/promotionCenter/constant'
   import { promotionList, promotionStatus, promotionDelete } from '@/api/promotion'
-  // import fullReductionCreate from '@/views/promotionCenter/fullReduction/fullReductionCreate'
-  import fullReductionEdit from '@/views/promotionCenter/fullReduction/fullReductionEdit'
+  import fullReductionCreate from '@/views/promotionCenter/fullReduction/fullReductionCreate'
 
   export default {
     name: 'fullReductionList',
     components: {
-      // fullReductionCreate,
-      fullReductionEdit
+      fullReductionCreate
     },
     data() {
       return {
