@@ -72,6 +72,7 @@ div {
     top: 0;
     width: 25px;
     height: 25px;
+    line-height: 25px;
     font-size: 20px;
     border: 0;
     border-radius: 50%;
